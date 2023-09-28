@@ -19,13 +19,15 @@
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-##                1.  Call Libraries                                                                        ----
+##                1.  Call Libraries and Data                                                               ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 suppressMessages(library(tidyverse))
 suppressMessages(library(dplyr))
+
+vdm<- readRDS("VDM_raw.rds")
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -45,7 +47,12 @@ VDM_clean<- function(df){
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
+targetvars<- c("country_text_id", "v2x_liberal", "v2xlg_legcon", "v2psoppaut", "v2cltrnslw", "v2lgqstexp", "v2lginvstp", 
+               "v2lgoppart", "v2x_jucon", "v2juhcind", "v2juncind", "v2lgotovst", "v2x_polyarchy", "v2x_suffr", 
+               "v2xel_frefair", "v2x_elecoff", "v2xdd_dd", "v2elembaut", "v2elembcap", "v2elrgstry", "v2elvotbuy", 
+               "v2elirreg", "v2elintim", "v2elpeace", "v2x_libdem", "v2x_freexp_altinf", "v2x_frassoc_thick", 
+               "v2merange", "v2meslfcen", "v2mecrit", "v2cldiscm", "v2cldiscw", "v2psbars", "v2cscnsult", "v2exrescon", 
+               "v2jucomp", "v2juhccomp", "v2mecenefm", "v2meharjrn", "v2cseeorgs", "v2csreprss")
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -55,6 +62,8 @@ VDM_clean<- function(df){
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
+dfv<- df%>%
+  select(all_of(targetvars))
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -81,7 +90,10 @@ VDM_clean<- function(df){
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
+print(dfv)
 
 
 }
+
+#VDM_clean(vdm)
+
