@@ -26,6 +26,16 @@
 
 suppressMessages(library(tidyverse))
 suppressMessages(library(dplyr))
+library(caret)
+
+#SharePoint path
+
+if (Sys.info()["user"]=="Dhabiby"){
+  
+  path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics/")
+} 
+
+ess<- read_csv(paste0(path2SP, "8. Data/TPS/ESS/ESS_raw.csv"))
 
 
 
@@ -46,7 +56,9 @@ ESS_clean<- function(df){
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  targetvars<- c()
+  targetvars<- c("name", "idno", "cntry", "contplt", "donprty", "pbldmna", "pstplonl", "volunfp", "medcrgv", "medcrgvc", 
+                 "fairelc", "dfprtal", "votedir", "gptpelc", "fairelcc", "dfprtalc", "votedirc", "gptpelcc", "dweight", 
+                 "pspwght", "pweight", "anweight", "prob")
   
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
