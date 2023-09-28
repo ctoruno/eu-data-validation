@@ -27,7 +27,6 @@
 suppressMessages(library(tidyverse))
 suppressMessages(library(dplyr))
 
-vdm<- readRDS("VDM_raw.rds")
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
