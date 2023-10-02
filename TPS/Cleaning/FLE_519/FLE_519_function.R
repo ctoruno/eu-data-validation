@@ -36,7 +36,7 @@ if (Sys.info()["user"]=="Dhabiby"){
   path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics/")
 } 
 
-f519<- read_dta(paste0(path2SP, "8. Data/TPS/Eurobarometer/FLE_519_raw.dta"))
+f519<- read_dta(paste0(path2SP, "8. Data/TPS/Eurobarometer/WVS_raw.dta"))
 
 
 
@@ -70,7 +70,8 @@ FLE_519_clean<- function(df){
   
   dfv<- df%>%
     select(all_of(targetvars))
-  
+
+
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##

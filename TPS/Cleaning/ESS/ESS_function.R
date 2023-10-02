@@ -49,17 +49,17 @@ ess<- read_csv(paste0(path2SP, "8. Data/TPS/ESS/ESS_raw.csv"))
 
 ESS_clean<- function(df){
   
-  
+  df<- ess
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
   ##                3.  Identify Indicators of Interest                                                       ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  targetvars<- c("name", "idno", "cntry", "contplt", "donprty", "pbldmna", "pstplonl", "volunfp", "medcrgv", "medcrgvc", 
-                 "fairelc", "dfprtal", "votedir", "gptpelc", "fairelcc", "dfprtalc", "votedirc", "gptpelcc", "dweight", 
-                 "pspwght", "pweight", "anweight", "prob")
+  targetvars<- c("cntry", "contplt", "donprty", "pbldmna", "pstplonl", "volunfp", "medcrgv", "medcrgvc", 
+                 "fairelc", "dfprtal", "votedir", "gptpelc", "fairelcc", "dfprtalc", "votedirc", "gptpelcc")
   
+  #, "dweight", "pspwght", "pweight", "anweight", "prob"
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
