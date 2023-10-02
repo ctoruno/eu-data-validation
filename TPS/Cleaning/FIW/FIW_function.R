@@ -129,7 +129,8 @@ FIW_clean<- function(df){
     mutate(Country = case_when(is.na(Country) ~ 
                                deframe(tibble(cntry, nuts))[`Country/Territory`], 
                              TRUE ~ Country))%>%
-    select(Country, )
+    select(Country, everything())%>%
+    select(-`Country/Territory`)
   
   write.csv(clean, "FIW_clean.csv")
 }
