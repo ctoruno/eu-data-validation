@@ -27,6 +27,7 @@
 suppressMessages(library(tidyverse))
 suppressMessages(library(dplyr))
 library(readxl)
+library(caret)
 
 
 #SharePoint path
@@ -50,14 +51,14 @@ fiw<- read_xlsx(paste0(path2SP, "8. Data/TPS/Freedom House/FIW_raw.xlsx"))
 
 FIW_clean<- function(df){
   
-  df<- fiw
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
   ##                3.  Identify Indicators of Interest                                                       ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  targetvars<- c("Country/Territory", "A", "B", "D", "E", "F", "PR", "CL")
+  targetvars<- c("Country/Territory", "A", "A1", "A2", "A3", "B", "B1", "B2", "D", "D1", "D2", "E",
+                "E1", "E2", "E3", "F", "PR", "CL")
   
   
   cntry<- c("Austria", "Belgium", "Bulgaria", "Cyprus", "Czech Republic", "Germany", "Denmark", "Estonia", "Greece", "Spain", 
@@ -92,8 +93,12 @@ FIW_clean<- function(df){
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
+  dfv[nrow(dfv) + 1,] <- c("mins", rep(list(0), ncol(dfv)-1))
   
+  process<- preProcess(dfv, method = c("range"))
+  normalized <- predict(process, dfv)
   
+  dfv2<- slice(normalized, 1:(n() - 1))
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
@@ -101,14 +106,32 @@ FIW_clean<- function(df){
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
+  #not needed
+  
+  
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ##
+  ##                8.  Write Clean Dataset                                                                   ----
+  ##
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  
 
+  dfv2$Country<- rep(NA, nrow(dfv2))
+  
+  nuts<- c("AT", "BE", "BU", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", 
+           "FR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", 
+           "RO", "SE", "SI", "SK")
   
   
-  print(dfv)
   
+  clean<- dfv2%>%
+    mutate(Country = case_when(is.na(Country) ~ 
+                               deframe(tibble(cntry, nuts))[`Country/Territory`], 
+                             TRUE ~ Country))
   
-  
+  write.csv(clean, "FIW_clean.csv")
 }
 
-#FIW_clean(fiw)
+FIW_clean(fiw)
 
