@@ -27,6 +27,7 @@
 suppressMessages(library(tidyverse))
 suppressMessages(library(dplyr))
 library(caret)
+library(haven)
 
 #SharePoint path
 
@@ -35,7 +36,7 @@ if (Sys.info()["user"]=="Dhabiby"){
   path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics/")
 } 
 
-wvs<- read_csv(paste0(path2SP, "8. Data/TPS/WVS/WVS_raw.csv"))
+wvs<- read_dta(paste0(path2SP, "8. Data/TPS/WVS/WVS_raw.dta"))
 
 
 
@@ -56,9 +57,10 @@ WVS_clean<- function(df){
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  targetvars<- c()
+  targetvars<- c(COUNTRY_ALPHA, S006, S007, E069_64, E265_01, E265_02, E265_03, E265_04, 
+                 E265_05, E265_06, E265_07, E265_08, E265_09, E236, E276)
   
- 
+  cntry<- c()
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
@@ -68,8 +70,13 @@ WVS_clean<- function(df){
   
   
   dfv<- df%>%
-    select(all_of(targetvars))
+    filter(S020 == 2022)
+  #%>%select(all_of(targetvars))
   
+  #how to handle no answer/dk?
+  dfv$E069_64<- ifelse(dfv$E069_64 == 1, 4, ifelse(dfv$E069_64 == 2, 3, ifelse(dfv$E069_64 == 3, 2, dfv$E069_64 == 4, 1)))
+  
+  unique(dfv$E069_64)
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
