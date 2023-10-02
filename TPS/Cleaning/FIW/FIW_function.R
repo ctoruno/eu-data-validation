@@ -128,7 +128,8 @@ FIW_clean<- function(df){
   clean<- dfv2%>%
     mutate(Country = case_when(is.na(Country) ~ 
                                deframe(tibble(cntry, nuts))[`Country/Territory`], 
-                             TRUE ~ Country))
+                             TRUE ~ Country))%>%
+    select(Country, )
   
   write.csv(clean, "FIW_clean.csv")
 }
