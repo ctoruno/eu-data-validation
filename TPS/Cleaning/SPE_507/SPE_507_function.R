@@ -1,12 +1,12 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## Script:            EU Data Validation- WVS Function
+## Script:            EU Data Validation- SPE_507 Function
 ##
 ## Author:            Dalia Habiby   (dhabiby@worldjusticeproject.org)
 ##
 ## Dependencies:      World Justice Project
 ##
-## Creation date:     October 2nd, 2023
+## Creation date:     October 3rd, 2023
 ##
 ## This version:      October 3rd, 2023
 ##
@@ -36,7 +36,7 @@ if (Sys.info()["user"]=="Dhabiby"){
   path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics/")
 } 
 
-wvs<- read_dta(paste0(path2SP, "8. Data/TPS/WVS/WVS_raw.dta"))
+s507<- read_dta(paste0(path2SP, "8. Data/TPS/Eurobarometer/SPE_507_raw.dta"))
 
 
 
@@ -48,19 +48,18 @@ wvs<- read_dta(paste0(path2SP, "8. Data/TPS/WVS/WVS_raw.dta"))
 
 
 
-WVS_clean<- function(df){
+SPE_507_clean<- function(df){
   
-  df<- wvs
+  df<- s507
+  
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
   ##                3.  Identify Indicators of Interest                                                       ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  targetvars<- c("COUNTRY_ALPHA", "E069_64", "E265_01", "E265_02", "E265_03", "E265_04", 
-                 "E265_05", "E265_06", "E265_07", "E265_08", "E265_09", "E236", "E276")
+  targetvars<- c()
   
-  cntry<- c()
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
@@ -70,14 +69,9 @@ WVS_clean<- function(df){
   
   
   dfv<- df%>%
-    filter(S020 == 2022)%>%
     select(all_of(targetvars))
-  
-  #how to handle no answer/dk?
-  dfv$E069_64<- ifelse(dfv$E069_64 == 1, 4, ifelse(dfv$E069_64 == 2, 3, ifelse(dfv$E069_64 == 3, 2, 
-                                                                               ifelse(dfv$E069_64 == 4, 1, dfv$E069_64))))
-  
-  unique(dfv$E069_64)
+
+
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
@@ -87,14 +81,13 @@ WVS_clean<- function(df){
   
   
   
-  
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
   ##                6.  Normalize Values from 0-1                                                             ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  
+
   
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -102,8 +95,6 @@ WVS_clean<- function(df){
   ##                7.  Aggregate to One Score per Country                                                    ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
-  print(dfv)
   
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -113,8 +104,10 @@ WVS_clean<- function(df){
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   
+  print(dfv)
+  
   
 }
 
-#WVS_clean(ess)
+#SPE_507_clean(s507)
 

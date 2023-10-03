@@ -1,6 +1,6 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## Script:            EU Data Validation- ESS Function
+## Script:            EU Data Validation- FLE_519 Function
 ##
 ## Author:            Dalia Habiby   (dhabiby@worldjusticeproject.org)
 ##
@@ -8,7 +8,7 @@
 ##
 ## Creation date:     September 28th, 2023
 ##
-## This version:      September 28th, 2023
+## This version:      October 3rd, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -36,7 +36,7 @@ if (Sys.info()["user"]=="Dhabiby"){
   path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics/")
 } 
 
-f519<- read_dta(paste0(path2SP, "8. Data/TPS/Eurobarometer/WVS_raw.dta"))
+f519<- read_dta(paste0(path2SP, "8. Data/TPS/Eurobarometer/FLE_519_raw.dta"))
 
 
 
@@ -97,10 +97,19 @@ FLE_519_clean<- function(df){
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
+  
+  
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ##
+  ##                8.  Write Clean Dataset                                                                   ----
+  ##
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  
   print(dfv)
   
   
 }
 
-#FLE_519_clean(fle_519)
+#FLE_519_clean(f519)
 
