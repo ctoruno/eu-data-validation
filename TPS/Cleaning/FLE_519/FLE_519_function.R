@@ -67,7 +67,7 @@ FLE_519_clean<- function(df){
   
   for(i in no){
     
-    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3), oriented[[i]], NA_real_)
+    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3, 4), oriented[[i]], NA_real_)
     
   }
   
@@ -119,5 +119,5 @@ FLE_519_clean<- function(df){
   
 }
 
-#FLE_519_clean(f519)
+FLE_519_clean(f519)
 
