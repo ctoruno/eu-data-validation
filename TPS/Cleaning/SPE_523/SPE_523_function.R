@@ -23,88 +23,108 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-suppressMessages(library(tidyverse))
-suppressMessages(library(dplyr))
-library(caret)
-library(haven)
-
-#SharePoint path
-
-if (Sys.info()["user"]=="Dhabiby"){
-  
-  path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics/")
-} 
-
-s523<- read_dta(paste0(path2SP, "8. Data/TPS/Eurobarometer/SPE_523_raw.dta"))
-
-
-
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-##                2.  Define Function                                                                       ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+#Source Eurobarometer 97.2 
 
 
 SPE_523_clean<- function(df){
-  
-  df<- s523
-  
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ##                3.  Identify Indicators of Interest                                                       ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
-  targetvars<- c()
-  
+
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
-  ##                4.  Select Indicators of Interest                                                         ----
+  ##                1.  Identify Indicators of Interest                                                       ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
+  targetvars<- c("isocntry", "qa15_5", "qa15_6", "qa15_7", "qa15_13")
   
-  dfv<- df%>%
+  cntry<- c("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "GR", "ES", "FI", "FR", "HR", "HU", "IE", "IT", 
+            "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK")
+  
+  
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ##
+  ##                2.  Select Indicators of Interest                                                         ----
+  ##
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  df$isocntry<- recode(df$isocntry, "DE-W"="DE", "DE-E"="DE")
+  
+  df2<- df%>%
+    filter(isocntry %in% cntry)%>%
     select(all_of(targetvars))
 
 
-  
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
-  ##                5.  Reorient Indicator Coding                                                             ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
-  
-  
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ##                6.  Normalize Values from 0-1                                                             ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
-
-  
-  
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ##                7.  Aggregate to One Score per Country                                                    ----
+  ##                3.  Reorient Indicator Coding                                                             ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   
+  oriented<- df2
+  
+  ##Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient.##
+  
+  ro<- c("qa15_5", "qa15_7", "qa15_13")
+  
+  for(i in ro){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
+                                                         ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
+    
+  }
+  
+  
+  no<- setdiff(targetvars[-1], ro)
+  
+  for(i in no){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3, 4), oriented[[i]], NA_real_)
+    
+  }
+  
+  
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
-  ##                8.  Write Clean Dataset                                                                   ----
+  ##                4.  Normalize Values from 0-1                                                             ----
+  ##
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  process<- preProcess(oriented, method = c("range"))
+  normalized <- predict(process, oriented)
+  
+  
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ##
+  ##                5.  Aggregate to One Score per Country                                                    ----
+  ##
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  aggregate<- normalized%>%
+    group_by(isocntry)%>%
+    summarise_at(targetvars[-1], mean, na.rm= TRUE)
+  
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ##
+  ##                6.  Write Clean Dataset                                                                   ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   
-  print(dfv)
+  nuts<- c("AT", "BE", "BU", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", 
+           "FR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", 
+           "RO", "SE", "SI", "SK")
+  
+  aggregate$Country<- rep(NA, nrow(aggregate))
+  
+  clean<- aggregate%>%
+    mutate(Country = case_when(is.na(Country) ~ 
+                                 deframe(tibble(cntry, nuts))[isocntry], 
+                               TRUE ~ Country))%>%
+    select(Country, everything())%>%
+    select(-`isocntry`)
+  
+  write.csv(clean, "SPE_523_clean.csv")
   
   
 }

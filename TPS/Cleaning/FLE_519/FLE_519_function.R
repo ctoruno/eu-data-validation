@@ -71,7 +71,6 @@ FLE_519_clean<- function(df){
     
   }
   
-  # Next steps: go to codebook to evaluate orientation and value options
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
@@ -119,5 +118,5 @@ FLE_519_clean<- function(df){
   
 }
 
-FLE_519_clean(f519)
+#FLE_519_clean(f519)
 

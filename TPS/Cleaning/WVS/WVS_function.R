@@ -37,11 +37,8 @@ if (Sys.info()["user"]=="Dhabiby"){
 } 
 
 wvs<- read_dta(paste0(path2SP, "8. Data/TPS/WVS/WVS_raw.dta"))
+# try EVS/WVS data instead
 
-t<-wvs%>%
-  filter(S020 == 2022)
-
-unique(t$COUNTRY_ALPHA)
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -68,6 +65,9 @@ WVS_clean<- function(df){
   cntry<- c("AUT", "BGR", "CYP", "CZE", "DEU", "DNK", "EST", "GRC", "ESP", "FIN", "FRA", "HRV", "HUN", "ITA", "LTU", 
             "LVA", "NLD", "POL", "PRT", "ROU", "SWE", "SVN", "SVK")
   
+  
+  
+  
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
   ##                4.  Select Indicators of Interest                                                         ----
@@ -75,10 +75,16 @@ WVS_clean<- function(df){
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   
-  dfv<- df%>%
+  dfyr<- df%>%
     filter(COUNTRY_ALPHA %in% cntry)%>%
-    filter(S020 == 2019)
-    select(all_of(targetvars))
+    group_by(COUNTRY_ALPHA)%>%
+    summarise(year= max(S020))
+  
+  dfyr
+    
+    
+    # filter(S020 == 2019)
+    # select(all_of(targetvars))
   
  # unique(dfv$COUNTRY_ALPHA)
   
