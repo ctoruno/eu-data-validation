@@ -87,7 +87,8 @@ applyMe <- function(acronym, df) {
     
     print(paste("Applying function:",
                 func_name))
-    result <- do.call(func_name, args = list("df" = df))
+    result <- do.call(func_name, 
+                      args = list("df" = df))
     return(result)
     
   } else {
