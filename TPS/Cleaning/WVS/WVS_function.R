@@ -38,7 +38,10 @@ if (Sys.info()["user"]=="Dhabiby"){
 
 wvs<- read_dta(paste0(path2SP, "8. Data/TPS/WVS/WVS_raw.dta"))
 
+t<-wvs%>%
+  filter(S020 == 2022)
 
+unique(t$COUNTRY_ALPHA)
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -46,6 +49,8 @@ wvs<- read_dta(paste0(path2SP, "8. Data/TPS/WVS/WVS_raw.dta"))
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#use reg_nuts_1 ! -1 and -4, group by country find largest value of year
+#leave a year column in clean data
 
 
 WVS_clean<- function(df){
@@ -60,7 +65,8 @@ WVS_clean<- function(df){
   targetvars<- c("COUNTRY_ALPHA", "E069_64", "E265_01", "E265_02", "E265_03", "E265_04", 
                  "E265_05", "E265_06", "E265_07", "E265_08", "E265_09", "E236", "E276")
   
-  cntry<- c()
+  cntry<- c("AUT", "BGR", "CYP", "CZE", "DEU", "DNK", "EST", "GRC", "ESP", "FIN", "FRA", "HRV", "HUN", "ITA", "LTU", 
+            "LVA", "NLD", "POL", "PRT", "ROU", "SWE", "SVN", "SVK")
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
@@ -70,14 +76,18 @@ WVS_clean<- function(df){
   
   
   dfv<- df%>%
-    filter(S020 == 2022)%>%
+    filter(COUNTRY_ALPHA %in% cntry)%>%
+    filter(S020 == 2019)
     select(all_of(targetvars))
   
-  #how to handle no answer/dk?
-  dfv$E069_64<- ifelse(dfv$E069_64 == 1, 4, ifelse(dfv$E069_64 == 2, 3, ifelse(dfv$E069_64 == 3, 2, 
-                                                                               ifelse(dfv$E069_64 == 4, 1, dfv$E069_64))))
+ # unique(dfv$COUNTRY_ALPHA)
   
-  unique(dfv$E069_64)
+  
+  dfv%>%
+    group_by(COUNTRY_ALPHA)%>%
+    summarise(yr = S020)%>%
+    distinct
+  
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
@@ -86,6 +96,24 @@ WVS_clean<- function(df){
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   
+  oriented<- dfv
+  
+  #Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient.
+  for(i in c("E069_64", "E265_05", "E265_06", "E265_09")){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
+                              ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
+    
+  }
+  
+  
+  #put any variable that does not need to be reoriented here
+  
+  for(i in c("E265_01", "E265_02", "E265_03", "E265_04", "E265_07", "E265_08", "E236", "E276")){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3, 4), oriented[[i]], NA_real_)
+    
+  }
   
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -95,7 +123,9 @@ WVS_clean<- function(df){
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   
-  
+  process<- preProcess(oriented, method = c("range"))
+  normalized <- predict(process, oriented)
+    
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
