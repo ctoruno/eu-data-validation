@@ -155,5 +155,5 @@ SPE_489_clean<- function(df){
   
 }
 
-SPE_489_clean(s489)
+#SPE_489_clean(s489)
 

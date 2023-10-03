@@ -146,5 +146,5 @@ VDM_clean<- function(df){
 
 }
 
-VDM_clean(vdm)
+#VDM_clean(vdm)
 

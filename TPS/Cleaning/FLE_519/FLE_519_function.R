@@ -17,96 +17,104 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-##                1.  Call Libraries and Data                                                               ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-suppressMessages(library(tidyverse))
-suppressMessages(library(dplyr))
-library(caret)
-library(haven)
-
-#SharePoint path
-
-if (Sys.info()["user"]=="Dhabiby"){
-  
-  path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics/")
-} 
-
-f519<- read_dta(paste0(path2SP, "8. Data/TPS/Eurobarometer/FLE_519_raw.dta"))
-
-
-
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-##                2.  Define Function                                                                       ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
 FLE_519_clean<- function(df){
-  
-  df<- f519
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
-  ##                3.  Identify Indicators of Interest                                                       ----
+  ##                1.  Identify Indicators of Interest                                                       ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   targetvars<- c("isocntry", "q1", "q2a_1", "q2a_2", "q2a_3")
   
+  cntry<- c("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "GR", "ES", "FI", "FR", "HR", "HU", "IE", "IT", 
+            "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK")
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
-  ##                4.  Select Indicators of Interest                                                         ----
+  ##                2.  Select Indicators of Interest                                                         ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   
-  dfv<- df%>%
+  df2<- df%>%
+    filter(isocntry %in% cntry)%>%
     select(all_of(targetvars))
 
 
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
-  ##                5.  Reorient Indicator Coding                                                             ----
+  ##                3.  Reorient Indicator Coding                                                             ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
+  oriented<- df2
+  
+  ##Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient.##
+  
+  ro<- c("q1")
+  
+  for(i in ro){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
+                                                         ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
+    
+  }
+  
+  
+  no<- setdiff(targetvars[-1], ro)
+  
+  for(i in no){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3), oriented[[i]], NA_real_)
+    
+  }
   
   # Next steps: go to codebook to evaluate orientation and value options
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
-  ##                6.  Normalize Values from 0-1                                                             ----
+  ##                4.  Normalize Values from 0-1                                                             ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
 
+  process<- preProcess(oriented, method = c("range"))
+  normalized <- predict(process, oriented)
   
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
-  ##                7.  Aggregate to One Score per Country                                                    ----
+  ##                5.  Aggregate to One Score per Country                                                    ----
+  ##
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  aggregate<- normalized%>%
+    group_by(isocntry)%>%
+    summarise_at(targetvars[-1], mean, na.rm= TRUE)
+  
+  
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ##
+  ##                6.  Write Clean Dataset                                                                   ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   
+  nuts<- c("AT", "BE", "BU", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", 
+           "FR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", 
+           "RO", "SE", "SI", "SK")
   
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ##                8.  Write Clean Dataset                                                                   ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  aggregate$Country<- rep(NA, nrow(aggregate))
   
+  clean<- aggregate%>%
+    mutate(Country = case_when(is.na(Country) ~ 
+                                 deframe(tibble(cntry, nuts))[isocntry], 
+                               TRUE ~ Country))%>%
+    select(Country, everything())%>%
+    select(-`isocntry`)
   
-  print(dfv)
+  write.csv(clean, "FLE_519_clean.csv")
   
   
 }
