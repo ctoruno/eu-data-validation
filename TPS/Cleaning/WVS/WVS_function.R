@@ -8,7 +8,7 @@
 ##
 ## Creation date:     October 2nd, 2023
 ##
-## This version:      October 3rd, 2023
+## This version:      October 4th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -17,140 +17,104 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-##                1.  Call Libraries and Data                                                               ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-suppressMessages(library(tidyverse))
-suppressMessages(library(dplyr))
-library(caret)
-library(haven)
-
-#SharePoint path
-
-if (Sys.info()["user"]=="Dhabiby"){
-  
-  path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics/")
-} 
-
-wvs<- read_dta(paste0(path2SP, "8. Data/TPS/WVS/WVS_raw.dta"))
-# try EVS/WVS data instead
-
-
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-##                2.  Define Function                                                                       ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-#use reg_nuts_1 ! -1 and -4, group by country find largest value of year
-#leave a year column in clean data
-
-
 WVS_clean<- function(df){
   
-  df<- wvs
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
-  ##                3.  Identify Indicators of Interest                                                       ----
+  ##                1.  Data Wrangling                                                                      ----
   ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  targetvars<- c("COUNTRY_ALPHA", "E069_64", "E265_01", "E265_02", "E265_03", "E265_04", 
-                 "E265_05", "E265_06", "E265_07", "E265_08", "E265_09", "E236", "E276")
+  ## 1.1 Identifying indicators  ===============================================================================
   
-  cntry<- c("AUT", "BGR", "CYP", "CZE", "DEU", "DNK", "EST", "GRC", "ESP", "FIN", "FRA", "HRV", "HUN", "ITA", "LTU", 
-            "LVA", "NLD", "POL", "PRT", "ROU", "SWE", "SVN", "SVK")
+  targetvars<- c("cntry_AN", "year", "E265_01", "E265_02", "E265_03", "E265_04", 
+                 "E265_05", "E265_06", "E265_07", "E265_08", "E236")
   
-  
-  
-  
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ##                4.  Select Indicators of Interest                                                         ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  cy<- c("AT", "BG", "CY", "CZ", "DE", "DK", "EE", "GR", "ES", "FI", "FR", "HR", "HU", "IT", 
+            "LT", "LV", "NL", "PL", "PT", "RO", "SE", "SI", "SK")
   
   
-  dfyr<- df%>%
-    filter(COUNTRY_ALPHA %in% cntry)%>%
-    group_by(COUNTRY_ALPHA)%>%
-    summarise(year= max(S020))
+  ## 1.2 Sub-setting data=======================================================================================
   
-  dfyr
+  df2<- df%>%
+    select(all_of(targetvars))
+  
+  dfy<- df%>%
+    filter(cntry_AN %in% cy)%>%
+    group_by(cntry_AN)%>%
+    summarise(yr= max(year))
+  
+  df3<- data.frame(matrix(ncol= length(targetvars), nrow = 0))
+  colnames(df3)<- targetvars
+  
+  for (i in 1:length(cy)){
     
+    latest<- df2%>%
+      filter(cntry_AN == dfy$cntry_AN[i] & year == dfy$yr[i])
     
-    # filter(S020 == 2019)
-    # select(all_of(targetvars))
-  
- # unique(dfv$COUNTRY_ALPHA)
-  
-  
-  dfv%>%
-    group_by(COUNTRY_ALPHA)%>%
-    summarise(yr = S020)%>%
-    distinct
-  
-  
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ##                5.  Reorient Indicator Coding                                                             ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
-  
-  oriented<- dfv
-  
-  #Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient.
-  for(i in c("E069_64", "E265_05", "E265_06", "E265_09")){
-    
-    oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
-                              ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
-    
+    df3<- rbind(df3, latest)
   }
   
   
-  #put any variable that does not need to be reoriented here
+  ## 1.3 Re-orient indicators ==================================================================================
   
-  for(i in c("E265_01", "E265_02", "E265_03", "E265_04", "E265_07", "E265_08", "E236", "E276")){
+  oriented<- df3
+  
+  # Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient (ro)
+  
+  ro<- c("E265_01", "E265_05", "E265_06")
+  
+  for(i in ro){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
+                              ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
+  }
+  
+  
+  no<- setdiff(targetvars[-c(1,2)], ro)
+  
+  for(i in no){
     
     oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3, 4), oriented[[i]], NA_real_)
     
   }
   
   
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ##                6.  Normalize Values from 0-1                                                             ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
+  ## 1.4 Normalize indicators ==================================================================================
   
   process<- preProcess(oriented, method = c("range"))
   normalized <- predict(process, oriented)
     
   
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ##                7.  Aggregate to One Score per Country                                                    ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ## 1.5 Aggregate indicators at the country level =============================================================
   
-  print(dfv)
+  aggregate<- normalized%>%
+    group_by(cntry_AN, year)%>%
+    summarise_at(targetvars[-c(1,2)], mean, na.rm= TRUE)
   
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
-  ##                8.  Write Clean Dataset                                                                   ----
+  ##                2.  Preparing Data                                                                        ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   
+  nuts<- c("AT", "BU", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", 
+           "FR", "HR", "HU", "IT", "LT", "LV", "NL", "PL", "PT", 
+           "RO", "SE", "SI", "SK")
+  
+  aggregate$Country<- rep(NA, nrow(aggregate))
+  
+  clean1<- aggregate%>%
+    mutate(Country = case_when(is.na(Country) ~ 
+                                 deframe(tibble(cy, nuts))[cntry_AN], 
+                               TRUE ~ Country))%>%
+    select(Country, everything())
+  
+  clean<- clean1[-2]
+  
+  return(clean)
   
 }
-
-#WVS_clean(ess)
 
