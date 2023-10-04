@@ -8,7 +8,7 @@
 ##
 ## Creation date:     October 3rd, 2023
 ##
-## This version:      October 3rd, 2023
+## This version:      October 4th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -23,43 +23,34 @@
 SPE_489_clean<- function(df){
   
   
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
-  ##                1.  Identify Indicators of Interest                                                       ----
+  ##                1.  Data Wrangling                                                                      ----
   ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  targetvars<- c("isocntry", "qa9_1", "qa9_2", "qa9_3", "qa1_1", "qa1_2", "qa1_3", "qa1_5", "qa2_1", "qa2_2", "qa2_3", 
+  ## 1.1 Identifying indicators    =============================================================================
+
+    targetvars<- c("isocntry", "qa9_1", "qa9_2", "qa9_3", "qa1_1", "qa1_2", "qa1_3", "qa1_5", "qa2_1", "qa2_2", "qa2_3", 
                  "qa2_5", "qa3_2", "qa4_2", "qa5_3", "qa5_4", "qa5_5", "qa5_6", "qa6_3", "qa6_4", "qa6_5", "qa6_6", 
                  "qa7_1", "qa7_2", "qa7_3", "qa3_5", "qa4_5")
   
   cntry<- c("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "GR", "ES", "FI", "FR", "HR", "HU", "IE", "IT", 
             "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK")
   
-  
-  
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ##                2.  Select Indicators of Interest                                                         ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ## 1.2 Sub-setting data  =====================================================================================
   
   df$isocntry<- recode(df$isocntry, "DE-W"="DE", "DE-E"="DE")
   
-  dfv<- df%>%
+  df2<- df%>%
     filter(isocntry %in% cntry)%>%
     select(all_of(targetvars))
   
+  ## 1.3 Re-orient indicators ==================================================================================
+  
+  oriented<- df2
 
-
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ##                3.  Reorient Indicator Coding                                                             ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  oriented<- dfv
-
-  #Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient.
+  # Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient (ro)
   
   ro<- c("qa9_1", "qa9_2", "qa9_3", "qa1_1", "qa1_2", "qa1_3", "qa1_5", "qa3_2","qa5_3", "qa5_4", "qa5_5", "qa5_6",
          "qa7_1", "qa7_2", "qa7_3", "qa3_5")
@@ -67,10 +58,8 @@ SPE_489_clean<- function(df){
   for(i in ro){
   
     oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
-                                                        ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
-  
+                                      ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
   }
-
 
   no<- setdiff(targetvars[-1], ro)
 
@@ -79,34 +68,24 @@ SPE_489_clean<- function(df){
     oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3), oriented[[i]], NA_real_)
   
   }
-
   
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ##                4.  Normalize Values from 0-1                                                             ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ## 1.4 Normalize indicators ==================================================================================
   
   process<- preProcess(oriented, method = c("range"))
   normalized <- predict(process, oriented)
   
-  
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ##                5.  Aggregate to One Score per Country                                                    ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ## 1.5 Aggregate indicators at the country level =============================================================
   
   aggregate<- normalized%>%
     group_by(isocntry)%>%
     summarise_at(targetvars[-1], mean, na.rm= TRUE)
   
   
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
-  ##                6.  Write Clean Dataset                                                                   ----
+  ##                2.  Preparing Data                                                                      ----
   ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   nuts<- c("AT", "BE", "BU", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", 
            "FR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", 
@@ -118,13 +97,11 @@ SPE_489_clean<- function(df){
     mutate(Country = case_when(is.na(Country) ~ 
                                  deframe(tibble(cntry, nuts))[isocntry], 
                                TRUE ~ Country))%>%
-    select(Country, everything())%>%
-    select(-`isocntry`)
+  select(Country, everything())%>%
+  select(-`isocntry`)
   
-  write.csv(clean, "SPE_489_clean.csv")
+  return(clean)
   
   
 }
-
-#SPE_489_clean(s489)
 
