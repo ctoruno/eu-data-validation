@@ -11,7 +11,7 @@
 ##
 ## Creation date:     October 3rd, 2023
 ##
-## This version:      October 3rd, 2023
+## This version:      October 4th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -69,6 +69,20 @@ readMe <- function(acronym){
   if (acronym == "VDM") {
     rdata <- readRDS(file.path(path2SP, 
                                "8. Data/TPS/V-Dem/VDM_raw.rds",
+                               fsep = "/")) 
+  }
+  
+  # Flash Eurobarometer 507
+  if (acronym == "FLE_507") {
+    rdata <- import_list(file.path(path2SP, 
+                                "8. Data/TPS/Eurobarometer/FLE_507_raw.xlsx",
+                                fsep = "/")) 
+  }
+  
+  # Flash Eurobarometer 519
+  if (acronym == "FLE_519") {
+    rdata <- read_dta(file.path(path2SP, 
+                               "8. Data/TPS/Eurobarometer/FLE_519_raw.dta",
                                fsep = "/")) 
   }
   

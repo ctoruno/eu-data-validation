@@ -16,21 +16,6 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-suppressMessages(library(tidyverse))
-suppressMessages(library(dplyr))
-library(caret)
-library(rio)
-
-#SharePoint path
-
-if (Sys.info()["user"]=="Dhabiby"){
-  
-  path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics/")
-} 
-
-f507<- import_list(paste0(path2SP, "8. Data/TPS/Eurobarometer/FLE_507_raw.xlsx"))
-
-
 FLE_507_clean<- function(df){
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -116,6 +101,4 @@ FLE_507_clean<- function(df){
   
 }
 
-
-FLE_507_clean(f507)
 
