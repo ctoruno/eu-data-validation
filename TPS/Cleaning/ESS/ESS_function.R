@@ -21,6 +21,7 @@
 suppressMessages(library(tidyverse))
 suppressMessages(library(dplyr))
 library(caret)
+library(haven)
 
 #SharePoint path
 
@@ -30,18 +31,9 @@ if (Sys.info()["user"]=="Dhabiby"){
 } 
 
 ess<- read_dta(paste0(path2SP, "8. Data/TPS/ESS/ESS_raw.dta"))
-ess<- read_dta(paste0(path2SP, "8. Data/TPS/ESS/ESS-Data-Wizard-subset-2023-08-09.dta"))
 
-unique(ess$cntry)
+
 ESS_clean<- function(df){
-  
-  unique(ess$name)
-  
-  df<- ess%>%
-    filter(name %in% c("ESS10e03_1", "ESS10SCe03"))
-  
-  df%>%
-    count(cntry)
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
@@ -62,7 +54,6 @@ ESS_clean<- function(df){
   
   ## 1.2 Sub-setting data=======================================================================================
   
-  
   df2<- df%>%
     filter(cntry %in% cy)%>%
     select(all_of(targetvars))
@@ -71,14 +62,14 @@ ESS_clean<- function(df){
   
   oriented<- df2
   
-  # Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient (ro)
+  # Check the codebook to see which variables need to be reoriented. Add them in the appropriate vector to reorient 
   
-  ro<- c()
+  #Yes/No questions
+  ro<- c("contplt", "donprty", "pbldmna", "pstplonl", "volunfp")
   
   for(i in ro){
     
-    oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
-                                                         ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 1, ifelse(oriented[[i]] == 2, 0, NA_real_))
   }
   
   
@@ -86,20 +77,24 @@ ESS_clean<- function(df){
   
   for(i in no){
     
-    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3, 4), oriented[[i]], NA_real_)
+    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1:10), oriented[[i]], NA_real_)
     
   }
   
   
   ## 1.4 Normalize indicators ==================================================================================
   
+  oriented[nrow(oriented) + 1,] <- c("mins", rep(list(0), ncol(oriented)-1))
+  
   process<- preProcess(oriented, method = c("range"))
   normalized <- predict(process, oriented)
+  
+  normalized2 <- slice(normalized, 1:(n() - 1))
   
   
   ## 1.5 Aggregate indicators at the country level =============================================================
   
-  aggregate<- normalized%>%
+  aggregate<- normalized2%>%
     group_by(cntry)%>%
     summarise_at(targetvars[-1], mean, na.rm= TRUE)
   
@@ -109,24 +104,22 @@ ESS_clean<- function(df){
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  nuts<- c("AT", "BU", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", 
+  nuts<- c("AT", "BE", "BU", "CY", "CZ", "DE", "EE", "EL", "ES", "FI", 
            "FR", "HR", "HU", "IT", "LT", "LV", "NL", "PL", "PT", 
            "RO", "SE", "SI", "SK")
   
   aggregate$Country<- rep(NA, nrow(aggregate))
   
-  clean1<- aggregate%>%
+  clean<- aggregate%>%
     mutate(Country = case_when(is.na(Country) ~ 
                                  deframe(tibble(cy, nuts))[cntry], 
                                TRUE ~ Country))%>%
     select(Country, everything())%>%
     select(-cntry)
   
-  clean<- clean1[-2]
   
   return(clean)
   
 }
 
-#ESS_clean(ess)
 
