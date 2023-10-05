@@ -72,7 +72,6 @@ readMe <- function(acronym){
                                fsep = "/")) 
   }
 
-  
   # Flash Eurobarometer 519
   if (acronym == "FLE_519") {
     rdata <- read_dta(file.path(path2SP, 
