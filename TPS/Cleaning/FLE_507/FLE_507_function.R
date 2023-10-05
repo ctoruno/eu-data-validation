@@ -1,6 +1,6 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## Script:            EU Data Validation- FLE_503 Function
+## Script:            EU Data Validation- FLE_507 Function
 ##
 ## Author:            Dalia Habiby   (dhabiby@worldjusticeproject.org)
 ##
@@ -8,7 +8,7 @@
 ##
 ## Creation date:     October 3rd, 2023
 ##
-## This version:      October 4th, 2023
+## This version:      October 5th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -17,7 +17,7 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 FLE_507_clean<- function(df){
-  df<-rdata
+  
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
   ##                1.  Data Wrangling                                                                      ----
@@ -88,7 +88,6 @@ FLE_507_clean<- function(df){
       summarise_at(n, mean, na.rm= TRUE)
     
     aggregate<- left_join(aggregate, agg, by = join_by(ctrycode))
-    
     
   }
   
