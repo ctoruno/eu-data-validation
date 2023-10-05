@@ -1,6 +1,6 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## Script:            EU Data Validation- FLE_503 Function
+## Script:            EU Data Validation- FLE_524 Function
 ##
 ## Author:            Dalia Habiby   (dhabiby@worldjusticeproject.org)
 ##
@@ -8,7 +8,7 @@
 ##
 ## Creation date:     October 3rd, 2023
 ##
-## This version:      October 3rd, 2023
+## This version:      October 5th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -18,7 +18,7 @@
 
 
 FLE_524_clean<- function(df){
-  
+
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
   ##                1.  Data Wrangling                                                                      ----
@@ -27,8 +27,10 @@ FLE_524_clean<- function(df){
   
   ## 1.1 Identifying indicators    =============================================================================
   
+  p1<- c("Q7_6", "Q7_7", "Q7_8", "Q8_1", "Q8_2", "Q8_3")
+  p2<- c("Q1_1", "Q3", "Q4_1", "Q4_2", "Q4_3", "Q4_4", "Q4_5", "Q4_6", "Q5_1", "Q5_2", "Q7_2", "Q7_4", "Q7_5")
   
-  targetvars<- c("Q7_6", "Q7_7", "Q7_8", "Q8_1", "Q8_2", "Q8_3")
+  targetvars<- c(p1,p2)
   
   cntry<- c("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", "FR", "HR", "HU", "IE", "IT", 
             "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK")
@@ -49,8 +51,16 @@ FLE_524_clean<- function(df){
     
     ## 1.3 Re-orient indicators ==================================================================================
     
-    vals<-dfq[[1]]
-    new_vals<- c(1,2/3,1/3,0, NA_real_)
+    if (n %in% p1){
+      
+      vals<-dfq[[1]]
+      new_vals<- c(1,2/3,1/3,0, NA_real_)
+    }
+    
+    if (n %in% p2){
+      vals<-dfq[[1]]
+      new_vals<- c(0,1/3,2/3,1, NA_real_)
+    }
     
     ## 1.4 Normalize indicators ==================================================================================
     
@@ -101,5 +111,4 @@ FLE_524_clean<- function(df){
   return(clean)
   
 }
-
 
