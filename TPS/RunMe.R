@@ -101,6 +101,13 @@ readMe <- function(acronym){
                                fsep = "/")) 
   }
   
+  # Global Corruption Barometer
+  if (acronym == "GCB") {
+    rdata <- read_dta(file.path(path2SP, 
+                                "8. Data/TPS/Global Corruption Barometer/GCB_raw.dta",
+                                fsep = "/")) 
+  }
+  
   # Special Eurobarometer 489
   if (acronym == "SPE_489") {
     rdata <- read_dta(file.path(path2SP, 
