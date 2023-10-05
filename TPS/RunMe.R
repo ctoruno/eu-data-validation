@@ -58,31 +58,81 @@ clean_data <- list()
 ## 1.1 Loading Data ============================================================================================
 readMe <- function(acronym){
   
-  # Freedom in the World
-  if (acronym == "FIW") {
-    rdata <- read_xlsx(file.path(path2SP, 
-                                 "8. Data/TPS/Freedom House/FIW_raw.xlsx",
-                                 fsep = "/")) 
-  }
-  
-  # V-Dem
-  if (acronym == "VDM") {
-    rdata <- readRDS(file.path(path2SP, 
-                               "8. Data/TPS/V-Dem/VDM_raw.rds",
+  # European Social Survey
+  if (acronym == "ESS") {
+    rdata <- read_dta(file.path(path2SP, 
+                               "8. Data/TPS/ESS/ESS_raw.dta",
                                fsep = "/")) 
   }
   
   # Flash Eurobarometer 507
   if (acronym == "FLE_507") {
     rdata <- import_list(file.path(path2SP, 
-                                "8. Data/TPS/Eurobarometer/FLE_507_raw.xlsx",
-                                fsep = "/")) 
+                               "8. Data/TPS/Eurobarometer/FLE_507_raw.xlsx",
+                               fsep = "/")) 
   }
+
   
   # Flash Eurobarometer 519
   if (acronym == "FLE_519") {
     rdata <- read_dta(file.path(path2SP, 
                                "8. Data/TPS/Eurobarometer/FLE_519_raw.dta",
+                               fsep = "/")) 
+  }
+  
+  # Flash Eurobarometer 520
+  if (acronym == "FLE_520") {
+    rdata <- read_dta(file.path(path2SP, 
+                               "8. Data/TPS/Eurobarometer/FLE_520_raw.dta",
+                               fsep = "/")) 
+  }
+  
+  # Flash Eurobarometer 524
+  if (acronym == "FLE_524") {
+    rdata <- import_list(file.path(path2SP, 
+                               "8. Data/TPS/Eurobarometer/FLE_524_raw.xlsx",
+                               fsep = "/")) 
+  }
+  
+  # Freedom in the World
+  if (acronym == "FIW") {
+    rdata <- read_xlsx(file.path(path2SP, 
+                               "8. Data/TPS/Freedom House/FIW_raw.xlsx",
+                               fsep = "/")) 
+  }
+  
+  # Special Eurobarometer 489
+  if (acronym == "SPE_489") {
+    rdata <- read_dta(file.path(path2SP, 
+                               "8. Data/TPS/Eurobarometer/SPE_489_raw.dta",
+                               fsep = "/")) 
+  }
+  
+  # Special Eurobarometer 507
+  if (acronym == "SPE_507") {
+    rdata <- read_dta(file.path(path2SP, 
+                               "8. Data/TPS/Eurobarometer/SPE_507_raw.dta",
+                               fsep = "/")) 
+  }
+  
+  # Special Eurobarometer 523
+  if (acronym == "SPE_523") {
+    rdata <- read_dta(file.path(path2SP, 
+                               "8. Data/TPS/Eurobarometer/SPE_523_raw.dta",
+                               fsep = "/")) 
+  }
+  
+  # World Values Survey (+European Values Survey)
+  if (acronym == "WVS") {
+    rdata <- read_dta(file.path(path2SP, 
+                               "8. Data/TPS/Freedom House/WVS_raw.dta",
+                               fsep = "/")) 
+  }
+  
+  # V-Dem
+  if (acronym == "VDM") {
+    rdata <- readRDS(file.path(path2SP, 
+                               "8. Data/TPS/V-Dem/VDM_raw.rds",
                                fsep = "/")) 
   }
   

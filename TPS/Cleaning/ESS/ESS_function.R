@@ -8,30 +8,13 @@
 ##
 ## Creation date:     September 28th, 2023
 ##
-## This version:      October 4th, 2023
+## This version:      October 5th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## Outline:                                                                                                 ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
-suppressMessages(library(tidyverse))
-suppressMessages(library(dplyr))
-library(caret)
-library(haven)
-
-#SharePoint path
-
-if (Sys.info()["user"]=="Dhabiby"){
-  
-  path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics/")
-} 
-
-ess<- read_dta(paste0(path2SP, "8. Data/TPS/ESS/ESS_raw.dta"))
-
 
 ESS_clean<- function(df){
   
