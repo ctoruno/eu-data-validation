@@ -16,7 +16,7 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# Source: Eurobarometer 94.1 ZA 7749 Oct-Nov 2020
+# Source: Eurobarometer 92.4   December 2019 ZA No. 7602
 
 suppressMessages(library(tidyverse))
 suppressMessages(library(dplyr))

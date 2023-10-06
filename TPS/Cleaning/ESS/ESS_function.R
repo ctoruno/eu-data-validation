@@ -26,10 +26,10 @@ ESS_clean<- function(df){
   
   ## 1.1 Identifying indicators  ===============================================================================
   
-  targetvars<- c("cntry", "contplt", "donprty", "pbldmna", "pstplonl", "volunfp", "medcrgv", "medcrgvc", 
-                 "fairelc", "dfprtal", "votedir", "gptpelc", "fairelcc", "dfprtalc", "votedirc", "gptpelcc")
+  targetvars<- c("cntry", "contplt", "donprty", "pbldmna", "pstplonl", "volunfp", "medcrgvc", 
+                  "fairelcc", "dfprtalc", "votedirc", "gptpelcc")
   
-  #, "dweight", "pspwght", "pweight", "anweight", "prob"
+  #"medcrgv", "fairelc", "dfprtal", "votedir", "gptpelc", "dweight", "pspwght", "pweight", "anweight", "prob"
   
   
   cy<-  c("AT", "BE", "BG", "CY", "CZ", "DE", "EE", "GR", "ES", "FI", "FR", "HR", "HU", "IE", "IT", 

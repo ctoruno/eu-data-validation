@@ -29,7 +29,6 @@ FLE_520_clean<- function(df){
   ## 1.1 Identifying indicators    =============================================================================
   
   targetvars<- c("isocntry", "q1", "q2a_1", "q2a_2", "q2a_3", "q2b_1", "q2b_2", "q2b_3", "q3")
-                 #, "q4_1", "q4_2", "q4_3", "q4_4", "q4_5", "q4_6"
   
   cntry<- c("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "GR", "ES", "FI", "FR", "HR", "HU", "IE", "IT", 
             "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK")
