@@ -27,7 +27,11 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # Please fill the sources to be updated
-data2update <- c("FIW", "VDM")
+data2update <- c("FIW", "VDM", "ESS", "WVS",  
+                 "FLE_507", "FLE_519", "FLE_520", "FLE_524",
+                 "GCB","GTI", "PII", 
+                 "SPE_489", "SPE_502", "SPE_507", "SPE_523", "SPE_534"
+                 )
 
 # Loading settings
 source("Code/settings.R")
@@ -154,6 +158,7 @@ readMe <- function(acronym){
     rdata <- import_list(file.path(path2SP, 
                                    "8. Data/TPS/Eurobarometer/SPE_534_raw.xlsx",
                                    fsep = "/")) 
+  }
   
   # World Values Survey (+European Values Survey)
   if (acronym == "WVS") {
@@ -229,13 +234,16 @@ lapply(data2update,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# general_info <- read_csv("../../GPP/0. Metadata/EU_general_information.csv") %>%
-#   left_join(
-#     purrr::reduce(
-#       clean_data,
-#       left_join,
-#       by = "Country"
-#     ),
-#     by = c("country_code_nuts" = "country")
-#   )
-  
+general_info <- read_csv("../../GPP/0. Metadata/EU_general_information.csv")
+
+tps_data <- general_info %>%
+  left_join(
+    purrr::reduce(
+      clean_data,
+      left_join,
+      by = "Country"
+    ),
+    by = c("country_code_nuts" = "Country")
+  )
+
+write_csv(tps_data, "TPS_data.csv")

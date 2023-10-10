@@ -31,7 +31,7 @@ library(pacman)
 p_load(char = c(
   
   # Data Loading
-  "haven", "readxl", "writexl", "xlsx", "rio",
+  "haven", "readxl", "writexl", "rio",
   
   # Utilities
   "caret",
