@@ -16,7 +16,7 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
+#COME BACK TO THIS, 2023 VERSION OF SPE_502
 
 SPE_534_clean<- function(df){
   
@@ -28,76 +28,67 @@ SPE_534_clean<- function(df){
   
   ## 1.1 Identifying indicators    =============================================================================
   
-  targetvars<- c("isocntry", "qb15_5", "qb15_6", "qb15_7", "qb15_13",
-                 "qb5", "qb6", "qb7_2", "qb7_4", "qb7_8", "qb7_9", "qb7_12", "qb10", "qb15_1", "qb15_2", "qb15_3", 
-                      "qb15_4", "qb15_8", "qb15_9", "qb15_11", "qb15_12")
+  targetvars<- c("isocntry", "QA15_5", "QA15_6", "QA15_7", "QA15_13",
+                 "QA5", "QA6", "QA7_2", "QA7_4", "QA7_8", "QA7_9", "QA7_12", "QA10", "QA15_1", "QA15_2", "QA15_3", 
+                 "QA15_4", "QA15_8", "QA15_9", "QA15_11", "QA15_12")
   
-  cntry<- c("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "GR", "ES", "FI", "FR", "HR", "HU", "IE", "IT", 
+  cntry<- c("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", "FR", "HR", "HU", "IE", "IT", 
             "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK")
   
   ## 1.2 Sub-setting data  =====================================================================================
   
-  df$isocntry<- recode(df$isocntry, "DE-W"="DE", "DE-E"="DE")
+  aggregate<- data.frame(ctrycode = cntry)
   
-  df2<- df%>%
-    filter(isocntry %in% cntry)%>%
-    select(all_of(targetvars))
-  
-  ## 1.3 Re-orient indicators ==================================================================================
-  
-  oriented<- df2
-  
-  # Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient (ro)
-  
-  ro1<- c("qb15_5", "qb15_7", "qb15_13")
-  
-  for(i in ro){
+  for (n in targetvars){
+    n<- "QA15_5"
+    f<- df[[n]]
     
-    oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
-                          ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
+    dfq<- f[c(8,11,13,15,17,19),]
+    dfq[1,1]<- "q"
+    
+    colnames(dfq) <- dfq[1,]
+    dfq <- dfq[-1, ] 
+    
+    ## 1.3 Re-orient indicators ================================================================================
+    
+    if (n %in% p1){
+      
+      vals<-dfq[[1]]
+      new_vals<- c(1,2/3,1/3,0, NA_real_)
+    }
+    
+    if (n %in% p2){
+      vals<-dfq[[1]]
+      new_vals<- c(0,1/3,2/3,1, NA_real_)
+    }
+    
+    
+    ## 1.4 Normalize indicators ================================================================================
+    
+    dfq[[n]] <- as.numeric(rep(NA, nrow(dfq)))
+    
+    df2<- dfq%>%
+      mutate(!!paste0(n) := case_when(is.na(dfq[[n]]) ~ 
+                                        deframe(tibble(vals, new_vals))[q], 
+                                      TRUE ~dfq[[n]]))%>%
+      select(-c(EU27, q))%>%
+      pivot_longer(cols = BE:SE, names_to = "ctrycode", values_to = "count")
+    
+    df2$count<- as.numeric(df2$count)
+    
+    df3<- df2%>%
+      uncount(count)%>%
+      select(ctrycode, paste0(n))
+    
+    ## 1.5 Aggregate indicators at the country level ===========================================================
+    
+    agg<- df3%>%
+      group_by(ctrycode)%>%
+      summarise_at(n, mean, na.rm= TRUE)
+    
+    aggregate<- left_join(aggregate, agg, by = join_by(ctrycode))
+    
   }
-  
-  ro2<- c("qb7_2", "qb7_4", "qb7_8", "qb7_9", "qb7_12")
-  
-  for(i in ro2){
-    
-    oriented[[i]]<- ifelse(oriented[[i]] == 1, 0, ifelse(oriented[[i]] == 0, 1, NA_real_))
-  }
-  
-  ro3<- c("qb6")
-  
-  for(i in ro3){
-    
-    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3, 4, 5), oriented[[i]], NA_real_)
-  }
-  
-  ro4<- c("qb10")
-  
-  for(i in ro4){
-    
-    oriented[[i]]<- ifelse(oriented[[i]] == 1, 1, ifelse(oriented[[i]] == 2, 0, NA_real_))
-  }
-  
-
-  no<- setdiff(targetvars[-1], c(ro, ro2,ro3,ro4))
-  
-  for(i in no){
-    
-    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3, 4), oriented[[i]], NA_real_)
-    
-  }
-  
-  ## 1.4 Normalize indicators ==================================================================================
-  
-  process<- preProcess(oriented, method = c("range"))
-  normalized <- predict(process, oriented)
-  
-  ## 1.5 Aggregate indicators at the country level =============================================================
-  
-  aggregate<- normalized%>%
-    group_by(isocntry)%>%
-    summarise_at(targetvars[-1], mean, na.rm= TRUE)
-  
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##

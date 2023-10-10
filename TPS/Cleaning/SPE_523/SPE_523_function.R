@@ -30,7 +30,12 @@ SPE_523_clean<- function(df){
 
   ## 1.1 Identifying indicators    =============================================================================
   
-  targetvars<- c("isocntry", "qa15_5", "qa15_6", "qa15_7", "qa15_13")
+  p1<- c("isocntry", "qa15_5", "qa15_6", "qa15_7", "qa15_13")
+  p2<- c("qa15_5", "qa15_6", "qa15_7", "qa15_13",
+         "qa5", "qa6", "qa7_2", "qa7_4", "qa7_8", "qa7_9", "qa7_12", "qa10", "qa15_1", "qa15_2", "qa15_3", 
+         "qa15_4", "qa15_8", "qa15_9", "qa15_11", "qa15_12")
+  
+  targetvars<- c(p1,p2)
   
   cntry<- c("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "GR", "ES", "FI", "FR", "HR", "HU", "IE", "IT", 
             "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK")
@@ -59,7 +64,28 @@ SPE_523_clean<- function(df){
                                        ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
   }
   
-  no<- setdiff(targetvars[-1], ro)
+  ro2<- c("qa7_2", "qa7_4", "qa7_8", "qa7_9", "qa7_12")
+  
+  for(i in ro2){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 0, ifelse(oriented[[i]] == 0, 1, NA_real_))
+  }
+  
+  ro3<- c("qa6")
+  
+  for(i in ro3){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3, 4, 5), oriented[[i]], NA_real_)
+  }
+  
+  ro4<- c("qa10")
+  
+  for(i in ro4){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 1, ifelse(oriented[[i]] == 2, 0, NA_real_))
+  }
+  
+  no<- setdiff(targetvars[-1], c(ro, ro2, ro3, ro4))
   
   for(i in no){
     
