@@ -8,7 +8,7 @@
 ##
 ## Creation date:     October 5th, 2023
 ##
-## This version:      October 5th, 2023
+## This version:      October 10th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -42,7 +42,7 @@ SPE_502_clean<- function(df){
   
   ## 1.1 Identifying indicators    =============================================================================
   
-  targetvars<- c()
+  targetvars<- c("isocntry", "qb15_5", "qb15_6", "qb15_7", "qb15_13")
   
   cntry<- c("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "GR", "ES", "FI", "FR", "HR", "HU", "IE", "IT", 
             "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK")
@@ -61,11 +61,12 @@ SPE_502_clean<- function(df){
   
   # Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient (ro)
   
-  ro<- c()
+  ro<- c("qb15_5", "qb15_7", "qb15_13")
   
   for(i in ro){
     
-    oriented[[i]]<- ifelse(oriented[[i]] == 1, oriented[[i]], ifelse(oriented[[i]] == 2, 0, NA_real_))
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
+                          ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
   }
   
   no<- setdiff(targetvars[-1], ro)
