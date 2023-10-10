@@ -28,7 +28,9 @@ SPE_502_clean<- function(df){
   
   ## 1.1 Identifying indicators    =============================================================================
   
-  targetvars<- c("isocntry", "qb15_5", "qb15_6", "qb15_7", "qb15_13")
+  targetvars<- c("isocntry", "qb15_5", "qb15_6", "qb15_7", "qb15_13",
+                 "qb5", "qb6", "qb7_2", "qb7_4", "qb7_8", "qb7_9", "qb7_12", "qb10", "qb15_1", "qb15_2", "qb15_3", 
+                      "qb15_4", "qb15_8", "qb15_9", "qb15_11", "qb15_12")
   
   cntry<- c("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "GR", "ES", "FI", "FR", "HR", "HU", "IE", "IT", 
             "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK")
@@ -47,7 +49,7 @@ SPE_502_clean<- function(df){
   
   # Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient (ro)
   
-  ro<- c("qb15_5", "qb15_7", "qb15_13")
+  ro1<- c("qb15_5", "qb15_7", "qb15_13")
   
   for(i in ro){
     
@@ -55,7 +57,29 @@ SPE_502_clean<- function(df){
                           ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
   }
   
-  no<- setdiff(targetvars[-1], ro)
+  ro2<- c("qb7_2", "qb7_4", "qb7_8", "qb7_9", "qb7_12")
+  
+  for(i in ro2){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 0, ifelse(oriented[[i]] == 0, 1, NA_real_))
+  }
+  
+  ro3<- c("qb6")
+  
+  for(i in ro3){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3, 4, 5), oriented[[i]], NA_real_)
+  }
+  
+  ro4<- c("qb10")
+  
+  for(i in ro4){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 1, ifelse(oriented[[i]] == 2, 0, NA_real_))
+  }
+  
+
+  no<- setdiff(targetvars[-1], c(ro, ro2,ro3,ro4))
   
   for(i in no){
     
