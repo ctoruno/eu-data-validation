@@ -8,7 +8,7 @@
 ##
 ## Creation date:     October 2nd, 2023
 ##
-## This version:      October 4th, 2023
+## This version:      October 10th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -27,8 +27,13 @@ WVS_clean<- function(df){
   
   ## 1.1 Identifying indicators  ===============================================================================
   
-  targetvars<- c("cntry_AN", "year", "E265_01", "E265_02", "E265_03", "E265_04", 
-                 "E265_05", "E265_06", "E265_07", "E265_08", "E236")
+  p1<- c("cntry_AN", "year", "E265_01", "E265_02", "E265_03", "E265_04", 
+         "E265_05", "E265_06", "E265_07", "E265_08", "E236")
+  p3<- c("E069_04", "E069_06", "E069_17", "E069_11", "E069_12", "E069_07", "E069_08", "E069_18",
+         "A068", "A080_01", "E025", "E026", "E027", "E028")
+  #"E069_10", "E069_64", "E286", "E287", "E288", "E289", "E291"
+  
+  targetvars<- c(p1, p3)
   
   cy<- c("AT", "BG", "CY", "CZ", "DE", "DK", "EE", "GR", "ES", "FI", "FR", "HR", "HU", "IT", 
             "LT", "LV", "NL", "PL", "PT", "RO", "SE", "SI", "SK")
@@ -62,7 +67,7 @@ WVS_clean<- function(df){
   
   # Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient (ro)
   
-  ro<- c("E265_01", "E265_05", "E265_06")
+  ro<- c("E265_01", "E265_05", "E265_06", "E069_04", "E069_06", "E069_17", "E069_11", "E069_12", "E069_07", "E069_08", "E069_18")
   
   for(i in ro){
     
@@ -71,11 +76,19 @@ WVS_clean<- function(df){
   }
   
   
-  no<- setdiff(targetvars[-c(1,2)], ro)
+  ro2<- c("E025", "E026", "E027", "E028")
+  
+  for(i in ro2){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 3, ifelse(oriented[[i]] == 2, 2, 
+                                                         ifelse(oriented[[i]] == 3, 1, NA_real_)))
+  }
+  
+  no<- setdiff(targetvars[-c(1,2)], c(ro, ro2))
   
   for(i in no){
     
-    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3, 4), oriented[[i]], NA_real_)
+    oriented[[i]]<- ifelse(oriented[[i]] <0, NA_real_, oriented[[i]])
     
   }
   

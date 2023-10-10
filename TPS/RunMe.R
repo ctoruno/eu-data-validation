@@ -158,7 +158,7 @@ readMe <- function(acronym){
   # World Values Survey (+European Values Survey)
   if (acronym == "WVS") {
     rdata <- read_dta(file.path(path2SP, 
-                               "8. Data/TPS/Freedom House/WVS_raw.dta",
+                               "8. Data/TPS/WVS/WVS_raw.dta",
                                fsep = "/")) 
   }
   
