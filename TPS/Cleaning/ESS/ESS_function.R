@@ -8,7 +8,7 @@
 ##
 ## Creation date:     September 28th, 2023
 ##
-## This version:      October 5th, 2023
+## This version:      October 10th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -26,8 +26,11 @@ ESS_clean<- function(df){
   
   ## 1.1 Identifying indicators  ===============================================================================
   
-  targetvars<- c("cntry", "contplt", "donprty", "pbldmna", "pstplonl", "volunfp", "medcrgvc", 
-                  "fairelcc", "dfprtalc", "votedirc", "gptpelcc")
+  p1<- c("cntry", "contplt", "donprty", "pbldmna", "pstplonl", "volunfp", "medcrgvc", 
+         "fairelcc", "dfprtalc", "votedirc", "gptpelcc")
+  p3<- c("psppsgva", "psppipla", "trstprl", "trstlgl", "trstplc", "trstplt", "trstprt", "trstep", "trstun")
+  
+  targetvars<- c(p1, p3)
   
   #"medcrgv", "fairelc", "dfprtal", "votedir", "gptpelc", "dweight", "pspwght", "pweight", "anweight", "prob"
   
@@ -55,8 +58,14 @@ ESS_clean<- function(df){
     oriented[[i]]<- ifelse(oriented[[i]] == 1, 1, ifelse(oriented[[i]] == 2, 0, NA_real_))
   }
   
+  ro2<- c("psppsgva", "psppipla")
   
-  no<- setdiff(targetvars[-1], ro)
+  for(i in ro2){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1:5), oriented[[i]], NA_real_)
+  }
+  
+  no<- setdiff(targetvars[-1], c(ro, ro2))
   
   for(i in no){
     
@@ -66,18 +75,28 @@ ESS_clean<- function(df){
   
   
   ## 1.4 Normalize indicators ==================================================================================
+  df3a<- oriented%>%
+    select(-psppsgva, -psppipla)
   
-  oriented[nrow(oriented) + 1,] <- c("mins", rep(list(0), ncol(oriented)-1))
+  df3a[nrow(df3a) + 1,] <- c("mins", rep(list(0), ncol(df3a)-1))
   
-  process<- preProcess(oriented, method = c("range"))
-  normalized <- predict(process, oriented)
+  processa<- preProcess(df3a, method = c("range"))
+  normalizeda <- predict(processa, df3a)
   
-  normalized2 <- slice(normalized, 1:(n() - 1))
+  normalizeda2 <- slice(normalizeda, 1:(n() - 1))
   
+  
+  df3b<- oriented%>%
+    select(psppsgva, psppipla)
+  
+  processb<- preProcess(df3b, method = c("range"))
+  normalizedb <- predict(processb, df3b)
+  
+  norm<- cbind(normalizeda2, normalizedb)
   
   ## 1.5 Aggregate indicators at the country level =============================================================
   
-  aggregate<- normalized2%>%
+  aggregate<- norm%>%
     group_by(cntry)%>%
     summarise_at(targetvars[-1], mean, na.rm= TRUE)
   
