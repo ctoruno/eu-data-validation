@@ -114,6 +114,13 @@ readMe <- function(acronym){
                                  fsep = "/")) 
   }
   
+  # Public Integrity Index
+  if (acronym == "PII") {
+    rdata <- import_list(file.path(path2SP, 
+                                   "8. Data/TPS/Public Integrity/PII_raw.xlsx",
+                                   fsep = "/")) 
+  }
+  
   # Special Eurobarometer 489
   if (acronym == "SPE_489") {
     rdata <- read_dta(file.path(path2SP, 
