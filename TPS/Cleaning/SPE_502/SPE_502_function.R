@@ -18,20 +18,6 @@
 
 # Source: Eurobarometer 92.4   December 2019 ZA No. 7602
 
-suppressMessages(library(tidyverse))
-suppressMessages(library(dplyr))
-library(caret)
-library(haven)
-
-#SharePoint path
-
-if (Sys.info()["user"]=="Dhabiby"){
-  
-  path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics/")
-} 
-
-s502<- read_dta(paste0(path2SP, "8. Data/TPS/Eurobarometer/SPE_502_raw.dta"))
-
 SPE_502_clean<- function(df){
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
