@@ -107,6 +107,13 @@ readMe <- function(acronym){
                                 fsep = "/")) 
   }
   
+  # Government Transparency Index
+  if (acronym == "GTI") {
+    rdata <- import_list(file.path(path2SP, 
+                                 "8. Data/TPS/Government Transparency/GTI_raw.xlsx",
+                                 fsep = "/")) 
+  }
+  
   # Special Eurobarometer 489
   if (acronym == "SPE_489") {
     rdata <- read_dta(file.path(path2SP, 
