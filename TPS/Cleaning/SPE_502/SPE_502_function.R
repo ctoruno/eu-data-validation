@@ -51,7 +51,7 @@ SPE_502_clean<- function(df){
   
   ro1<- c("qb15_5", "qb15_7", "qb15_13")
   
-  for(i in ro){
+  for(i in ro1){
     
     oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
                           ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
