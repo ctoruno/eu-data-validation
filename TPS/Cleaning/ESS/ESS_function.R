@@ -8,7 +8,7 @@
 ##
 ## Creation date:     September 28th, 2023
 ##
-## This version:      October 10th, 2023
+## This version:      October 11th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -29,8 +29,9 @@ ESS_clean<- function(df){
   p1<- c("cntry", "contplt", "donprty", "pbldmna", "pstplonl", "volunfp", "medcrgvc", 
          "fairelcc", "dfprtalc", "votedirc", "gptpelcc")
   p3<- c("psppsgva", "psppipla", "trstprl", "trstlgl", "trstplc", "trstplt", "trstprt", "trstep", "trstun")
+  p4<- c("cttresac", "rghmgprc")
   
-  targetvars<- c(p1, p3)
+  targetvars<- c(p1, p3, p4)
   
   #"medcrgv", "fairelc", "dfprtal", "votedir", "gptpelc", "dweight", "pspwght", "pweight", "anweight", "prob"
   
@@ -69,7 +70,7 @@ ESS_clean<- function(df){
   
   for(i in no){
     
-    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1:10), oriented[[i]], NA_real_)
+    oriented[[i]]<- ifelse(oriented[[i]] %in% c(0:10), oriented[[i]], NA_real_)
     
   }
   
