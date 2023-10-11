@@ -125,6 +125,13 @@ readMe <- function(acronym){
                                    fsep = "/")) 
   }
   
+  # Special Eurobarometer 043
+  if (acronym == "SPE_043") {
+    rdata <- import_list(file.path(path2SP, 
+                                   "8. Data/TPS/Eurobarometer/SPE_043_raw.xlsx",
+                                   fsep = "/")) 
+  }
+  
   # Special Eurobarometer 489
   if (acronym == "SPE_489") {
     rdata <- read_dta(file.path(path2SP, 
