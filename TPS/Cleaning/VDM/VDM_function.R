@@ -28,13 +28,19 @@ VDM_clean<- function(df){
   
   ## 1.1 Identifying indicators  ===============================================================================
   
-  targetvars <- c("country_name", "v2x_liberal", "v2xlg_legcon", "v2psoppaut", "v2cltrnslw", "v2lgqstexp", 
+  p1 <- c("country_name", "v2x_liberal", "v2xlg_legcon", "v2psoppaut", "v2cltrnslw", "v2lgqstexp", 
                   "v2lginvstp", "v2lgoppart", "v2x_jucon", "v2juhcind", "v2juncind", "v2lgotovst", 
                   "v2x_polyarchy", "v2x_suffr", "v2xel_frefair", "v2x_elecoff", "v2xdd_dd", "v2elembaut", 
                   "v2elembcap", "v2elrgstry", "v2elvotbuy", "v2elirreg", "v2elintim", "v2elpeace", "v2x_libdem", 
                   "v2x_freexp_altinf", "v2x_frassoc_thick", "v2merange", "v2meslfcen", "v2mecrit", "v2cldiscm", 
                   "v2cldiscw", "v2psbars", "v2cscnsult", "v2exrescon", "v2jucomp", "v2juhccomp", "v2mecenefm", 
                   "v2meharjrn", "v2cseeorgs", "v2csreprss")
+  
+  p4<- c("v2cltort", "v2clkill", "v2clslavem", "v2clslavef", "v2clprptym", "v2clprptyw", "v2clrelig", "v2xcl_rol", 
+         "v2csgender", "v2clacjust", "v2clsocgrp", "v2pepwrgen", "v2pepwrses", "v2pepwrsoc", "v2clfmove", 
+         "v2cldmovem","v2cldmovew")
+  
+  targetvars <- c(p1, p4)
 
   cntry<- c("Austria", "Belgium", "Bulgaria", "Cyprus", "Czechia", "Germany", "Denmark", "Estonia", "Greece", 
             "Spain", "Finland", "France", "Croatia", "Hungary", "Ireland", "Italy", "Lithuania", "Luxembourg", 
@@ -52,21 +58,32 @@ VDM_clean<- function(df){
 
   ## 1.4 Normalize indicators ==================================================================================
 
-  mm <- dfv[c(4:8, 10:12, 18:24, 28:41)]
-  s  <- dfv[c(1:3, 9, 13:17, 25:27)]
-
-  process    <- preProcess(mm, method = c("range"))
-  normalized <- predict(process, mm)
+  changescale<- c("v2psoppaut", "v2cltrnslw", "v2lgqstexp","v2lginvstp", "v2lgoppart", "v2juhcind", "v2juncind", 
+                  "v2lgotovst", "v2elembaut", "v2elembcap", "v2elrgstry", "v2elvotbuy", "v2elirreg", "v2elintim", 
+                  "v2elpeace", "v2merange", "v2meslfcen", "v2mecrit", "v2cldiscm", "v2cldiscw", "v2psbars",
+                  "v2cscnsult", "v2exrescon", "v2jucomp", "v2juhccomp", "v2mecenefm", "v2meharjrn", "v2cseeorgs",
+                  "v2csreprss", "v2cltort", "v2clkill", "v2clslavem", "v2clslavef", "v2clprptym", "v2clprptyw", 
+                  "v2clrelig", "v2csgender", "v2clacjust", "v2clsocgrp", "v2pepwrgen", "v2pepwrses", "v2pepwrsoc", 
+                  "v2clfmove", "v2cldmovem","v2cldmovew")
   
+  nochange<- setdiff(targetvars, changescale)
+  
+  df2a <- dfv%>%
+    select(all_of(changescale))
+  df2b <- dfv%>%
+    select(all_of(nochange))
 
-  dfnorm <- cbind(s, normalized )
+  process    <- preProcess(df2a, method = c("range"))
+  normalized <- predict(process, df2a)
+  
+  dfnorm <- cbind(df2b, normalized)
 
-  df2 <- dfnorm %>%
+  df3<- dfnorm %>%
     select(all_of(targetvars))
   
   ## 1.5 Aggregate indicators at the country level =============================================================
   
-  aggregate <- df2%>%
+  aggregate <- df3%>%
     group_by(country_name) %>%
     summarise_at(targetvars[-1], mean, na.rm= TRUE)
 
@@ -87,7 +104,8 @@ VDM_clean<- function(df){
                                deframe(tibble(cntry, nuts))[country_name], 
                              TRUE ~ Country)) %>%
   select(Country, everything()) %>%
-  select(-country_name)
+  select(-country_name)%>%
+    arrange(Country)
 
   return(clean)
 
