@@ -18,20 +18,6 @@
 
 # Source: Eurobarometer 94.1 ZA 7749 Oct-Nov 2020
 
-suppressMessages(library(tidyverse))
-suppressMessages(library(dplyr))
-library(caret)
-library(haven)
-
-#SharePoint path
-
-if (Sys.info()["user"]=="Dhabiby"){
-  
-  path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics/")
-} 
-
-s507<- read_dta(paste0(path2SP, "8. Data/TPS/Eurobarometer/SPE_507_raw.dta"))
-
 SPE_507_clean<- function(df){
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
