@@ -73,9 +73,9 @@ readMe <- function(acronym){
   
   # Flash Eurobarometer 507
   if (acronym == "FLE_507") {
-    rdata <- import_list(file.path(path2SP, 
+    rdata <- suppressMessages(import_list(file.path(path2SP, 
                                    "8. Data/TPS/Eurobarometer/FLE_507_raw.xlsx",
-                                   fsep = "/")) 
+                                   fsep = "/")))
   }
   
   # Flash Eurobarometer 519
@@ -94,9 +94,9 @@ readMe <- function(acronym){
   
   # Flash Eurobarometer 524
   if (acronym == "FLE_524") {
-    rdata <- import_list(file.path(path2SP, 
+    rdata <- suppressMessages(import_list(file.path(path2SP, 
                                    "8. Data/TPS/Eurobarometer/FLE_524_raw.xlsx",
-                                   fsep = "/")) 
+                                   fsep = "/")))
   }
   
   # Freedom in the World
@@ -122,23 +122,23 @@ readMe <- function(acronym){
   
   # Government Transparency Index
   if (acronym == "GTI") {
-    rdata <- import_list(file.path(path2SP, 
+    rdata <- suppressMessages(import_list(file.path(path2SP, 
                                    "8. Data/TPS/Government Transparency/GTI_raw.xlsx",
-                                   fsep = "/")) 
+                                   fsep = "/"))) 
   }
   
   # Public Integrity Index
   if (acronym == "PII") {
-    rdata <- import_list(file.path(path2SP, 
+    rdata <- suppressMessages(import_list(file.path(path2SP, 
                                    "8. Data/TPS/Public Integrity/PII_raw.xlsx",
-                                   fsep = "/")) 
+                                   fsep = "/"))) 
   }
   
   # Special Eurobarometer 043
   if (acronym == "SPE_043") {
-    rdata <- import_list(file.path(path2SP, 
+    rdata <- suppressMessages(import_list(file.path(path2SP, 
                                    "8. Data/TPS/Eurobarometer/SPE_043_raw.xlsx",
-                                   fsep = "/")) 
+                                   fsep = "/"))) 
   }
   
   # Special Eurobarometer 489
@@ -171,9 +171,9 @@ readMe <- function(acronym){
   
   # Special Eurobarometer 534
   if (acronym == "SPE_534") {
-    rdata <- import_list(file.path(path2SP, 
+    rdata <- suppressMessages(import_list(file.path(path2SP, 
                                    "8. Data/TPS/Eurobarometer/SPE_534_raw.xlsx",
-                                   fsep = "/")) 
+                                   fsep = "/"))) 
   }
   
   # World Values Survey (+European Values Survey)
