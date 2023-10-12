@@ -79,7 +79,7 @@ SPE_502_clean<- function(df){
   }
   
 
-  no<- setdiff(targetvars[-1], c(ro, ro2,ro3,ro4))
+  no<- setdiff(targetvars[-1], c(ro1, ro2,ro3,ro4))
   
   for(i in no){
     
