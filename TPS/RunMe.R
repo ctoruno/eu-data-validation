@@ -32,7 +32,8 @@ data2update <- c(
   "GCB","GTI", "PII",
   "FLE_507", "FLE_519", "FLE_520", "FLE_524",
   "SPE_043", "SPE_489", "SPE_502",
-  "SPE_507", "SPE_523", "SPE_534"
+  "SPE_507", "SPE_523"
+  #, "SPE_534"
 )
 
 # Loading settings
