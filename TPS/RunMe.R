@@ -233,6 +233,8 @@ lapply(data2update,
          # Step 2: Clean
          clean_data[[src]] <<- applyMe(src, df = raw_data[[src]])
          
+         colnames(clean_data[[src]])<<- c("Country", paste0(src, "_", colnames(clean_data[[src]])[-1]))
+         
          # Step 3: Save
          write.csv(clean_data[[src]],
                    file.path(
