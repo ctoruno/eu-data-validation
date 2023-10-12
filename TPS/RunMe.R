@@ -11,7 +11,7 @@
 ##
 ## Creation date:     October 3rd, 2023
 ##
-## This version:      October 4th, 2023
+## This version:      October 12th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -28,10 +28,10 @@
 
 # Please fill the sources to be updated
 data2update <- c(
-  "FIW", "VDM", "ESS", "WVS",  
+  "FIW", "VDM", "ESS", "WVS", "FRS", 
   "FLE_507", "FLE_519", "FLE_520", "FLE_524",
   "GCB","GTI", "PII", 
-  "SPE_489", "SPE_502",
+  "SPE_043", "SPE_489", "SPE_502",
   "SPE_507", "SPE_523", "SPE_534"
 )
 
@@ -103,6 +103,13 @@ readMe <- function(acronym){
   if (acronym == "FIW") {
     rdata <- read_xlsx(file.path(path2SP, 
                                  "8. Data/TPS/Freedom House/FIW_raw.xlsx",
+                                 fsep = "/")) 
+  }
+  
+  # Fundamental Rights Survey
+  if (acronym == "FRS") {
+    rdata <- read_xlsx(file.path(path2SP, 
+                                 "8. Data/TPS/Fundamental Rights/FRS_raw.xlsx",
                                  fsep = "/")) 
   }
   
