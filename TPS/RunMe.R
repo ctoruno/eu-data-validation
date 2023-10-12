@@ -27,11 +27,13 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # Please fill the sources to be updated
-data2update <- c("FIW", "VDM", "ESS", "WVS",  
-                 "FLE_507", "FLE_519", "FLE_520", "FLE_524",
-                 "GCB","GTI", "PII", 
-                 "SPE_489", "SPE_502", "SPE_507", "SPE_523", "SPE_534"
-                 )
+data2update <- c(
+  "FIW", "VDM", "ESS", "WVS",  
+  "FLE_507", "FLE_519", "FLE_520", "FLE_524",
+  "GCB","GTI", "PII", 
+  "SPE_489", "SPE_502",
+  "SPE_507", "SPE_523", "SPE_534"
+)
 
 # Loading settings
 source("Code/settings.R")
@@ -65,43 +67,43 @@ readMe <- function(acronym){
   # European Social Survey
   if (acronym == "ESS") {
     rdata <- read_dta(file.path(path2SP, 
-                               "8. Data/TPS/ESS/ESS_raw.dta",
-                               fsep = "/")) 
+                                "8. Data/TPS/ESS/ESS_raw.dta",
+                                fsep = "/")) 
   }
   
   # Flash Eurobarometer 507
   if (acronym == "FLE_507") {
     rdata <- import_list(file.path(path2SP, 
-                               "8. Data/TPS/Eurobarometer/FLE_507_raw.xlsx",
-                               fsep = "/")) 
+                                   "8. Data/TPS/Eurobarometer/FLE_507_raw.xlsx",
+                                   fsep = "/")) 
   }
-
+  
   # Flash Eurobarometer 519
   if (acronym == "FLE_519") {
     rdata <- read_dta(file.path(path2SP, 
-                               "8. Data/TPS/Eurobarometer/FLE_519_raw.dta",
-                               fsep = "/")) 
+                                "8. Data/TPS/Eurobarometer/FLE_519_raw.dta",
+                                fsep = "/")) 
   }
   
   # Flash Eurobarometer 520
   if (acronym == "FLE_520") {
     rdata <- read_dta(file.path(path2SP, 
-                               "8. Data/TPS/Eurobarometer/FLE_520_raw.dta",
-                               fsep = "/")) 
+                                "8. Data/TPS/Eurobarometer/FLE_520_raw.dta",
+                                fsep = "/")) 
   }
   
   # Flash Eurobarometer 524
   if (acronym == "FLE_524") {
     rdata <- import_list(file.path(path2SP, 
-                               "8. Data/TPS/Eurobarometer/FLE_524_raw.xlsx",
-                               fsep = "/")) 
+                                   "8. Data/TPS/Eurobarometer/FLE_524_raw.xlsx",
+                                   fsep = "/")) 
   }
   
   # Freedom in the World
   if (acronym == "FIW") {
     rdata <- read_xlsx(file.path(path2SP, 
-                               "8. Data/TPS/Freedom House/FIW_raw.xlsx",
-                               fsep = "/")) 
+                                 "8. Data/TPS/Freedom House/FIW_raw.xlsx",
+                                 fsep = "/")) 
   }
   
   # Global Corruption Barometer
@@ -114,8 +116,8 @@ readMe <- function(acronym){
   # Government Transparency Index
   if (acronym == "GTI") {
     rdata <- import_list(file.path(path2SP, 
-                                 "8. Data/TPS/Government Transparency/GTI_raw.xlsx",
-                                 fsep = "/")) 
+                                   "8. Data/TPS/Government Transparency/GTI_raw.xlsx",
+                                   fsep = "/")) 
   }
   
   # Public Integrity Index
@@ -135,8 +137,8 @@ readMe <- function(acronym){
   # Special Eurobarometer 489
   if (acronym == "SPE_489") {
     rdata <- read_dta(file.path(path2SP, 
-                               "8. Data/TPS/Eurobarometer/SPE_489_raw.dta",
-                               fsep = "/")) 
+                                "8. Data/TPS/Eurobarometer/SPE_489_raw.dta",
+                                fsep = "/")) 
   }
   
   # Special Eurobarometer 502
@@ -149,15 +151,15 @@ readMe <- function(acronym){
   # Special Eurobarometer 507
   if (acronym == "SPE_507") {
     rdata <- read_dta(file.path(path2SP, 
-                               "8. Data/TPS/Eurobarometer/SPE_507_raw.dta",
-                               fsep = "/")) 
+                                "8. Data/TPS/Eurobarometer/SPE_507_raw.dta",
+                                fsep = "/")) 
   }
   
   # Special Eurobarometer 523
   if (acronym == "SPE_523") {
     rdata <- read_dta(file.path(path2SP, 
-                               "8. Data/TPS/Eurobarometer/SPE_523_raw.dta",
-                               fsep = "/")) 
+                                "8. Data/TPS/Eurobarometer/SPE_523_raw.dta",
+                                fsep = "/")) 
   }
   
   # Special Eurobarometer 534
@@ -170,8 +172,8 @@ readMe <- function(acronym){
   # World Values Survey (+European Values Survey)
   if (acronym == "WVS") {
     rdata <- read_dta(file.path(path2SP, 
-                               "8. Data/TPS/WVS/WVS_raw.dta",
-                               fsep = "/")) 
+                                "8. Data/TPS/WVS/WVS_raw.dta",
+                                fsep = "/")) 
   }
   
   # V-Dem
@@ -183,7 +185,7 @@ readMe <- function(acronym){
   
   return(rdata)
 }
-  
+
 ## 1.2 Cleaning Data ===========================================================================================
 
 applyMe <- function(acronym, df) {
@@ -231,7 +233,6 @@ lapply(data2update,
                      paste0(src, "_clean.csv"),
                      fsep = "/"
                    ))
-         
        })
 
 

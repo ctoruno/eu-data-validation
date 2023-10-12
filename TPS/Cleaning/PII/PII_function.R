@@ -45,7 +45,7 @@ PII_clean <- function(df){
   
   df2<- df2[-1,]
   
-  df3<- as.tibble(df2%>%
+  df3<- as_tibble(df2%>%
     filter(countryname %in% cntry)%>%
     select(all_of(targetvars)))
   
