@@ -26,8 +26,8 @@ FRS_clean<- function(df){
   
   ## 1.1 Identifying indicators    =============================================================================
   
-  p4<- c("Importance of having the reporting by the media be free from government influence",
-         "Importance of protecting the rights of minority groups",
+  p4<- c(#"Importance of having the reporting by the media be free from government influence",
+         #"Importance of protecting the rights of minority groups",
          "Extent of concern for experiencing political intimidation during election campaigns in the country",
          "Views on the ability of NGOs to do their work free from government intimidation",
          "Awareness of the right to send complaints to the European Ombudsman",
@@ -46,15 +46,11 @@ FRS_clean<- function(df){
          "Awareness of laws that forbid discriminating against job applicants - Because they are overweight/obese",
          "Awareness of the General Data Protection Regulation (GDPR)",
          "Discrimination in employment on any grounds, in the past 5 years",
-         "Discrimination in employment, by grounds for feeling discriminated against, in the past 5 years",
          "Discrimination in employment on any grounds, in the past 12 months",
-         "Number of discrimination incidents in employment in the past 12 months",
-         "Main reasons for feeling discriminated against in employment",
+         #"Number of discrimination incidents in employment in the past 12 months",
          "Discrimination when using selected services, on any grounds, in the past 5 years",
-         "Discrimination when using selected services, by grounds for feeling discriminated against, in the past 5 years",
          "Discrimination when using selected services, on any grounds, in the past 12 months",
-         "Number of discrimination incidents when using selected services, in the past 12 months",
-         "Main reasons for feeling discriminated against when using selected services",
+         #"Number of discrimination incidents when using selected services, in the past 12 months",
          "Statements on gender equality - Attention given to sexual harassment at work",
          "Statements on gender equality - Working in a management position",
          "Statements on gender equality - Care responsibilities involving children",
@@ -75,57 +71,92 @@ FRS_clean<- function(df){
     filter(question %in% targetvars)%>%
     filter(country %in% cntry)
   
-  aggregate<- data.frame(ctrycode = cntry)
+  f$percentage<- f$percentage/100
+  
+  aggregate<- data.frame("cy" = cntry)
   
   for (n in targetvars){
     
-    f<- df%>%
+    f2<- f%>%
       filter(question == n)
-    
-    dfq<- f[c(11,19,22,25,28,31),]
-    dfq[1,1]<- "q"
-    
-    colnames(dfq) <- dfq[1,]
-    dfq <- dfq[-1, ] 
     
   ## 1.3 Re-orient indicators ==================================================================================
     
-    if (n %in% p1){
-      
-      vals<-dfq[[1]]
-      new_vals<- c(1,2/3,1/3,0, NA_real_)
+    vals<- unique(f2$answer)
+    
+    if (grepl("against job applicants", n)){
+      new_vals<- c(1, 0)
     }
     
-    if (n %in% p2){
-      vals<-dfq[[1]]
-      new_vals<- c(0,1/3,2/3,1, NA_real_)
+    if (grepl("on any grounds", n)){
+      new_vals<- c(0,1)
+    }
+    
+    if (grepl("Awareness of the", n) | grepl("Experience of not being", n)){
+      new_vals<- c(1, 0, NA_real_)
     }
       
+    if (grepl("equality - Attention", n) | grepl("equality - Care", n) | grepl("Extent of concern", n)){
+      new_vals<- c(0, .5, 1, NA_real_)
+    }
+    
+    if (grepl("equality - Ensuring", n) | grepl("equality - Working", n)){
+      new_vals<- c(1, .5, 0, NA_real_)
+    }
+    
+    if (grepl("NGOs", n)){
+      new_vals<- c(0, 1/3, 2/3, 1, NA_real_)
+    }
     
   ## 1.4 Normalize indicators ==================================================================================
     
-    dfq[[n]] <- as.numeric(rep(NA, nrow(dfq)))
+    f2$prop <- as.numeric(rep(NA, nrow(f2)))
     
-    df2<- dfq%>%
-      mutate(!!paste0(n) := case_when(is.na(dfq[[n]]) ~ 
-                                        deframe(tibble(vals, new_vals))[q], 
-                                      TRUE ~dfq[[n]]))%>%
-      select(-c(EU27, q))%>%
-      pivot_longer(cols = BE:SE, names_to = "ctrycode", values_to = "count")
-    
-    df2$count<- as.numeric(df2$count)
-    
-    df3<- df2%>%
-      uncount(count)%>%
-      select(ctrycode, paste0(n))
-    
+    df2<- f2%>%
+      mutate(prop := case_when(is.na(prop) ~ 
+                                        deframe(tibble(vals, new_vals))[answer], 
+                                      TRUE ~prop))%>%
+      select(-answer)
+  
   ## 1.5 Aggregate indicators at the country level =============================================================
     
-    agg<- df3%>%
-      group_by(ctrycode)%>%
-      summarise_at(n, mean, na.rm= TRUE)
+    indicatordf<- data.frame((matrix(ncol = 2, nrow = 0)))
+    colnames(indicatordf) = c("cy", paste0(n))
     
-    aggregate<- left_join(aggregate, agg, by = join_by(ctrycode))
+    for (c in cntry){
+      
+      df3<- df2%>%
+        filter(country == c)
+      
+      if (is.na(sum(df3$prop))){
+        
+        no_na<- df3%>%
+          filter(!is.na(prop))
+        available<- sum(no_na$percentage)
+        
+        weight<- 1/available
+        
+        wt<- no_na$percentage*weight
+        
+        sumct <- sum(wt*no_na$prop)
+        
+        ind<- data.frame(c, sumct)
+        colnames(ind)<- c("cy", paste0(n))
+        indicatordf<- rbind(indicatordf, ind)
+      }
+      
+      if (!is.na(sum(df3$prop))){
+        
+       sumct<- sum(df3$percentage*df3$prop)
+       ind<- data.frame(c, sumct)
+       colnames(ind)<- c("cy", paste0(n))
+       indicatordf<- rbind(indicatordf, ind)
+        
+      }
+      
+    }
+    
+    aggregate<- left_join(aggregate, indicatordf, by = join_by(cy))
     
   }
   
@@ -143,10 +174,10 @@ FRS_clean<- function(df){
   
   clean<- aggregate%>%
     mutate(Country = case_when(is.na(Country) ~ 
-                                 deframe(tibble(cntry, nuts))[ctrycode], 
+                                 deframe(tibble(cntry, nuts))[cy], 
                                TRUE ~ Country))%>%
     select(Country, everything())%>%
-    select(-`ctrycode`)
+    select(-cy)
   
   return(clean)
   
