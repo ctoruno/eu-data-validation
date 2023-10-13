@@ -8,7 +8,7 @@
 ##
 ## Creation date:     October 12th, 2023
 ##
-## This version:      October 12th, 2023
+## This version:      October 13th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -58,7 +58,45 @@ FRS_clean<- function(df){
          "Experience of not being equally treated by public administration or local authorities"
   )
   
-  targetvars<- c(p4)
+  p5<- c("Worry about experiencing a burglary",
+         "Worry about experiencing a terrorist attack",
+         "Worry about experiencing misuse of online bank account or payment card",
+         "Worry about experiencing a theft of mobile phone, wallet or purse",
+         "Witnessing a crime against the environment - willingness to intervene",
+         "Witnessing an incident of intimate partner violence - willingness to intervene",
+         "Witnessing a parent slap their child - willingness to intervene",
+         "Experiences of physical violence in the past 5 years",
+         "Experiences of physical violence in the past 12 months",
+         "Experiences of harassment in the past 5 years",
+         "Experiences of harassment in the past 12 months",
+         "Experiences of in-person harassment in the past 5 years",
+         "Experiences of cyberharassment in the past 5 years",
+         "Experiences of in-person harassment in the past 12 months",
+         "Experiences of cyberharassment in the past 12 months",
+         "Experiences of burglary in the past 5 years",
+         "Experiences of burglary in the past 12 months",
+         "Experiences of online banking or payment card fraud in the past 5 years",
+         "Experiences of online banking or payment card fraud in the past 12 months",
+         "Experiences of consumer fraud in the past 5 years",
+         "Experiences of consumer fraud in the past 12 months"
+         #"Type of perpetrator(s) in the incident of harassment",
+         #"Location of the incident of harassment",
+         #"Whether the incident of harassment was of a sexual nature",
+         #"Description of the perpetrator(s) in the incident of harassment",
+         #"Gender of the perpetrator(s) in the incident of harassment",
+         #"Type of method for making the purchase when experienced consumer fraud",
+         #"Type of perpetrator(s) in the incident of physical violence",
+         #"Location of the incident of physical violence",
+         #"Whether the incident of physical violence was of a sexual nature",
+         #"Description of the perpetrator(s) in the incident of physical violence",
+         #"Gender of the perpetrator(s) in the incident of physical violence",
+         #"Psychological consequences from the incident of physical violence",
+         #"Physical injuries from the incident of physical violence",
+         #"Organisations and services contacted following the incident of physical violence",
+         #"Whether experience of consumer fraud involved products or services ordered from abroad"
+  )
+  
+  targetvars<- c(p4, p5)
   
   cntry<- c("Austria", "Belgium", "Bulgaria", "Cyprus", "Czechia", "Germany", "Denmark", "Estonia", "Greece", 
             "Spain", "Finland", "France", "Croatia", "Hungary", "Ireland", "Italy",  "Lithuania", "Luxembourg",
@@ -88,11 +126,11 @@ FRS_clean<- function(df){
       new_vals<- c(1, 0)
     }
     
-    if (grepl("on any grounds", n)){
+    if (grepl("on any grounds", n) | grepl("Experiences of", n)){
       new_vals<- c(0,1)
     }
     
-    if (grepl("Awareness of the", n) | grepl("Experience of not being", n)){
+    if (grepl("Awareness of the", n) | grepl("Experience of not being", n)| grepl("willingness to intervene", n)){
       new_vals<- c(1, 0, NA_real_)
     }
       
@@ -104,7 +142,7 @@ FRS_clean<- function(df){
       new_vals<- c(1, .5, 0, NA_real_)
     }
     
-    if (grepl("NGOs", n)){
+    if (grepl("NGOs", n) | grepl("Worry about experiencing", n)){
       new_vals<- c(0, 1/3, 2/3, 1, NA_real_)
     }
     
