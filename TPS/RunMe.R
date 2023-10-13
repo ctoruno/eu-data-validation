@@ -29,7 +29,7 @@
 # Please fill the sources to be updated
 data2update <- c(
   "FIW", "VDM", "ESS", "WVS", "FRS", 
-  "GCB","GTI", "PII",
+  "GCB","GTI", "PII", "OCI", 
   "FLE_507", "FLE_519", "FLE_520", "FLE_524",
   "SPE_043", "SPE_489", "SPE_502",
   "SPE_507", "SPE_523"
@@ -126,6 +126,13 @@ readMe <- function(acronym){
     rdata <- suppressMessages(import_list(file.path(path2SP, 
                                    "8. Data/TPS/Government Transparency/GTI_raw.xlsx",
                                    fsep = "/"))) 
+  }
+  
+  # Organized Crime Index
+  if (acronym == "OCI") {
+    rdata <- suppressMessages(import_list(file.path(path2SP, 
+                                                    "8. Data/TPS/Organized Crime/OCI_raw.xlsx",
+                                                    fsep = "/")))
   }
   
   # Public Integrity Index
