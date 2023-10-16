@@ -64,7 +64,7 @@ FLE_507_clean<- function(df){
       new_vals<- c(0,1/3,2/3,1, NA_real_)
     }
     
-    if (n %in% p5){
+    if (n %in% p6){
       
       if (n != "Q4_7"){
         vals<-dfq[[1]]
