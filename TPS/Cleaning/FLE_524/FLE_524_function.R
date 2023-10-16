@@ -65,16 +65,16 @@ FLE_524_clean<- function(df){
     
     if (n %in% p6){
       
-      if (n != "Q4_7"){
+      #if (n != "Q4_7"){
         vals<-dfq[[1]]
         new_vals<- c(0,1/3,2/3,1, NA_real_)
-      }
-      
-      #review for how to code non-existent
-      if (n == "Q4_7"){
-        vals<-dfq[[1]]
-        new_vals<- c(0,0.25,0.5,0.75, 1)
-      }
+      # }
+      # 
+      # #review for how to code non-existent
+      # if (n == "Q4_7"){
+      #   vals<-dfq[[1]]
+      #   new_vals<- c(0,0.25,0.5,0.75, 1)
+      # }
       
     }
     
