@@ -8,7 +8,7 @@
 ##
 ## Creation date:     October 12th, 2023
 ##
-## This version:      October 13th, 2023
+## This version:      October 17th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -96,7 +96,21 @@ FRS_clean<- function(df){
          #"Whether experience of consumer fraud involved products or services ordered from abroad"
   )
   
-  targetvars<- c(p4, p5)
+  p7<- c("Views on the ability of judges to do their job free from government influence",
+         "Views on authorities providing information for people in a simple way",
+         "Views on authorities providing information about people's rights and entitlements",
+         "Views on authorities making information easy to find online",
+         "Views on authorities making information easy to find without using the internet",
+         "Awareness of the European Convention on Human Rights",
+         "Awareness of the EU Charter of Fundamental Rights",
+         "Awareness of the Universal Declaration of Human Rights",
+         "Awareness of the national gender equality body",
+         "Awareness of the national racial equality body",
+         "Awareness of the national human rights institution",
+         "Awareness of the national supervisory authority for data protection"
+  )
+  
+  targetvars<- c(p4, p5, p7)
   
   cntry<- c("Austria", "Belgium", "Bulgaria", "Cyprus", "Czechia", "Germany", "Denmark", "Estonia", "Greece", 
             "Spain", "Finland", "France", "Croatia", "Hungary", "Ireland", "Italy",  "Lithuania", "Luxembourg",
@@ -134,7 +148,8 @@ FRS_clean<- function(df){
       new_vals<- c(1, 0, NA_real_)
     }
       
-    if (grepl("equality - Attention", n) | grepl("equality - Care", n) | grepl("Extent of concern", n)){
+    if (grepl("equality - Attention", n) | grepl("equality - Care", n) | grepl("Extent of concern", n) 
+        | grepl("Views on authorities", n)){
       new_vals<- c(0, .5, 1, NA_real_)
     }
     
@@ -142,7 +157,7 @@ FRS_clean<- function(df){
       new_vals<- c(1, .5, 0, NA_real_)
     }
     
-    if (grepl("NGOs", n) | grepl("Worry about experiencing", n)){
+    if (grepl("NGOs", n) | grepl("Worry about experiencing", n) | grepl("ability of judges", n)){
       new_vals<- c(0, 1/3, 2/3, 1, NA_real_)
     }
     
@@ -221,4 +236,6 @@ FRS_clean<- function(df){
   
 }
 
-
+f2<- f%>%
+  filter(question == "Views on authorities providing information about people's rights and entitlements")
+unique(f2$answer)
