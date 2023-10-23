@@ -8,7 +8,7 @@
 ##
 ## Creation date:     October 12th, 2023
 ##
-## This version:      October 17th, 2023
+## This version:      October 23rd, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -110,7 +110,26 @@ FRS_clean<- function(df){
          "Awareness of the national supervisory authority for data protection"
   )
   
-  targetvars<- c(p4, p5, p7)
+  p8<- c(
+    "Views on the ability of judges to do their job free from government influence",
+    "Perception of the way the police generally treats people",
+    #"Reporting the incident of physical violence",
+    #"Reasons for not reporting the incident of physical violence to the police",
+    "Satisfaction with the way the police handled the incident of physical violence",
+    #"Reporting the incident of harassment",
+    #"Reasons for not reporting the incident of harassment to the police",
+    "Satisfaction with the way the police handled the incident of harassment",
+    #"Reporting burglary to the police",
+    #"Reasons for not reporting burglary to the police",
+    "Reporting online banking or payment card fraud, in total",
+    #"Reporting online banking or payment card fraud, by type of authority or service",
+    #"Reasons for not reporting online banking or payment card fraud to the police",
+    "Reporting consumer fraud, in total"
+    #"Reporting consumer fraud, by type of authority or service",
+    #"Reasons for not reporting consumer fraud to the police"
+  )
+  
+  targetvars<- unique(c(p4, p5, p7, p8))
   
   cntry<- c("Austria", "Belgium", "Bulgaria", "Cyprus", "Czechia", "Germany", "Denmark", "Estonia", "Greece", 
             "Spain", "Finland", "France", "Croatia", "Hungary", "Ireland", "Italy",  "Lithuania", "Luxembourg",
@@ -136,7 +155,7 @@ FRS_clean<- function(df){
     
     vals<- unique(f2$answer)
     
-    if (grepl("against job applicants", n)){
+    if (grepl("against job applicants", n)| grepl("Reporting online banking", n)){
       new_vals<- c(1, 0)
     }
     
@@ -144,7 +163,8 @@ FRS_clean<- function(df){
       new_vals<- c(0,1)
     }
     
-    if (grepl("Awareness of the", n) | grepl("Experience of not being", n)| grepl("willingness to intervene", n)){
+    if (grepl("Awareness of the", n) | grepl("Experience of not being", n)| grepl("willingness to intervene", n)|
+        grepl("Reporting consumer fraud", n)){
       new_vals<- c(1, 0, NA_real_)
     }
       
@@ -153,12 +173,17 @@ FRS_clean<- function(df){
       new_vals<- c(0, .5, 1, NA_real_)
     }
     
-    if (grepl("equality - Ensuring", n) | grepl("equality - Working", n)){
+    if (grepl("equality - Ensuring", n) | grepl("equality - Working", n) | grepl("Perception of the way the police", n)){
       new_vals<- c(1, .5, 0, NA_real_)
     }
     
     if (grepl("NGOs", n) | grepl("Worry about experiencing", n) | grepl("ability of judges", n)){
       new_vals<- c(0, 1/3, 2/3, 1, NA_real_)
+    }
+    
+    if (grepl("Satisfaction with the way", n)){
+      
+      new_vals<- c(0,1, NA_real_)
     }
     
   ## 1.4 Normalize indicators ==================================================================================
@@ -236,6 +261,3 @@ FRS_clean<- function(df){
   
 }
 
-f2<- f%>%
-  filter(question == "Views on authorities providing information about people's rights and entitlements")
-unique(f2$answer)
