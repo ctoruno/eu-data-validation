@@ -8,7 +8,7 @@
 ##
 ## Creation date:     October 3rd, 2023
 ##
-## This version:      October 10th, 2023
+## This version:      October 23rd, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -32,7 +32,7 @@ SPE_489_clean<- function(df){
   ## 1.1 Identifying indicators    =============================================================================
 
     targetvars<- c("isocntry",  "qa2_1", "qa2_2", "qa2_3", "qa2_5",  "qa4_2", "qa6_3", "qa6_4", "qa6_5", 
-                   "qa6_6", "qa4_5")
+                   "qa6_6", "qa4_5", "qa6_1", "qa6_2", "sd4")
     #"qa9_1", "qa9_2", "qa9_3", "qa1_1", "qa1_2", "qa1_3", "qa1_5","qa3_2","qa3_5","qa5_3", "qa5_4", "qa5_5", 
     #"qa5_6", "qa7_1", "qa7_2", "qa7_3",
   
@@ -56,7 +56,7 @@ SPE_489_clean<- function(df){
   # ro<- c("qa1_1", "qa1_2", "qa1_3", "qa1_5", "qa3_2","qa5_3", "qa5_4", "qa5_5", "qa5_6",
   #        "qa7_1", "qa7_2", "qa7_3", "qa3_5")
   
-  ro<- c()
+  ro<- c("sd4")
   
   for(i in ro){
   
@@ -101,7 +101,8 @@ SPE_489_clean<- function(df){
                                  deframe(tibble(cntry, nuts))[isocntry], 
                                TRUE ~ Country))%>%
   select(Country, everything())%>%
-  select(-`isocntry`)
+  select(-`isocntry`)%>%
+    arrange(Country)
   
   return(clean)
   
