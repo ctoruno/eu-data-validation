@@ -9,7 +9,7 @@
 ##
 ## Creation date:     September 29th, 2023
 ##
-## This version:      October 3rd, 2023
+## This version:      October 23rd, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -29,7 +29,7 @@ FIW_clean <- function(df){
   ## 1.1 Identifying indicators  ===============================================================================
   
   targetvars <- c("Country/Territory", "A", "A1", "A2", "A3", "B", "B1", "B2", "D", "D1", "D2", "E",
-                  "E1", "E2", "E3", "F", "PR", "CL")
+                  "E1", "E2", "E3", "F", "F2", "PR", "CL")
   
   
   cntry <- c("Austria", "Belgium", "Bulgaria", "Cyprus", "Czech Republic", "Germany", "Denmark", "Estonia", 
