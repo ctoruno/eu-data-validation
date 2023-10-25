@@ -27,7 +27,8 @@ GCB_clean <- function(df){
   ## 1.1 Identifying indicators  ===============================================================================
   
   targetvars <- c("COUNTRY", "Q2", "Q3", "Q5_1", "Q5_2", "Q5_3", "Q5_4", "Q5_5", "Q5_6", "Q5_7", "Q8_1", "Q8_2", 
-                  "Q8_3", "Q8_4", "Q8_5", "Q8_6", "Q9_1", "Q9_2", "Q9_3", "Q9_4", "Q9_5", "Q9_6", "Q19_5", "Q20_1")
+                  "Q8_3", "Q8_4", "Q8_5", "Q8_6", "Q9_1", "Q9_2", "Q9_3", "Q9_4", "Q9_5", "Q9_6", "Q19_5", "Q20_1",
+                  "Q20_2")
   
   
   cntry <- c("1","2","3","5","6","11","7", "8", "12", "26", "9", "10", "4", "13", "14", "15", "17", "18", "16", "19", 
@@ -69,7 +70,15 @@ GCB_clean <- function(df){
                                    ifelse(oriented[[i]] == 3, 3, ifelse(oriented[[i]] == 4, 2, ifelse(oriented[[i]] == 5, 1, NA_real_)))))
   }
   
-  no<- setdiff(targetvars[-1], c(ro1, ro2, ro3))
+  ro4<- c("Q20_2")
+  
+  for(i in ro4){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] %in% c(1, 2, 3, 4, 5), oriented[[i]], NA_real_)
+    
+  }
+  
+  no<- setdiff(targetvars[-1], c(ro1, ro2, ro3, ro4))
   
   for(i in no){
     
