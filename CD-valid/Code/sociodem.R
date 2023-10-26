@@ -1,6 +1,6 @@
 sociodem_check <- function(){
   
-  EU_GPP <- read_dta("EU-GPP_test - renamed.dta") %>%
+  EU_GPP <- read_dta("Input/EU-GPP_test - renamed.dta") %>%
     mutate(
       generation               =  if_else(age < 30 & age > 17, "Less than 30 years", 
                                           if_else(age > 29, "More than 30 years", NA_character_)),
@@ -49,13 +49,3 @@ sociodem_check <- function(){
   
 }
 
-a <- openxlsx::write.xlsx(sociodem_data, "prueba.xlsx")
-
-conditionalFormatting(
-  a,
-  cols = 4,
-  rule = NULL,
-  style = NULL,
-  type = "expression",
-  ...
-)
