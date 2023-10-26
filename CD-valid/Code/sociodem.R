@@ -1,6 +1,6 @@
-sociodem_check <- function(){
+sociodem_check <- function(data){
   
-  EU_GPP <- read_dta("Input/EU-GPP_test - renamed.dta") %>%
+  EU_GPP <- data %>%
     mutate(
       generation               =  if_else(age < 30 & age > 17, "Less than 30 years", 
                                           if_else(age > 29, "More than 30 years", NA_character_)),
