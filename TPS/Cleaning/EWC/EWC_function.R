@@ -28,9 +28,11 @@ EWC_clean<- function(df){
 
   targetvars<- c("Country", "osh_risk", "work_life_balance")
   
-  cy<- c(1:27)
+  cy<- as.character(c(1:27))
   
   ## 1.2 Sub-setting data=======================================================================================
+  
+  df$Country<- as.character(df$Country)
   
   df2<- df%>%
     filter(Country %in% cy)%>%
