@@ -42,7 +42,6 @@ SPE_534_clean<- function(df){
   aggregate<- data.frame(ctrycode = cntry)
   
   for (n in targetvars){
-    n<- "QA6"
     f<- df[[n]]
     
     if (n == "QA2"){
