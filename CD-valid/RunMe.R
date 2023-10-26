@@ -11,7 +11,7 @@
 ##
 ## Creation date:     October 25th, 2023
 ##
-## This version:      October 25th, 2023
+## This version:      October 26th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -33,8 +33,7 @@ source("Code/sociodem.R")
 
 country_name <- "example"
 # List of chosen analyses (add/remove as needed)
-analysis <- "pretest"
-chosen_analyses <- c("time_changes", "tps_comparisson")
+type_data <- "pretest"
 
 master_data.df <- haven::read_dta(paste0("Input", 
                                          "/",
@@ -57,47 +56,30 @@ master_data.df <- haven::read_dta(paste0("Input",
 
 # Define analysis functions
 
-time_changes <- function(data) {
-  # Your t-test analysis code here
-  # This function should return the analysis result
-}
+time_changes.df <- sociodem_check(data = master_data.df)
 
-tps_comparisson <- function(data) {
-  # Your TPS analysis code here
-  # This function should return the analysis result
-}
+tps_comparisson <- "Please insert your TPS function here"
 
-tps_trend_comparisson <- function(data) {
-  # Your TPS trend analysis code here
-  # This function should return the analysis result
-}
 
 # List of analysis functions
-if(analysis == "pretest") {
+if(type_data == "pretest") {
   
   analysis_functions <- list(
-    time_changes = time_changes,
-    tps_comparisson = tps_comparisson,
-    tps_trend_comparisson = tps_trend_comparisson
+    time_changes = time_changes.df,
+    tps_comparisson = tps_comparisson
     )
   
 } else {
   
   analysis_functions <- list(
-    time_changes = time_changes,
+    time_changes = time_changes.df,
     tps_comparisson = tps_comparisson,
     tps_trend_comparisson = tps_trend_comparisson
   )
   
 }
 
-
-# Use purrr::map to apply the analysis functions and create the analysis.list
-analysis.list <- purrr::map(chosen_analyses, ~ {
-  if (.x %in% names(analysis_functions)) {
-    analysis_functions[[.x]](master_data.df)
-  }
-})
+analysis.list <- analysis_functions
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##

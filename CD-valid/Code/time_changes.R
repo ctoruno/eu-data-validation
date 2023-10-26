@@ -27,7 +27,7 @@ time_changes <- function(data, country) {
       country = country,
       ttestResult = t_test_result
     )
-  })
+  }
   
   return(t_test_results)
 }
