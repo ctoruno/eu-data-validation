@@ -28,12 +28,11 @@
 
 # Please fill the sources to be updated
 data2update <- c(
-  "FIW", "VDM", "ESS", "WVS", "FRS", 
+  "FIW", "VDM", "ESS", "EWC", "WVS", "FRS", 
   "GCB","GTI", "PII", "OCI", 
   "FLE_507", "FLE_519", "FLE_520", "FLE_524",
   "SPE_043", "SPE_489", "SPE_502",
-  "SPE_507", "SPE_523"
-  #, "SPE_534"
+  "SPE_507", "SPE_523", "SPE_534"
 )
 
 # Loading settings
@@ -69,6 +68,13 @@ readMe <- function(acronym){
   if (acronym == "ESS") {
     rdata <- read_dta(file.path(path2SP, 
                                 "8. Data/TPS/ESS/ESS_raw.dta",
+                                fsep = "/")) 
+  }
+  
+  # European Working Conditions Survey
+  if (acronym == "EWC") {
+    rdata <- read_dta(file.path(path2SP, 
+                                "8. Data/TPS/European Working Conditions/EWC_raw.dta",
                                 fsep = "/")) 
   }
   
