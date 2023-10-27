@@ -17,11 +17,11 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-# gpp<- read_dta("../Input/example_clean.dta")
-# tps<- read_csv("../../TPS/TPS_data.csv")
-# country<- "CZ"
+ #gpp<- read_dta("../Input/example_clean.dta")
+ #tps<- read_csv("../../TPS/TPS_data.csv")
+ #country<- "CZ"
 
-threshold<- function(gpp, tps, country){
+TPS_function<- function(gpp, tps, country){
   
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
