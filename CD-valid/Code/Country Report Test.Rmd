@@ -1,0 +1,29 @@
+---
+title: "`r params$country` Country Report"
+author: "Dalia Habiby"
+date: "2023-10-27"
+output: html_document
+params:
+  country: "CZ"
+---
+
+
+```{r setup, echo = F}
+
+suppressMessages(library(tidyverse))
+suppressMessages(library(haven))
+suppressMessages(library(caret))
+knitr::opts_chunk$set(echo = F)
+
+source("TPS.R")
+
+gpp<- suppressMessages(read_dta("../Input/example_clean.dta"))
+tps<- suppressMessages(read_csv("../../TPS/TPS_data.csv"))
+```
+
+
+```{r}
+df<- TPS_function(gpp, tps, params$country)
+
+knitr::kable(df)
+```
