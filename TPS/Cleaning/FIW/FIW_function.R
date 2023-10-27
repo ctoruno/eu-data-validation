@@ -28,7 +28,7 @@ FIW_clean <- function(df){
 
   ## 1.1 Identifying indicators  ===============================================================================
   
-  targetvars <- c("Country/Territory", "A", "A1", "A2", "A3", "B", "B1", "B2", "D", "D1", "D2", "E",
+  targetvars <- c("Country/Territory", "A", "A1", "A2", "A3", "B", "B1", "B2", "D", "D1", "D2", "D4", "E",
                   "E1", "E2", "E3", "F", "F2", "PR", "CL")
   
   
