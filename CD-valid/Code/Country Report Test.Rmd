@@ -27,3 +27,33 @@ df<- TPS_function(gpp, tps, params$country)
 
 knitr::kable(df)
 ```
+
+```{r}
+flags<- df%>%
+  group_by(Pillar)%>%
+  count(Flag)
+
+for (p in unique(df$Pillar)){
+  
+  pillar<- flags%>%
+    filter(Pillar == p)
+  
+  sp<- sum(pillar$n)
+  
+  
+  if ("red" %in% unique(pillar$Flag)){
+  
+    if (pillar$n[pillar$Flag == "red"]/sp >0.25){
+    
+    print(paste0("Pillar ", p, " is problematic"))
+    
+  }
+  else {
+    print(paste0("Pillar ", p, " is not problematic"))
+  }
+    
+  }
+  
+}
+```
+
