@@ -88,26 +88,28 @@ for (p in unique(df$Pillar)){
 if (length(problematic) >= length(c(problematic, notproblematic))/2){
   
   probl<- "problematic"
-  rec<- "We recommend that the survey company should be notified of this concern and instructed about how to remedy it."
+  rec<- "we recommend that the survey company should be notified of this concern and instructed about how to remedy it."
   
 } else {
   probl<- "not problematic"
-  rec<- "We recommend that the EU GPP team should decide whether to present any concern to the survey company."
+  rec<- "we recommend that the EU GPP team should decide whether to present any concern to the survey company."
 }
 ```
-# Country Level Findings
+## Country Level Findings
+
+**We have found that the data from `r params$country` is `r probl`.**
 
 Each country is evaluated based on threshold differences between an EU GPP indicator and a matched third party source indicator for each sub-pillar, as well as t-tests between the EU GPP data and the latest Global GPP data we have for that country. We determine that there is cause for concern for a specific country's data if at lease half of the Pillars evaluated are labelled "problematic."
 
-We define a pillar as problematic in one of two cases:
+We define a pillar as problematic in one of three cases:
   
-1. If 25% or more of the sub-pillars have a threshold difference above 0.25, or
+1. If 25% or more of the sub-pillars have a threshold difference above 0.25, 
   
-2. If 50% or more of the sub-pillars have a threshold difference above 0.10.
+2. If 50% or more of the sub-pillars have a threshold difference above 0.10, or
+  
+3. If 50% or more of the indicators have a statistically significant difference from our last GPP
 
-We have found that the data from `r params$country` is `r probl`.
-
-`r rec`
+Since the data from `r params$country` is overall `r probl`, `r rec`
 
 
 ```{r}
@@ -123,7 +125,7 @@ flagsoutput<- flagsoutput%>%
 flagsoutput$Label<- ifelse(flagsoutput$red> flagsoutput$sum/4, "Problematic", ifelse(flagsoutput$red+flagsoutput$yellow > flagsoutput$sum/2, "Problematic", ifelse(flagsoutput$yellow > flagsoutput$sum/2, "Problematic", "Not Problematic")))
 
 
-colnames(flagsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Total Sub-Pillars", "Label")
+colnames(flagsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Total Indicators", "Label")
 
 
 
