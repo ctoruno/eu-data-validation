@@ -1,13 +1,11 @@
 ---
-title: "`r params$country` External Validation Report"
+title: "`r params$country` Validation Report"
 author: "Dalia Habiby"
 date: "2023-10-27"
 output: html_document
 params:
   country: "Czechia"
 ---
-
-# Big Picture
 
 ```{r setup, echo = F}
 
@@ -25,8 +23,6 @@ tps<- suppressMessages(read_csv("../../TPS/TPS_data.csv"))
 
 ```{r}
 df<- TPS_function(gpp, tps, params$country)
-
-knitr::kable(df)
 ```
 
 ```{r}
@@ -51,13 +47,13 @@ for (p in unique(df$Pillar)){
       
       problematic<- c(problematic, p)
     
-      print(paste0("Pillar ", p, " is problematic"))
+      #print(paste0("Pillar ", p, " is problematic"))
     
     
   }
     else {
       notproblematic<- c(notproblematic, p)
-      print(paste0("Pillar ", p, " is not problematic"))
+      #print(paste0("Pillar ", p, " is not problematic"))
   }
     
   }
@@ -88,5 +84,100 @@ for (p in unique(df$Pillar)){
 }
 #problematic
 #notproblematic
+
+if (length(problematic) >= length(c(problematic, notproblematic))/2){
+  
+  probl<- "problematic"
+  rec<- "We recommend that the survey company should be notified of this concern and instructed about how to remedy it."
+  
+} else {
+  probl<- "not problematic"
+  rec<- "We recommend that the EU GPP team should decide whether to present any concern to the survey company."
+}
 ```
+# Country Level Findings
+
+Each country is evaluated based on threshold differences between an EU GPP indicator and a matched third party source indicator for each sub-pillar, as well as t-tests between the EU GPP data and the latest Global GPP data we have for that country. We determine that there is cause for concern for a specific country's data if at lease half of the Pillars evaluated are labelled "problematic."
+
+We define a pillar as problematic in one of two cases:
+  
+1. If 25% or more of the sub-pillars have a threshold difference above 0.25, or
+  
+2. If 50% or more of the sub-pillars have a threshold difference above 0.10.
+
+We have found that the data from `r params$country` is `r probl`.
+
+`r rec`
+
+
+```{r}
+flagsoutput<- flags%>%
+  pivot_wider(names_from = Flag, values_from = n)
+
+flagsoutput[is.na(flagsoutput)] <- 0
+  
+flagsoutput<- flagsoutput%>%
+  mutate(sum = green + red + yellow )%>%
+  select(Pillar, green, yellow, red, sum)
+
+flagsoutput$Label<- ifelse(flagsoutput$red> flagsoutput$sum/4, "Problematic", ifelse(flagsoutput$red+flagsoutput$yellow > flagsoutput$sum/2, "Problematic", ifelse(flagsoutput$yellow > flagsoutput$sum/2, "Problematic", "Not Problematic")))
+
+
+colnames(flagsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Total Sub-Pillars", "Label")
+
+
+
+```
+
+## Pillar and Sub-Pillar Details
+
+```{r}
+knitr::kable(flagsoutput)
+
+```
+
+
+```{r, results = 'asis'}
+
+flags2<- df%>%
+  group_by(Sub_Pillar, Pillar)%>%
+  count(Flag)%>%
+  pivot_wider(names_from = Flag, values_from = n)
+
+flags2[is.na(flags2)] <- 0
+
+ex<- c()
+
+for (i in unique(flags2$Pillar)){
+  
+  pill<- filter(flags2, Pillar == i)
+  
+    red<- pill%>%
+      filter(red > 0)
+    
+    r<- ifelse(nrow(red)>2, paste0(", Sub-Pillars ", paste(red$Sub_Pillar[1:(nrow(red)-1)], sep="' '", collapse=", "), ", and ", red$Sub_Pillar[[nrow(red)]], " have "), ifelse(nrow(red) == 2, paste0(", Sub-Pillars ", red$Sub_Pillar[[1]], " and ", red$Sub_Pillar[[2]], " have "), ifelse(nrow(red) ==1, paste0(", Sub-Pillar ", red$Sub_Pillar[[1]], " has "), ifelse(nrow(red)== 0, ", no Sub-Pillars have "))))
+    
+    yellow<- pill%>%
+      filter(yellow > 0)%>%
+      filter(red == 0)
+    
+    y<- ifelse(nrow(yellow)>2, paste0(", Sub-Pillars ", paste(yellow$Sub_Pillar[1:(nrow(yellow)-1)], sep="' '", collapse=", "), ", and ", yellow$Sub_Pillar[[nrow(yellow)]], " have "), ifelse(nrow(yellow) == 2, paste0(", Sub-Pillars ", yellow$Sub_Pillar[[1]], " and ", yellow$Sub_Pillar[[2]], " have "), ifelse(nrow(yellow) ==1, paste0(", Sub-Pillar ", yellow$Sub_Pillar[[1]], " has "), ifelse(nrow(yellow)== 0, ", no Sub-Pillars have "))))
+    
+    green<- pill%>%
+      filter(green > 0)%>%
+      filter(red == 0)%>%
+      filter(yellow == 0)
+    
+    g<- ifelse(nrow(green)>2, paste0(" Sub-Pillars ", paste(green$Sub_Pillar[1:(nrow(green)-1)], sep="' '", collapse=", "), ", and ", green$Sub_Pillar[[nrow(green)]], " have "), ifelse(nrow(green) == 2, paste0(" Sub-Pillars ", green$Sub_Pillar[[1]], " and ", green$Sub_Pillar[[2]], " have "), ifelse(nrow(green) ==1, paste0(" Sub-Pillar ", green$Sub_Pillar[[1]], " has "), ifelse(nrow(green)== 0, " no Sub-Pillars have "))))
+    
+    ex<- c(ex, paste0("In Pillar ", i, r,  "high concern", y,  "moderate concern, and", g, "little to no concern."))
+    
+}
+
+ 
+text<- paste(ex, sep="", collapse="\n")
+cat(gsub(pattern = "\n", replacement = "  \n", x = text))
+```
+
+
 

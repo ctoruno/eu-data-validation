@@ -90,7 +90,7 @@ analysis.list <- analysis_functions
 for (i in c("Czechia", "Estonia", "Finland", "France","Spain", "Sweden", "Slovenia")) {
   rmarkdown::render("Country Report Test.Rmd", 
                     params = list(country = i),
-                    output_file=paste0(i, " External Validation Report", ".html"))
+                    output_file=paste0(i, " Validation Report", ".html"))
 }
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
