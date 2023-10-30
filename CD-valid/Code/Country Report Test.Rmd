@@ -1,12 +1,13 @@
 ---
-title: "`r params$country` Country Report"
+title: "`r params$country` External Validation Report"
 author: "Dalia Habiby"
 date: "2023-10-27"
 output: html_document
 params:
-  country: "CZ"
+  country: "Czechia"
 ---
 
+# Big Picture
 
 ```{r setup, echo = F}
 
@@ -33,6 +34,9 @@ flags<- df%>%
   group_by(Pillar)%>%
   count(Flag)
 
+problematic<- c()
+notproblematic<- c()
+
 for (p in unique(df$Pillar)){
   
   pillar<- flags%>%
@@ -43,17 +47,46 @@ for (p in unique(df$Pillar)){
   
   if ("red" %in% unique(pillar$Flag)){
   
-    if (pillar$n[pillar$Flag == "red"]/sp >0.25){
+    if (pillar$n[pillar$Flag == "red"]/sp >0.25 | (pillar$n[pillar$Flag == "red"] + pillar$n[pillar$Flag == "yellow"])/sp > 0.5){
+      
+      problematic<- c(problematic, p)
     
-    print(paste0("Pillar ", p, " is problematic"))
+      print(paste0("Pillar ", p, " is problematic"))
+    
     
   }
-  else {
-    print(paste0("Pillar ", p, " is not problematic"))
+    else {
+      notproblematic<- c(notproblematic, p)
+      print(paste0("Pillar ", p, " is not problematic"))
   }
     
   }
   
+  else if ("red" %in% unique(pillar$Flag)){
+    
+    if (pillar$n[pillar$Flag == "yellow"]/sp > 0.5){
+      
+      problematic<- c(problematic, p)
+    
+      #print(paste0("Pillar ", p, " is problematic"))
+      
+    }
+    else {
+      notproblematic<- c(notproblematic, p)
+      #print(paste0("Pillar ", p, " is not problematic"))
+    
+    
+  }
+  
+  }
+  else {
+    notproblematic<- c(notproblematic, p)
+      #print(paste0("Pillar ", p, " is not problematic"))
+    
+  }
+  
 }
+#problematic
+#notproblematic
 ```
 

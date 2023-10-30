@@ -8,7 +8,7 @@
 ##
 ## Creation date:     October 26th, 2023
 ##
-## This version:      October 27th, 2023
+## This version:      October 30th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -19,7 +19,7 @@
 
  #gpp<- read_dta("../Input/example_clean.dta")
  #tps<- read_csv("../../TPS/TPS_data.csv")
- country<- "Czechia"
+ #country<- "Czechia"
 
 TPS_function<- function(gpp, tps, country){
   
