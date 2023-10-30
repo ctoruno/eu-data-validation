@@ -19,9 +19,19 @@
 
  #gpp<- read_dta("../Input/example_clean.dta")
  #tps<- read_csv("../../TPS/TPS_data.csv")
- #country<- "CZ"
+ country<- "Czechia"
 
 TPS_function<- function(gpp, tps, country){
+  
+  countries<- c("Austria", "Belgium", "Bulgaria", "Cyprus", "Czechia", "Germany", "Denmark", "Estonia", "Greece", "Spain",      
+                "Finland", "France", "Croatia", "Hungary", "Ireland", "Italy", "Lithuania", "Luxembourg", "Latvia", "Malta",      
+                "Netherlands", "Poland", "Portugal", "Romania", "Sweden", "Slovenia", "Slovakia")
+  ns<- c("AT", "BE", "BU", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", 
+         "FR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", 
+         "RO", "SE", "SI", "SK")
+  
+  ind<- which(countries == country)
+  cy<- ns[[ind]]
   
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -140,11 +150,11 @@ TPS_function<- function(gpp, tps, country){
   for (i in c(1:length(tpsvars))){
     
     t<- tps2%>%
-      filter(country_code_nuts == country)%>%
+      filter(country_code_nuts == cy)%>%
       select(country_code_nuts, tpsvars[[i]])
     
     g<- gppaggregate%>%
-      filter(Country == country)%>%
+      filter(Country == cy)%>%
       select(Country, gppvars[[i]])
     
     gp<- g[[1,2]]
