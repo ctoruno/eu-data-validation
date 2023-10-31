@@ -36,6 +36,7 @@ source("Code/TPS.R")
 country_name <- "example"
 country_ind <- "CZ"
 country <- "Czechia"
+
 # List of chosen analyses (add/remove as needed)
 type_data <- "pretest"
 
@@ -81,24 +82,25 @@ variable_list.df <- match_indicators()
 time_changes.df <- time_changes(data = master_data.df,
                                 country_code = country_ind)
 
-tps_comparisson <- TPS_function(country = country, 
-                                gpp = master_data.df, 
-                                tps = TPS.df)
+tps_comparisson.df <- TPS_function(country = country,
+                                   gpp = master_data.df,
+                                   tps = TPS.df)
 
 
 # List of analysis functions
+
 if(type_data == "pretest") {
   
   analysis_functions <- list(
     time_changes = time_changes.df,
-    tps_comparisson = tps_comparisson
+    tps_comparisson = tps_comparisson.df
     )
   
 } else {
   
   analysis_functions <- list(
     time_changes = time_changes.df,
-    tps_comparisson = tps_comparisson,
+    tps_comparisson = tps_comparisson.df,
     tps_trend_comparisson = tps_trend_comparisson
   )
   
