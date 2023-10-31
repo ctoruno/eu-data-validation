@@ -12,28 +12,28 @@ params:
 suppressMessages(library(tidyverse))
 suppressMessages(library(haven))
 suppressMessages(library(caret))
+suppressMessages(library(rio))
 knitr::opts_chunk$set(echo = F)
 
-source("TPS.R")
-
-gpp<- suppressMessages(read_dta("../Input/example_clean.dta"))
-tps<- suppressMessages(read_csv("../../TPS/TPS_data.csv"))
+df<- import_list(paste0("../Outcomes/Pretest/", params$country, "/", params$country, ".xlsx"))
 ```
 
 
 ```{r}
-df<- TPS_function(gpp, tps, params$country)
+threshold<- df$tps_comparisson
+time<- df$time_changes
 ```
 
 ```{r}
-flags<- df%>%
+# Threshold Analysis
+flags<- threshold%>%
   group_by(Pillar)%>%
   count(Flag)
 
 problematic<- c()
 notproblematic<- c()
 
-for (p in unique(df$Pillar)){
+for (p in unique(threshold$Pillar)){
   
   pillar<- flags%>%
     filter(Pillar == p)
@@ -47,13 +47,10 @@ for (p in unique(df$Pillar)){
       
       problematic<- c(problematic, p)
     
-      #print(paste0("Pillar ", p, " is problematic"))
-    
-    
   }
     else {
       notproblematic<- c(notproblematic, p)
-      #print(paste0("Pillar ", p, " is not problematic"))
+
   }
     
   }
@@ -63,38 +60,68 @@ for (p in unique(df$Pillar)){
     if (pillar$n[pillar$Flag == "yellow"]/sp > 0.5){
       
       problematic<- c(problematic, p)
-    
-      #print(paste0("Pillar ", p, " is problematic"))
-      
+
     }
     else {
       notproblematic<- c(notproblematic, p)
-      #print(paste0("Pillar ", p, " is not problematic"))
-    
-    
+
   }
   
   }
   else {
     notproblematic<- c(notproblematic, p)
-      #print(paste0("Pillar ", p, " is not problematic"))
-    
+
   }
   
 }
-#problematic
-#notproblematic
+
+clevel<- c()
 
 if (length(problematic) >= length(c(problematic, notproblematic))/2){
+  clevel<-c(clevel, 1)
+} else {
+  
+  clevel<- c(clevel,0)
+}
+
+
+
+
+
+
+```
+
+```{r}
+# Time change analysis
+
+
+```
+
+
+
+```{r}
+#Country overall
+
+if (clevel[[1]] = 1 & clevel[[2]] = 1){
   
   probl<- "problematic"
   rec<- "we recommend that the survey company should be notified of this concern and instructed about how to remedy it."
   
-} else {
-  probl<- "not problematic"
+} else if (clevel[[1]] = 1 & clevel[[2]] = 0) {
+  probl<- "problematic only in the threshold analysis"
   rec<- "we recommend that the EU GPP team should decide whether to present any concern to the survey company."
+} else if (clevel[[1]] = 0 & clevel[[2]] = 1){
+  probl<- "problematic only in the time change analysis"
+  rec<- "we recommend that the survey company should be notified of this concern and instructed about how to remedy it."
+  
+} else if (clevel[[1]] = 0 & clevel[[2]] = 0){
+  probl<- "not problematic"
+  rec<- "we recommend that the survey company should be notified of this concern and instructed about how to remedy it."
+  
 }
 ```
+
+
 ## Country Level Findings
 
 **We have found that the data from `r params$country` is `r probl`.**
@@ -141,7 +168,7 @@ knitr::kable(flagsoutput)
 
 ```{r, results = 'asis'}
 
-flags2<- df%>%
+flags2<- threshold%>%
   group_by(Sub_Pillar, Pillar)%>%
   count(Flag)%>%
   pivot_wider(names_from = Flag, values_from = n)
@@ -181,5 +208,19 @@ text<- paste(ex, sep="", collapse="\n")
 cat(gsub(pattern = "\n", replacement = "  \n", x = text))
 ```
 
+```{r}
+# notes on T-test function
+
+#produce dataframes through runme, outside of rmd, and call them in the rmd
+#maybe make an excel with the GPP TPS matches so its not in the code
+
+# we only have 17 variables to compare in t-test
+# this is a problem because it is a small number
+
+# flag country as problematic when it is flagged in both tests
+# if only one, say "we only find it problematic in the threshold test/t-test"
+
+#missing values function: count the number of people who answered more than 10% DK/PNTS
+```
 
 
