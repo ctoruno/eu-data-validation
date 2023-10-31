@@ -55,7 +55,7 @@ for (p in unique(threshold$Pillar)){
     
   }
   
-  else if ("red" %in% unique(pillar$Flag)){
+  else if ("yellow" %in% unique(pillar$Flag)){
     
     if (pillar$n[pillar$Flag == "yellow"]/sp > 0.5){
       
@@ -94,7 +94,76 @@ if (length(problematic) >= length(c(problematic, notproblematic))/2){
 ```{r}
 # Time change analysis
 
+time2<- time%>%
+  rename(w = warning)
 
+time2$warning <- if_else(time2$ttestResult < 0.01, "Red light", 
+                        if_else(time2$ttestResult > 0.01 & time2$ttestResult > 0.1, "Yellow light", "Green light"))
+
+warnings<- time2%>%
+  group_by(pillar)%>%
+  count(warning)
+
+problematic<- c()
+notproblematic<- c()
+
+for (p in unique(time$pillar)){
+  
+  pillar<- warnings%>%
+    filter(pillar == p)
+  
+  sp<- sum(pillar$n)
+  
+  
+  if ("Red light" %in% unique(pillar$warning)){
+  
+    if (pillar$n[pillar$warning == "Red light"]/sp >0.25 ){
+      
+      problematic<- c(problematic, p)
+    
+    }
+    
+    else if ("Yellow light" %in% unique(pillar$warning)){
+      
+      if ((pillar$n[pillar$warning == "Red light"] + pillar$n[pillar$warning == "Yellow light"])/sp > 0.5){
+        
+        problematic<- c(problematic, p)
+        
+      }
+      else {
+        notproblematic<- c(notproblematic, p)
+        
+      }
+    }
+    
+  }
+  
+  else if ("Yellow light" %in% unique(pillar$warning)){
+    
+    if (pillar$n[pillar$warning == "Yellow light"]/sp > 0.5){
+      
+      problematic<- c(problematic, p)
+
+    }
+    else {
+      notproblematic<- c(notproblematic, p)
+
+  }
+  
+  }
+  else {
+    notproblematic<- c(notproblematic, p)
+
+  }
+  
+}
+
+if (length(problematic) >= length(c(problematic, notproblematic))/2){
+  clevel<-c(clevel, 1)
+} else {
+  
+  clevel<- c(clevel,0)
+}
 ```
 
 
