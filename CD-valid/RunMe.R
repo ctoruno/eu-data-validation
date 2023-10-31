@@ -29,11 +29,13 @@
 source("Code/settings.R")
 source("Code/sociodem.R")
 source("Code/time_changes.R")
+source("Code/TPS.R")
 
 # Please fill the country code to be validated
 
 country_name <- "example"
 country_ind <- "CZ"
+country <- "Czechia"
 # List of chosen analyses (add/remove as needed)
 type_data <- "pretest"
 
@@ -52,7 +54,8 @@ GPP_previous.df <- haven::read_dta(paste0("Input/eu_merge.dta")) %>%
              country_name_ltn %in% "Spain" ~ "ES",
              country_name_ltn %in% "Sweden" ~ "SE"
            ))
-  
+
+TPS.df <- read_csv("Input/TPS_data.csv")
 
 codebook.df <- read_excel("Input/EU2 GPP 2023 Codebook.xlsx")
 variable_list.df <- match_indicators()
@@ -78,7 +81,9 @@ variable_list.df <- match_indicators()
 time_changes.df <- time_changes(data = master_data.df,
                                 country_code = country_ind)
 
-tps_comparisson <- "Please insert your TPS function here"
+tps_comparisson <- TPS_function(country = country, 
+                                gpp = master_data.df, 
+                                tps = TPS.df)
 
 
 # List of analysis functions
@@ -121,4 +126,9 @@ for (i in c("Czechia", "Estonia", "Finland", "France","Spain", "Sweden", "Sloven
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-openxlsx::write.xlsx(analysis.list, "Outcomes/Pretest/Example/example.xlsx")
+openxlsx::write.xlsx(analysis.list,
+                     paste0("Outcomes/Pretest/",
+                     country,
+                     "/",
+                     country,
+                     ".xlsx"))
