@@ -28,16 +28,35 @@
 
 source("Code/settings.R")
 source("Code/sociodem.R")
+source("Code/time_changes.R")
 
 # Please fill the country code to be validated
 
 country_name <- "example"
+country_ind <- "CZ"
 # List of chosen analyses (add/remove as needed)
 type_data <- "pretest"
 
 master_data.df <- haven::read_dta(paste0("Input", 
                                          "/",
                                          country_name, "_clean.dta"))
+
+GPP_previous.df <- haven::read_dta(paste0("Input/eu_merge.dta")) %>%
+  mutate(country_code = 
+           case_when(
+             country_name_ltn %in% "Czechia" ~ "CZ",
+             country_name_ltn %in% "Estonia" ~ "EE",
+             country_name_ltn %in% "Finland" ~ "FI",
+             country_name_ltn %in% "France" ~ "FR",
+             country_name_ltn %in% "Slovenia" ~ "SI",
+             country_name_ltn %in% "Spain" ~ "ES",
+             country_name_ltn %in% "Sweden" ~ "SE"
+           ))
+  
+
+codebook.df <- read_excel("Input/EU2 GPP 2023 Codebook.xlsx")
+variable_list.df <- match_indicators()
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 1.  Defining analysis Functions                                                                          ----
@@ -56,7 +75,8 @@ master_data.df <- haven::read_dta(paste0("Input",
 
 # Define analysis functions
 
-time_changes.df <- sociodem_check(data = master_data.df)
+time_changes.df <- time_changes(data = master_data.df,
+                                country_code = country_ind)
 
 tps_comparisson <- "Please insert your TPS function here"
 
