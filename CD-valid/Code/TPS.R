@@ -8,7 +8,7 @@
 ##
 ## Creation date:     October 26th, 2023
 ##
-## This version:      October 30th, 2023
+## This version:      November 1st, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -76,7 +76,40 @@ TPS_function<- function(gpp, tps, country){
                 8.1, 8.1, 8.2, 8.3, 8.3, 8.5, 8.6, 8.7
   ))
   
+  spname<- c("Judicial Constraints", "Independent Oversight", "Elections are free, fair, and secure",
+             "Non-governmental checks", "Respect for the legitimacy of the constitutional order, the law making process, and political opponents (absence of authoritarianism)",
+             "Respect for judicial independence (absence of authoritarianism)", "Respect for the electoral process (absence of authoritarianism)",
+             "Respect for civil liberties (absence of authoritarianism)", "Government officials who abuse their power are sanctioned for misconduct (accountability and sanctions for misconduct)",
+             "Government officials who commit crimes are prosecuted and punished (accountability and sanctions for misconduct)",
+             "Absence of Bribery", "Absence of nepotism, favoritism, and patronage", "Right to information is effectively guaranteed", 
+             "Civic participation is effectively guaranteed", "Freedoms", "Equality", "Solidarity", "Citizens' Rights",
+             "Justice", "Absence of crime and violence", "Legal security", "People can access quality legal assistance and representation", "Civil justice is people-centered, accessible, efficient, and outcome-oriented",
+             "Civil justice is impartial and free from corruption and undue influence", "Civil justice is effectively enforced",
+             "Criminal Investigation", "Prosecution and pre-trial process", "Adjudication", "Victim's Rights", "Due process of law",
+             "Prisons")
+  
   pillar<- gsub("\\..*", "", subpillar)
+  
+  pillarname<- c("Constraints on Government Powers", "Absence of Corruption", "Open Government", "Fundamental Rights", 
+                 "Order and Security", "Regulatory Enforcement", "Civil Justice", "Criminal Justice")
+  
+  pillarnew<- c()
+  for (i in 1:length(pillar)) {
+    
+    n<- as.numeric(pillar[i])
+    pillarnew[i]<- paste0(pillar[i], ": ", pillarname[n])
+    
+  }
+  
+  spnew<-c()
+  
+  for (i in 1:length(subpillar)){
+    
+    n<- which(unique(subpillar) == subpillar[i])
+    spnew[i]<- paste0(subpillar[i], ": ", spname[n])
+    
+  }
+  unique(subpillar)
   
   ## 1.2 Sub-setting data  =====================================================================================
   
@@ -217,7 +250,7 @@ TPS_function<- function(gpp, tps, country){
     
     f<- tibble("Country" = country, "GPP_Variable_Name" = gppvars[[i]], "GPP_datapoint" = gp, "TPS_Variable_Name" = tpsvars[i], 
            "TPS_datapoint" = tp, "TPS_Source" = s, "Difference" = diff, "Flag" = ifelse(diff > .25, "red", ifelse(diff> .1, "yellow", "green")),
-           "Pillar" = pillar[i], "Sub_Pillar"= subpillar[i])
+           "Pillar" = pillarnew[i], "Sub_Pillar"= spnew[i])
     final<- rbind(final, f)
   }
   
