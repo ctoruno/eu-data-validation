@@ -34,7 +34,7 @@ source("Code/TPS.R")
 # Please fill the country code to be validated
 
 country_name <- "example"
-country_ind <- "CZ"
+country_ind <- "CZE"
 country <- "Czechia"
 
 # List of chosen analyses (add/remove as needed)
@@ -47,7 +47,7 @@ master_data.df <- haven::read_dta(paste0("Input",
 GPP_previous.df <- haven::read_dta(paste0("Input/eu_merge.dta")) %>%
   mutate(country_code = 
            case_when(
-             country_name_ltn %in% "Czechia" ~ "CZ",
+             country_name_ltn %in% "Czechia" ~ "CZE",
              country_name_ltn %in% "Estonia" ~ "EE",
              country_name_ltn %in% "Finland" ~ "FI",
              country_name_ltn %in% "France" ~ "FR",
@@ -60,6 +60,8 @@ TPS.df <- read_csv("Input/TPS_data.csv")
 
 codebook.df <- read_excel("Input/EU2 GPP 2023 Codebook.xlsx")
 variable_list.df <- match_indicators()
+sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
+  filter(country_code %in% country_ind)
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
