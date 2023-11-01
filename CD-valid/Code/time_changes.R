@@ -30,18 +30,20 @@ time_changes <- function(data = master_data.df,
 
   GPP.df <- GPP_previous.df %>%
     filter(!is.na(country_code)) %>%
-    select(country_code, year, all_of(list_var_t.test)) 
+    select(country_code, year, all_of(list_var_t.test)) %>%
+    filter(country_code %in% country_ind) %>%
+    select(country_code, year, all_of(list_var_t.test))
   
   data_subset.df <- data %>%
     mutate(country_code = 
              case_when(
-               country_name_ltn == 1 ~ "CZ",
-               country_name_ltn == 2 ~ "EE",
-               country_name_ltn == 3 ~ "FI",
-               country_name_ltn == 4 ~ "FR",
-               country_name_ltn == 5 ~ "SI",
-               country_name_ltn == 6 ~ "ES",
-               country_name_ltn == 7 ~ "SE"
+               country_name_ltn == 1 ~ "CZE",
+               country_name_ltn == 2 ~ "EST",
+               country_name_ltn == 3 ~ "FIN",
+               country_name_ltn == 4 ~ "FRA",
+               country_name_ltn == 5 ~ "SVN",
+               country_name_ltn == 6 ~ "ESP",
+               country_name_ltn == 7 ~ "SWE"
              )) %>%
     select(country_code, year, all_of(list_var_t.test))
   
