@@ -88,6 +88,7 @@ tps_comparisson.df <- TPS_function(country = country,
                                    gpp = master_data.df,
                                    tps = TPS.df)
 
+sociodem_comparisson.df <- sociodem_comparisson()
 
 # List of analysis functions
 
@@ -95,7 +96,8 @@ if(type_data == "pretest") {
   
   analysis_functions <- list(
     time_changes = time_changes.df,
-    tps_comparisson = tps_comparisson.df
+    tps_comparisson = tps_comparisson.df,
+    sociodem_comparisson = sociodem_comparisson.df
     )
   
 } else {
@@ -103,7 +105,8 @@ if(type_data == "pretest") {
   analysis_functions <- list(
     time_changes = time_changes.df,
     tps_comparisson = tps_comparisson.df,
-    tps_trend_comparisson = tps_trend_comparisson
+    tps_trend_comparisson = tps_trend_comparisson.df,
+    sociodem_comparisson = sociodem_comparisson.df
   )
   
 }
