@@ -20,8 +20,9 @@
  #gpp<- read_dta("../Input/example_clean.dta")
  #tps<- read_csv("../../TPS/TPS_data.csv")
  #country<- "Czechia"
+ #mat<- matched_tps
 
-TPS_function<- function(gpp, tps, country){
+TPS_function<- function(gpp, tps, country, mat){
   
   countries<- c("Austria", "Belgium", "Bulgaria", "Cyprus", "Czechia", "Germany", "Denmark", "Estonia", "Greece", "Spain",      
                 "Finland", "France", "Croatia", "Hungary", "Ireland", "Italy", "Lithuania", "Luxembourg", "Latvia", "Malta",      
@@ -109,7 +110,11 @@ TPS_function<- function(gpp, tps, country){
     spnew[i]<- paste0(subpillar[i], ": ", spname[n])
     
   }
-  unique(subpillar)
+  
+  match<- mat[-c(55, 56, 57, 59, 60, 61, 72),]
+  match[55,4]<- "Criminality average score"
+  match[55,5]<- "Organized Crime Index"
+  match[55,6]<- "2021"
   
   ## 1.2 Sub-setting data  =====================================================================================
   
@@ -176,9 +181,15 @@ TPS_function<- function(gpp, tps, country){
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   
-  final<- as.data.frame(matrix(nrow=0, ncol=10))
+  final<- as.data.frame(matrix(nrow=0, ncol=12))
   colnames(final)<- c("Country", "GPP_Variable_Name", "GPP_datapoint", "TPS_Variable_Name", "TPS_datapoint", "TPS_Source", 
-                      "Difference", "Flag", "Pillar", "Sub_Pillar")
+                      "TPS_Year", "TPS_Question", "Difference", "Flag", "Pillar", "Sub_Pillar")
+  sources<- match$TPS_SOURCE
+  sources<- sources[! sources %in% c("NA")]
+  yr<- match$TPS_YEAR
+  yr<- yr[! yr %in% c("NA")]
+  question<- match$TPS_Q
+  question<- question[! question %in% c("NA")]
   
   for (i in c(1:length(tpsvars))){
     
@@ -195,61 +206,14 @@ TPS_function<- function(gpp, tps, country){
     
     diff<- abs(gp - tp)
 
-      
-      if (startsWith(tpsvars[[i]], "SPE")| startsWith(tpsvars[[i]], "FLE")){
-        
-        s<- "Eurobarometer"
-        
-      }
-      if (startsWith(tpsvars[[i]], "FIW")){
-        
-        s<- "Freedom in the World"
-        
-      }
-      if (startsWith(tpsvars[[i]], "VDM")){
-        
-        s<- "Varieties of Democracy"
-        
-      }
-      if (startsWith(tpsvars[[i]], "ESS")){
-        
-        s<- "European Social Survey"
-        
-      }
-      if (startsWith(tpsvars[[i]], "WVS")){
-        
-        s<- "World Values Survey"
-        
-      }
-      if (startsWith(tpsvars[[i]], "FRS")){
-        
-        s<- "Fundamental Rights Survey"
-        
-      }
-      if (startsWith(tpsvars[[i]], "GCB")){
-        
-        s<- "Global Corruption Barometer"
-        
-      }
-      if (startsWith(tpsvars[[i]], "GTI")){
-        
-        s<- "Government Transparency Index"
-        
-      }
-      if (startsWith(tpsvars[[i]], "PII")){
-        
-        s<- "Public Integrity Index"
-        
-      }
-      if (startsWith(tpsvars[[i]], "OCI")){
-        
-        s<- "Organized Crime Index"
-        
-      }
-      
+    src<- sources[[i]]
+    
+    y<- yr[[i]]
+    
+    q<- question[[i]]
     
     f<- tibble("Country" = country, "GPP_Variable_Name" = gppvars[[i]], "GPP_datapoint" = gp, "TPS_Variable_Name" = tpsvars[i], 
-           "TPS_datapoint" = tp, "TPS_Source" = s, "Difference" = diff, "Flag" = ifelse(diff > .25, "red", ifelse(diff> .1, "yellow", "green")),
+           "TPS_datapoint" = tp, "TPS_Source" = src, "TPS_Year" = y, "TPS_Question" = q, "Difference" = diff, "Flag" = ifelse(diff > .25, "red", ifelse(diff> .1, "yellow", "green")),
            "Pillar" = pillarnew[i], "Sub_Pillar"= spnew[i])
     final<- rbind(final, f)
   }

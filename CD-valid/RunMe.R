@@ -5,7 +5,7 @@
 ##
 ## Author(s):         Santiago Pardo G.        (spardo@worldjusticeproject.org)
 ##                    Dalia Habiby                (Dhabiby@worldjusticeproject.org)
-##                    Carlos A. Toruño Paniagua   (ctoruno@worldjusticeproject.org)
+##                    Carlos A. ToruC1o Paniagua   (ctoruno@worldjusticeproject.org)
 ##
 ## Dependencies:      World Justice Project
 ##
@@ -59,6 +59,8 @@ GPP_previous.df <- haven::read_dta(paste0("Input/eu_merge.dta")) %>%
 TPS.df <- read_csv("Input/TPS_data.csv")
 
 codebook.df <- read_excel("Input/EU2 GPP 2023 Codebook.xlsx")
+matched_tps<- suppressMessages(import_list("Input/Selected GPP&TPS for QCC.xlsx"))
+matched_tps<- matched_tps$`Selection and matching`
 variable_list.df <- match_indicators()
 sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
   filter(country_code %in% country_ind)
@@ -86,7 +88,8 @@ time_changes.df <- time_changes(data = master_data.df,
 
 tps_comparisson.df <- TPS_function(country = country,
                                    gpp = master_data.df,
-                                   tps = TPS.df)
+                                   tps = TPS.df,
+                                   mat = matched_tps)
 
 sociodem_comparisson.df <- sociodem_comparisson()
 
