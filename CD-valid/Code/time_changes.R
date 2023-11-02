@@ -128,8 +128,8 @@ time_changes <- function(data = master_data.df,
       previous_score = t_test_result$estimate[[2]],
       warning = if_else(t_test_result$p.value < 0.01, "Red light", 
                         if_else(t_test_result$p.value > 0.01 & t_test_result$p.value < 0.1, "Yellow light", "Green light")),
-      current_year = current_year,
-      previous_year = previous_year
+      curr_year = current_year,
+      prev_year = previous_year
     ))
   })
   
