@@ -1,14 +1,15 @@
 ---
-title: "`r params$country` Validation Report"
+title: '`r params$country` Validation Report'
 author: "Dalia Habiby"
 date: "2023-10-27"
-output: html_document
+output:
+  html_document: default
 params:
-  country: "Czechia"
+  country: Czechia
 ---
 
 ```{r setup, echo = F}
-
+#add to gpp folder to make sure everyone has access
 suppressMessages(library(tidyverse))
 suppressMessages(library(haven))
 suppressMessages(library(caret))
@@ -23,6 +24,12 @@ df<- import_list(paste0("../Outcomes/Pretest/", params$country, "/", params$coun
 ```{r}
 threshold<- df$tps_comparisson
 time<- df$time_changes
+
+time2<-left_join(time, threshold, by = join_by(variable == "GPP_Variable_Name"), relationship = "many-to-many")
+
+time<- time2%>%
+  select("country","variable", "ttestResult","current_score","previous_score", "warning","curr_year", "prev_year", Pillar, Sub_Pillar )%>%
+  distinct()
 ```
 
 ```{r}
@@ -87,7 +94,7 @@ if (length(problematic) >= length(c(problematic, notproblematic))/2){
 
 
 
-
+problematicth<- sort(problematic)
 
 
 ```
@@ -95,23 +102,18 @@ if (length(problematic) >= length(c(problematic, notproblematic))/2){
 ```{r}
 # Time change analysis
 
-time2<- time%>%
-  rename(w = warning)
 
-time2$warning <- if_else(time2$ttestResult < 0.01, "Red light", 
-                        if_else(time2$ttestResult > 0.01 & time2$ttestResult > 0.1, "Yellow light", "Green light"))
-
-warnings<- time2%>%
-  group_by(pillar)%>%
+warnings<- time%>%
+  group_by(Pillar)%>%
   count(warning)
 
 problematic<- c()
 notproblematic<- c()
 
-for (p in unique(time$pillar)){
+for (p in unique(time$Pillar)){
   
   pillar<- warnings%>%
-    filter(pillar == p)
+    filter(Pillar == p)
   
   sp<- sum(pillar$n)
   
@@ -165,6 +167,8 @@ if (length(problematic) >= length(c(problematic, notproblematic))/2){
   
   clevel<- c(clevel,0)
 }
+
+problematictt<- sort(problematic)
 ```
 
 
@@ -174,48 +178,75 @@ if (length(problematic) >= length(c(problematic, notproblematic))/2){
 
 if (clevel[[1]] == 1 & clevel[[2]] == 1){
   
-  probl<- "statistically different from both the previous GPP and the Third Party Sources"
-  rec<- "we recommend that the survey company should be notified of this concern and instructed about how to remedy it."
+  probl<- "significantly different from both the previous GPP and the Third Party Sources"
+  rec<- paste0("we recommend to check the indicators in pillar(s) ", paste(problematictt, sep="", collapse=", "), " in the t-test analysis and pillar(s) ", paste(problematicth, sep="", collapse=", "), " in the threshold analysis.")
   
 } else if (clevel[[1]] == 1 & clevel[[2]] == 0) {
-  probl<- "statistically different from only the Third Party Sources"
-  rec<- "we recommend that the EU GPP team should decide whether to present any concern to the survey company."
+  probl<- "significantly different from only the Third Party Sources"
+  rec<- paste0("we recommend to check the indicators in pillar(s) ", paste(problematicth, sep="", collapse=", "), " in the threshold analysis.")
+  
 } else if (clevel[[1]] == 0 & clevel[[2]] == 1){
-  probl<- "statistically different from only the previous GPP"
-  rec<- "we recommend that the EU GPP team should decide whether to present any concern to the survey company."
+  probl<- "significantly different from only the previous GPP"
+  rec<- paste0("we recommend to check the indicators in pillar(s) ", paste(problematictt, sep="", collapse=", "), " in the t-test analysis.")
   
 } else if (clevel[[1]] == 0 & clevel[[2]] == 0){
-  probl<- "not statistically different from the previous GPP or the Third Party Sources"
+  probl<- "not significantly different from the previous GPP or the Third Party Sources"
   rec<- "we recommend that the EU GPP team continue monitoring and make note of any other concern"
   
 }
 ```
 
-# Analysis {.tabset}
+# Report {.tabset}
 
-## Country Level Findings 
+## Guidelines
 
-**We have found that the data from `r params$country` is `r probl`.**
+**Overview**
 
-Each country is evaluated based on two analyses: one external and the other internal. The first is a threshold difference between a few EU GPP indicators and their matched third party source indicators for each sub-pillar. 
-
-We define a pillar as problematic in the threshold analysis in one of two cases:
+The goal of this document is to facilitate the evaluation of concern for extreme issues in the survey.
   
-1. If 25% or more of the sub-pillars have a threshold difference above 0.25 (red flag), or
+We want to preserve the validation review process that has been implemented in the past by the GPP team, while also providing more structure and a quicker way to identify potential issues. Instead of keeping track of multiple files and documents on your device, all of the relevant information lives in one dynamic platform. 
   
-2. If 50% or more of the sub-pillars have a threshold difference above 0.10 (yellow flag)
+Our analyses are built to only identify cases of highly significant differences from our previous data as well as third party source data. We also acknowledge that many indicators are expected to change over time, or change when asked in a different way in another survey. Furthermore, our data is limited by the number of matches that can successfully be drawn from the EU GPP questionnaire to the Global GPP or to a Third Party Source. Ultimately, given these circumstances, it will still be up to the discretion of the GPP team about what and how they would like to communicate with the survey companies.
   
-The second analysis is a t-test between a few EU GPP indicators and their counterparts from the latest Global GPP per country. 
+**Analyses**
   
-We define a pillar as problematic in the t-test analysis in one of two cases:
+Each country is evaluated based on three analyses: one internal, another external, and the last one structural. 
+  
+The internal and external analyses are based on a flagging system which is explained below:
+  
+The first analysis is a t-test between a subset of EU GPP indicators and their counterparts from the latest Global GPP per country. 
+  
+We define a pillar as "significantly different" in the t-test analysis in one of two cases:
   
 1. If 25% or more of the indicators have a statistically significant difference from our last GPP with a p-value below 0.01 (red flag)
   
 2. If 50% or more of the indicators have a statistically significant difference from our last GPP with a p-value below 0.1 (yellow flag)
+  
+The second is a threshold difference between a few EU GPP indicators and their matched third party source indicators for each sub-pillar. 
+  
+We define a pillar as "significantly different" in the threshold analysis in one of two cases:
+  
+1. If 25% or more of the indicators have a threshold difference above 0.25 (red flag), or
+  
+2. If 50% or more of the indicators have a threshold difference above 0.10 (yellow flag)
+  
+In both of these tests, we flag the country as a whole if at lease half of the Pillars evaluated are labelled "significantly different." If the country is labelled "significantly different" in both tests, then we find cause for concern. 
+  
+Furthermore, the structural analysis describes the proportion of respondents who answered "Don't Know" or "Prefer Not to Say" in at least 10% of questions. This is helpful in the pretest specifically because we want to minimize the number of missing or NA values we receive. 
+  
+**Process**
+  
+In order to utilize this document to the fullest, we suggest navigating to the "Country Level Findings" tab to view a summary of which Pillars in which analyses are concerning. From there, if any of the Pillars are significantly different, you can investigate further in the "Appendix" tab. Under the Appendix, you can select the Pillar of interest and view the analysis results as well as contextual information for each indicator that we tested. Based on the flags in the tables, it may be necessary to proceed with qualitative research to determine if the significant changes are unexpected, and therefore troublesome. 
+  
+Overall, this platform is a tool to help accelerate the process of identifying possible issues that should be further investigated.
 
-In each test, we flag the country as a whole if at lease half of the Pillars evaluated are labelled "problematic." If the country is labelled "problematic" in both tests, then we find cause for concern. 
+## Country Level Findings {.tabset}
+
+**We have found that the data from `r params$country` is `r probl`.**
+
 
 Since the data from `r params$country` is overall `r probl`, `r rec`
+
 
 
 ```{r}
@@ -228,7 +259,7 @@ flagsoutput<- flagsoutput%>%
   mutate(sum = green + red + yellow )%>%
   select(Pillar, green, yellow, red, sum)
 
-flagsoutput$Label<- ifelse(flagsoutput$red> flagsoutput$sum/4, "Problematic", ifelse(flagsoutput$red+flagsoutput$yellow > flagsoutput$sum/2, "Problematic", ifelse(flagsoutput$yellow > flagsoutput$sum/2, "Problematic", "Not Problematic")))
+flagsoutput$Label<- ifelse(flagsoutput$red> flagsoutput$sum/4, "Significantly Different", ifelse(flagsoutput$red+flagsoutput$yellow > flagsoutput$sum/2, "Significantly Different", ifelse(flagsoutput$yellow > flagsoutput$sum/2, "Significantly Different", "Not Significantly Different")))
 
 
 colnames(flagsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Total Indicators", "Label")
@@ -236,23 +267,6 @@ colnames(flagsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", 
 
 
 ```
-
-## Pillar and Sub-Pillar Details {.tabset}
-
-Below are two tables summarizing each of the validation analyses to provide further details about the issues we have flagged. If you are interested in exploring which specific variables are flagged, please see the Appendix.
-  
-### External Validation 
-Given the nature of third party sources, there are a limited number of external indicators that match with our EU GPP indicators. As of now, we do not have any matches for Pillar 6. Furthermore, all of the third party indicators may not be available for each country and thus the percentage of problematic indicators in each Pillar may vary. 
-
-
-
-```{r}
-knitr::kable(flagsoutput, caption = "Threshold Analysis Summary")%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(bootstrap_options = c("striped"))
-
-```
-
 
 ```{r}
 warningsoutput<- warnings%>%
@@ -262,15 +276,19 @@ warningsoutput[is.na(warningsoutput)] <- 0
   
 warningsoutput<- warningsoutput%>%
   mutate(sum = `Green light` + `Red light` + `Yellow light`)%>%
-  select(pillar, `Green light`, `Yellow light`, `Red light`, sum)
+  select(Pillar, `Green light`, `Yellow light`, `Red light`, sum)
 
-warningsoutput$Label<- ifelse(warningsoutput$`Red light`> warningsoutput$sum/4, "Problematic", ifelse(warningsoutput$`Red light`+warningsoutput$`Yellow light` > warningsoutput$sum/2, "Problematic", ifelse(warningsoutput$`Yellow light` > warningsoutput$sum/2, "Problematic", "Not Problematic")))
+warningsoutput$Label<- ifelse(warningsoutput$`Red light`> warningsoutput$sum/4, "Significantly Different", ifelse(warningsoutput$`Red light`+warningsoutput$`Yellow light` > warningsoutput$sum/2, "Significantly Different", ifelse(warningsoutput$`Yellow light` > warningsoutput$sum/2, "Significantly Different", "Not Significantly Different")))
 
 
 colnames(warningsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Total Indicators", "Label")
 
 ```
-### Internal Validation
+
+Below are two tables summarizing each of the validation analyses to provide further details about the issues we have flagged. If you are interested in exploring which specific variables are flagged, please see the Appendix.
+  
+
+### Internal Validation (T-Test Analysis)
   
 Since the t-test analysis this year is comparing to the previous Global GPP, there are some indicators that are new this year and do not match with the Global indicators. Therefore, there are less indicators evaluated in this analysis than the threshold analysis. Additionally, we expect many of our indicators to change in significant ways as the world changes. Therefore, it is up to the discretion of the EU GPP team whether or not the t-test results are concerning.
 
@@ -281,42 +299,393 @@ knitr::kable(warningsoutput, caption = "T-Test Analysis Summary")%>%
 ```
 
 
-## Representativeness {.tabset}
-
-### Socio-Demographics
-
-
-### Missing Values
+### External Validation (Threshold Analysis)
+Given the nature of third party sources, there are a limited number of external indicators that match with our EU GPP indicators. As of now, we do not have any matches for Pillar 6. Furthermore, all of the third party indicators may not be available for each country and thus the percentage of problematic indicators in each Pillar may vary. 
 
 
-## Appendix
 
 ```{r}
-th<- threshold%>%
-  select(Country, GPP_Variable_Name, Flag, Pillar, Sub_Pillar)
-tt<- time2%>%
-  select(variable, warning)
+knitr::kable(flagsoutput, caption = "Threshold Analysis Summary")%>%
+  kable_classic(html_font = "Arial")%>%
+  kable_styling(bootstrap_options = c("striped"))
 
-appendix<- left_join(th, tt, by = join_by("GPP_Variable_Name"== variable), relationship = "many-to-many")
-appendix$Sub_Pillar<- as.numeric(appendix$Sub_Pillar)
-appendix<- appendix%>%
-  select(Country, GPP_Variable_Name, Flag, warning, Pillar, Sub_Pillar)%>%
-  distinct()%>%
-  arrange(GPP_Variable_Name, Sub_Pillar)
+```
+  
+  
+### Missing Values
 
-appendix$Flag<- ifelse(appendix$Flag == "red", "Red", ifelse(appendix$Flag == "yellow", "Yellow", ifelse(appendix$Flag == "green", "Green", "Not Assessed")))
-appendix$warning<- ifelse(appendix$warning == "Red light", "Red", ifelse(appendix$warning == "Yellow light", "Yellow", ifelse(appendix$warning == "Green light", "Green", "Not Assessed")))
+In the pretest data, 100% of the respondents answered at least 10% of the questions with DK/PNTS.
+  
+Below is a table listing all of the variables where over 7.5% of respondents answered DK/PNTS.
 
-colnames(appendix)<- c("Country", "GPP Variable Name", "Flag Threshold", "Flag T-Test", "Pillar", "Sub-Pillar")
+```{r}
+missingdf<- tibble(Pillar = c("q44j_G2", "q59f", "q4d", "q4e" , "q39d_G1" , "q54_G2"  , "q56_G2",  "q43f_G1"), "Proportion Missing" = c("12%", "10%", "15%", "20%", "11%", "12%", "14%", "10%"))
+
+knitr::kable(missingdf, caption = "Variables with more than 7.5% DK/PNTS")%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+```
+
+
+## Appendix {.tabset}
+
+Each tab below holds the full information for each analysis for each pillar in order to facilitate the evaluation of the results. At the moment, we do not have any matches in Pillar 6, and therefore there are no analysis tables for Pillar 6. Furthermore, there are no previous index matches for Pillar 5, and thus the table for the T-Test in Pillar 5 is empty.
+
+```{r}
+# th<- threshold%>%
+#   select(Country, GPP_Variable_Name, Flag, Pillar, Sub_Pillar)
+# tt<- time2%>%
+#   select(variable, warning)
+ codebook<- import_list("../Input/EU2 GPP 2023 Codebook.xlsx")
+ cb<- codebook$Codebook
+ 
+ cb2<-cb%>%
+   select(Variable, `2023  EU Questionnaire`, Description)
+# 
+# 
+# 
+# appendix<- left_join(th, tt, by = join_by("GPP_Variable_Name"== variable), relationship = "many-to-many")
+# appendix <- merge(appendix, cb2, by.x="GPP_Variable_Name", by.y =  "Variable", all.x = TRUE)
+# 
+# appendix<- appendix%>%
+#   select(Country, `2023  EU Questionnaire`, Description, Flag, warning, Pillar, Sub_Pillar)%>%
+#   distinct()%>%
+#   arrange(`2023  EU Questionnaire`, Pillar)
+# 
+# appendix$Flag<- ifelse(appendix$Flag == "red", "Red", ifelse(appendix$Flag == "yellow", "Yellow", ifelse(appendix$Flag == "green", "Green", "Not Assessed")))
+# appendix$warning<- ifelse(appendix$warning == "Red light", "Red", ifelse(appendix$warning == "Yellow light", "Yellow", ifelse(appendix$warning == "Green light", "Green", "Not Assessed")))
+# 
+# colnames(appendix)<- c("Country", "GPP Variable", "Question Text", "Flag Threshold", "Flag T-Test", "Pillar", "Sub-Pillar")
 
 
 ```
 
 
 ```{r}
-knitr::kable(appendix, caption = "Variable List and Flags")%>%
+appendixth <- merge(threshold, cb2, by.x="GPP_Variable_Name", by.y =  "Variable", all.x = TRUE)
+
+a<- appendixth%>%
+  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference,  Pillar )%>%
+  arrange(Sub_Pillar)
+a$Flag<- ifelse(a$Flag == "red", "Red", ifelse(a$Flag == "green", "Green", ifelse(a$Flag == "yellow", "Yellow", NA)))
+
+colnames(a)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Pillar")
+
+
+appendixtt <- merge(time, cb2, by.x="variable", by.y =  "Variable", all.x = TRUE)
+
+b<- appendixtt%>%
+  select(Sub_Pillar, `2023  EU Questionnaire`, warning, Description, prev_year, previous_score, current_score,   ttestResult, Pillar )%>%
+  arrange(Sub_Pillar)
+
+colnames(b)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question", "Comparison Year", "Previous Score", "Current Score", "P value",   "Pillar" )
+
+b$Flag<- ifelse(b$Flag == "Red light", "Red", ifelse(b$Flag == "Green light", "Green", ifelse(b$Flag == "Yellow light", "Yellow", NA)))
+
+```
+
+
+```{r}
+ttestex<- "In the T-test, a red flag indicates statistical significance with a p-value of 0.01. A yellow flag indicates statistical significance with a p-value between 0.01 and 0.1. A green flag indicates statistical significance only with a p-value greater than 0.1, or no statistical significance."
+
+threshex<- "In the threshold difference, a red flag indicates a difference of 0.25 or more. A yellow flag indicates a difference between 0.10 and 0.25. A green flag indicates a difference of less than 0.10."
+```
+
+
+### Pillar 1 {.tabset}
+
+#### T-Test (Internal) Analysis
+
+`r ttestex`
+
+```{r}
+b2<- b%>%
+  filter(Pillar == "1: Constraints on Government Powers")%>%
+  select(-Pillar)
+b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
+
+knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+```
+
+
+#### Threshold (External) Analysis
+
+`r threshex`
+
+```{r}
+a2<- a%>%
+  filter(Pillar == "1: Constraints on Government Powers")%>%
+  select(-Pillar)
+
+a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
+
+
+knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+  
+```
+
+
+
+
+### Pillar 2 {.tabset}
+
+#### T-Test (Internal) Analysis
+
+`r ttestex`
+
+```{r}
+b2<- b%>%
+  filter(Pillar == "2: Absence of Corruption")%>%
+  select(-Pillar)
+b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
+
+knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+```
+
+
+#### Threshold (External) Analysis
+
+`r threshex`
+
+```{r}
+a2<- a%>%
+  filter(Pillar == "2: Absence of Corruption")%>%
+  select(-Pillar)
+
+a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
+
+
+knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+  
+```
+
+
+
+### Pillar 3 {.tabset}
+
+#### T-Test (Internal) Analysis
+
+`r ttestex`
+
+```{r}
+b2<- b%>%
+  filter(Pillar == "3: Open Government")%>%
+  select(-Pillar)
+b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
+
+knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+```
+
+
+#### Threshold (External) Analysis
+
+`r threshex`
+
+```{r}
+a2<- a%>%
+  filter(Pillar == "3: Open Government")%>%
+  select(-Pillar)
+
+a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
+
+
+knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+  
+```
+
+### Pillar 4 {.tabset}
+
+#### T-Test (Internal) Analysis
+
+`r ttestex`
+
+```{r}
+b2<- b%>%
+  filter(Pillar == "4: Fundamental Rights")%>%
+  select(-Pillar)
+b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
+
+knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+```
+
+
+#### Threshold (External) Analysis
+
+`r threshex`
+
+```{r}
+a2<- a%>%
+  filter(Pillar == "4: Fundamental Rights")%>%
+  select(-Pillar)
+
+a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
+
+
+knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+  
+```
+
+
+### Pillar 5 {.tabset}
+
+#### T-Test (Internal) Analysis
+
+`r ttestex`
+
+```{r}
+b2<- b%>%
+  filter(Pillar == "5: Order and Security")%>%
+  select(-Pillar)
+#b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
+
+knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+```
+
+
+#### Threshold (External) Analysis {.tabset}
+
+`r threshex`
+
+```{r}
+a2<- a%>%
+  filter(Pillar == "5: Order and Security")%>%
+  select(-Pillar)
+
+a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
+
+
+knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+  
+```
+
+### Pillar 7 {.tabset}
+
+#### T-Test (Internal) Analysis
+
+`r ttestex`
+
+```{r}
+b2<- b%>%
+  filter(Pillar == "7: Civil Justice")%>%
+  select(-Pillar)
+b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
+
+knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+```
+
+
+#### Threshold (External) Analysis {.tabset}
+
+`r threshex`
+
+```{r}
+a2<- a%>%
+  filter(Pillar == "7: Civil Justice")%>%
+  select(-Pillar)
+
+a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
+
+
+knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+  
+```
+
+### Pillar 8 {.tabset}
+
+#### T-Test (Internal) Analysis
+
+`r ttestex`
+
+```{r}
+b2<- b%>%
+  filter(Pillar == "8: Criminal Justice")%>%
+  select(-Pillar)
+b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
+
+knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+```
+
+
+#### Threshold (External) Analysis
+
+`r threshex`
+
+```{r}
+a2<- a%>%
+  filter(Pillar == "8: Criminal Justice")%>%
+  select(-Pillar)
+
+a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
+
+
+knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+  
+```
+
+### Overall {.tabset}
+
+#### T-Test (Internal) Analysis
+
+`r ttestex`
+
+```{r}
+b$Flag = cell_spec(b$Flag, color = ifelse(b$Flag == "Green", "green", ifelse(b$Flag == "Red", "red", "gold")))
+
+knitr::kable(b, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))
+```
+
+#### Threshold (External) Analysis
+
+`r threshex`
+
+```{r}
+a$Flag = cell_spec(a$Flag, color = ifelse(a$Flag == "Green", "green", ifelse(a$Flag == "Red", "red", "gold")))
+
+knitr::kable(a, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
+  kable_classic(html_font = "Arial", )%>%
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
+# %>%
+#   scroll_box(width = "100%")
+```
+
+
+
+
+
+```{r}
+# knitr::kable(appendix, caption = "Variable List and Flags")%>%
+#   kable_classic(html_font = "Arial")%>%
+#   kable_styling(bootstrap_options = c("striped"))
 ```
 
 
