@@ -30,6 +30,7 @@ source("Code/settings.R")
 source("Code/sociodem.R")
 source("Code/time_changes.R")
 source("Code/TPS.R")
+source("Code/missing_values.R")
 
 # Please fill the country code to be validated
 
@@ -92,6 +93,9 @@ tps_comparisson.df <- TPS_function(country = country,
                                    mat = matched_tps)
 
 sociodem_comparisson.df <- sociodem_comparisson()
+
+missing_values.df<- missing_values(data= master_data.df, 
+                                   country= country)
 
 # List of analysis functions
 
