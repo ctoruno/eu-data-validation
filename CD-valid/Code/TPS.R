@@ -56,7 +56,9 @@ TPS_function<- function(gpp, tps, country, mat){
               "FRS_Views on authorities providing information for people in a simple way", "VDM_v2clacjstm", "VDM_v2clacjstw",
               "SPE_489_qa5_2", "SPE_489_qa5_2", "SPE_489_qa6_3", "GCB_Q5_7", "SPE_489_qa6_1", "SPE_489_qa6_4", 
               "GCB_Q5_6", "SPE_489_qa5_4", "GCB_Q5_7", "SPE_489_qa6_3", "FRS_Perception of the way the police generally treats people",
-              "FIW_F2", "VDM_v2cltort"
+              "FIW_F2", "VDM_v2cltort", "VDM_v2caassemb", "VDM_v2jupoatck", "VDM_v2exbribe", "VDM_v2lgcrrpt", "VDM_v2mecenefm",
+              "VDM_v2meharjrn", "VDM_v2xlg_legcon", "VDM_v2x_freexp_altinf", "VDM_v2xel_frefair", "VDM_v2lginvstp", 
+              "VDM_v2exembez"
   )
   
   gppvars<-c("JSE_indjudges", "ROL_courtrulings_imp", "ORC_govtefforts", "ORC_impartial_measures", "CPA_freevote", 
