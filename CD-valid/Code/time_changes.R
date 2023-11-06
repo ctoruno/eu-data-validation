@@ -1,5 +1,6 @@
 time_changes <- function(data = master_data.df, 
-                         country_code = country_ind) {
+                         country_code = country_ind,
+                         type = "dummy") {
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
@@ -34,6 +35,8 @@ time_changes <- function(data = master_data.df,
     filter(country_code %in% country_ind) %>%
     select(country_code, year, all_of(list_var_t.test))
   
+  if (type == "dummy"){
+  
   data_subset.df <- data %>%
     mutate(country_code = 
              case_when(
@@ -49,6 +52,16 @@ time_changes <- function(data = master_data.df,
   
   data2test <- data_subset.df %>% 
     bind_rows(GPP.df) 
+  } else if (type == "real"){
+    
+    data_subset.df <- data%>%
+      select(country_code_nuts, year, all_of(list_var_t.test))%>%
+      rename(country_code = country_code_nuts)
+    
+    data2test <-data_subset.df %>% 
+      bind_rows(GPP.df) 
+    
+  }
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
@@ -76,10 +89,13 @@ time_changes <- function(data = master_data.df,
                                                          ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
   }
   
+
   oriented <- oriented %>%
       mutate(year = as.character(year))
+  
   process<- preProcess(oriented, method = c("range"))
   normalized <- predict(process, oriented)
+
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
@@ -96,10 +112,10 @@ time_changes <- function(data = master_data.df,
       select(country_code, year, {{var_name}}) %>%
       arrange(year)
     
-    country_code <- data_sub %>%
-      select(country_code) %>%
-      unique() %>%
-      pull()
+    # country_code <- data_sub %>%
+    #   select(country_code) %>%
+    #   unique() %>%
+    #   pull()
     
     # Get the most recent year and calculate the previous year
     
