@@ -34,9 +34,10 @@ source("Code/missing_values.R")
 
 # Please fill the country code to be validated
 
-country_name <- "example"
-country_ind <- "CZE"
-country <- "Czechia"
+country_name <- "Greece"
+country_ind <- "EL"
+country <- "Greece"
+type<- "real"
 
 # List of chosen analyses (add/remove as needed)
 type_data <- "pretest"
@@ -54,7 +55,8 @@ GPP_previous.df <- haven::read_dta(paste0("Input/eu_merge.dta")) %>%
              country_name_ltn %in% "France" ~ "FR",
              country_name_ltn %in% "Slovenia" ~ "SI",
              country_name_ltn %in% "Spain" ~ "ES",
-             country_name_ltn %in% "Sweden" ~ "SE"
+             country_name_ltn %in% "Sweden" ~ "SE",
+             country_name_ltn %in% "Greece" ~ "EL"
            ))
 
 TPS.df <- read_csv("Input/TPS_data.csv")
@@ -90,12 +92,13 @@ time_changes.df <- time_changes(data = master_data.df,
 tps_comparisson.df <- TPS_function(country = country,
                                    gpp = master_data.df,
                                    tps = TPS.df,
-                                   mat = matched_tps)
+                                   mat = matched_tps,
+                                   type = "real")
 
 sociodem_comparisson.df <- sociodem_comparisson()
 
-missing_values.df<- missing_values(data= master_data.df, 
-                                   country= country)
+#missing_values.df<- missing_values(data= master_data.df, 
+#                                   country= country)
 
 # List of analysis functions
 
@@ -120,9 +123,23 @@ if(type_data == "pretest") {
 
 analysis.list <- analysis_functions
 
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 2. Outcomes function                                                                      ----
+## 2. Saving function                                                                   ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+openxlsx::write.xlsx(analysis.list,
+                     paste0("Outcomes/Pretest/",
+                            country,
+                            "/",
+                            country,
+                            ".xlsx"))
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 3. Outcomes function                                                                      ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -134,15 +151,4 @@ for (i in c("Czechia", "Estonia", "Finland", "France","Spain", "Sweden", "Sloven
                     )
 }
 
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 3. Saving function                                                                   ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-openxlsx::write.xlsx(analysis.list,
-                     paste0("Outcomes/Pretest/",
-                     country,
-                     "/",
-                     country,
-                     ".xlsx"))
