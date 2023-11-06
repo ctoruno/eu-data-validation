@@ -87,7 +87,8 @@ sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
 # Define analysis functions
 
 time_changes.df <- time_changes(data = master_data.df,
-                                country_code = country_ind)
+                                country_code = country_ind,
+                                type= "real")
 
 tps_comparisson.df <- TPS_function(country = country,
                                    gpp = master_data.df,
