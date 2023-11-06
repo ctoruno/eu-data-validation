@@ -42,7 +42,9 @@ VDM_clean<- function(df){
   
   p7<- c("v2clacjstm", "v2clacjstw")
   
-  targetvars <- c(p1, p4, p7)
+  val<- c("v2caassemb", "v2jupoatck", "v2exbribe", "v2lgcrrpt")
+  
+  targetvars <- c(p1, p4, p7, val)
 
   cntry<- c("Austria", "Belgium", "Bulgaria", "Cyprus", "Czechia", "Germany", "Denmark", "Estonia", "Greece", 
             "Spain", "Finland", "France", "Croatia", "Hungary", "Ireland", "Italy", "Lithuania", "Luxembourg", 
@@ -66,7 +68,8 @@ VDM_clean<- function(df){
                   "v2cscnsult", "v2exrescon", "v2jucomp", "v2juhccomp", "v2mecenefm", "v2meharjrn", "v2cseeorgs",
                   "v2csreprss", "v2cltort", "v2clkill", "v2clslavem", "v2clslavef", "v2clprptym", "v2clprptyw", 
                   "v2clrelig", "v2csgender", "v2clacjust", "v2clsocgrp", "v2pepwrgen", "v2pepwrses", "v2pepwrsoc", 
-                  "v2clfmove", "v2cldmovem","v2cldmovew", "v2clacjstm", "v2clacjstw")
+                  "v2clfmove", "v2cldmovem","v2cldmovew", "v2clacjstm", "v2clacjstw", "v2caassemb", "v2jupoatck", 
+                  "v2exbribe", "v2lgcrrpt")
   
   nochange<- setdiff(targetvars, changescale)
   
