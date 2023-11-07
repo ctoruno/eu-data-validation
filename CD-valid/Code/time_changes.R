@@ -15,7 +15,7 @@ time_changes <- function(data.df = master_data.df,
                           if_else(Variable %in% c("CPA_protest", "PAB_misinfo",
                                                   "PAB_attackmedia","PAB_emergpower",
                                                   "PAB_manipulelect", "PAB_overcourts",
-                                                  "CJP_resprights"), 1, 0))) %>%
+                                                  "CJP_resprights", "BRB_permit_B"), 1, 0))) %>%
     filter(skip == 0) %>%
     select(Variable) %>%
     pull()
@@ -95,7 +95,6 @@ time_changes <- function(data.df = master_data.df,
          "COR_govt_national",
          "COR_govt_local",
          "COR_judges",
-         "BRB_permit_B",
          "BRB_health_B",
          "IRE_govtbudget",
          "IRE_govtcontracts",
@@ -108,9 +107,7 @@ time_changes <- function(data.df = master_data.df,
          "CPB_freemedia", 
          "CPA_partdem_congress",
          "CPB_freexp_pp",
-         "CPA_partdem_localgvt",
-         "LEP_rightsresp",
-         "LEP_accountability")
+         "CPA_partdem_localgvt")
   
   for(i in ro){
     
@@ -162,17 +159,19 @@ time_changes <- function(data.df = master_data.df,
     
     # Perform a t-test on the measurements for the two years
     
-    current_point <- recent_year_data %>%
-      select(var_name) %>%
+    current_point <- recent_year_data%>%
+      rename(target = all_of({{var_name}})) %>%
+      summarise(curr_point = mean(target, na.rm= TRUE))%>%
       pull()
     
-    previous_point <- previous_year %>%
-      select(var_name) %>%
+    previous_point <- previous_year_data%>%
+      rename(target = all_of({{var_name}})) %>%
+      summarise(prev_point = mean(target, na.rm= TRUE))%>%
       pull()
     
     difference <- current_point - previous_point
     
-    direction <- if_else(difference > 0, "Positiva change", "Negative change")
+    direction <- if_else(difference > 0, "Positive change", "Negative change")
     
     t_test_result <- t.test(x = recent_year_data[[var_name]], 
                             y = previous_year_data[[var_name]])
