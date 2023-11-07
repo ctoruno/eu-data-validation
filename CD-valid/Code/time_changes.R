@@ -77,11 +77,40 @@ time_changes <- function(data = master_data.df,
     
   }
   
-  ro<- c("JSE_indjudges", "CPA_freevote", "CPA_cleanelec_local", 
-         "CPA_media_freeop", "CPB_freexp_cso", "CPA_freepolassoc", 
-         "CPB_freexp", "TRT_police", "TRT_pparties", "CJP_proofburden", 
-         "COR_judges", "COR_police", "LEP_indprosecutors","LEP_indpolinv",
-         "CJP_fairtrial")
+  ro<- c("JSE_indjudges", 
+         "CPA_freevote", 
+         "CPA_cleanelec_local", 
+         "CPA_media_freeop", 
+         "CPB_freexp_cso", 
+         "CPA_freepolassoc", 
+         "CPB_freexp", 
+         "TRT_police", 
+         "TRT_pparties", 
+         "CJP_proofburden", 
+         "COR_judges", 
+         "LEP_indprosecutors",
+         "LEP_indpolinv",
+         "CJP_fairtrial",
+         "COR_parliament",
+         "COR_govt_national",
+         "COR_govt_local",
+         "COR_judges",
+         "BRB_permit_B",
+         "BRB_health_B",
+         "IRE_govtbudget",
+         "IRE_govtcontracts",
+         "IRE_disclosure",
+         "SEC_walking",
+         "CPB_freeassoc",
+         "CPA_law_langaval",
+         "CPB_unions",
+         "CPB_community",
+         "CPB_freemedia", 
+         "CPA_partdem_congress",
+         "CPB_freexp_pp",
+         "CPA_partdem_localgvt",
+         "LEP_rightsresp",
+         "LEP_accountability")
   
   for(i in ro){
     
@@ -133,6 +162,8 @@ time_changes <- function(data = master_data.df,
     
     # Perform a t-test on the measurements for the two years
     
+    direction <- if_else(recent_year_data[[var_name]] - previous_year_data[[var_name]] > 0, "Positiva change", "Negative change")
+    
     t_test_result <- t.test(x = recent_year_data[[var_name]], 
                             y = previous_year_data[[var_name]])
     
@@ -144,6 +175,7 @@ time_changes <- function(data = master_data.df,
       previous_score = t_test_result$estimate[[2]],
       warning = if_else(t_test_result$p.value < 0.01, "Red light", 
                         if_else(t_test_result$p.value > 0.01 & t_test_result$p.value < 0.1, "Yellow light", "Green light")),
+      direction = direction,
       curr_year = current_year,
       prev_year = previous_year
     ))
