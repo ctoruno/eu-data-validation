@@ -1,4 +1,4 @@
-time_changes <- function(data = master_data.df, 
+time_changes <- function(data.df = master_data.df, 
                          country_code = country_ind,
                          type = "dummy") {
   
@@ -54,7 +54,7 @@ time_changes <- function(data = master_data.df,
     bind_rows(GPP.df) 
   } else if (type == "real"){
     
-    data_subset.df <- data%>%
+    data_subset.df <- data.df %>%
       select(country_code_nuts, year, all_of(list_var_t.test))%>%
       rename(country_code = country_code_nuts)
     
@@ -162,7 +162,17 @@ time_changes <- function(data = master_data.df,
     
     # Perform a t-test on the measurements for the two years
     
-    direction <- if_else(recent_year_data[[var_name]] - previous_year_data[[var_name]] > 0, "Positiva change", "Negative change")
+    current_point <- recent_year_data %>%
+      select(var_name) %>%
+      pull()
+    
+    previous_point <- previous_year %>%
+      select(var_name) %>%
+      pull()
+    
+    difference <- current_point - previous_point
+    
+    direction <- if_else(difference > 0, "Positiva change", "Negative change")
     
     t_test_result <- t.test(x = recent_year_data[[var_name]], 
                             y = previous_year_data[[var_name]])
