@@ -46,7 +46,8 @@ GCB_clean <- function(df){
   
   # Check the codebook to see which variables need to be reoriented. Add them in the below vector to reorient (ro)
   
-  ro1<- c("Q2", "Q5_1", "Q5_2", "Q5_3", "Q5_4", "Q5_5", "Q5_6", "Q5_7")
+  ro1<- c("Q2", "Q5_1", "Q5_2", "Q5_3", "Q5_4", "Q5_5", "Q5_6", "Q5_7", "Q8_1", "Q8_2", 
+          "Q8_3", "Q8_4", "Q8_5", "Q8_6", "Q9_1", "Q9_2", "Q9_3", "Q9_4", "Q9_5", "Q9_6")
   
   for(i in ro1){
     
