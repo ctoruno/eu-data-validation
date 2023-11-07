@@ -42,7 +42,9 @@ type<- "real"
 # List of chosen analyses (add/remove as needed)
 type_data <- "pretest"
 
-master_data.df <- haven::read_dta(paste0("Input", 
+master_data.df <- haven::read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/1. PTR/", 
+                                         country_name,
+                                         "/1. Clean Data", 
                                          "/",
                                          country_name, "_clean.dta"))
 

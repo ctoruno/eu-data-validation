@@ -62,6 +62,22 @@ if (Sys.info()["user"] == "ctoruno") {
   
 }
 
+
+if (Sys.info()["user"] == "ctoruno") {
+  path2eu <- paste0("/Users/ctoruno/OneDrive - World Justice Project/Data Analytics/EU Subnational")
+  
+} else if (Sys.info()["user"] == "santiagopardo") {
+  path2eu <- paste0("/Users/santiagopardo/OneDrive - World Justice Project/Data Analytics/EU Subnational")
+  
+} else if (Sys.info()["user"]=="Dhabiby"){
+  path2eu<- paste0("/Users/Dhabiby/World Justice Project/Research - EU Subnational")
+  
+} else {
+  path2eu <- "PLEASE INSERT YOUR PERSONAL PATH TO THE  WJP - EU SUBNATIONAL DIRECTORY"
+  
+}
+
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 3.  Data list                                                                                  ----
