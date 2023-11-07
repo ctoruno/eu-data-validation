@@ -146,7 +146,7 @@ openxlsx::write.xlsx(analysis.list,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-for (i in c("Czechia", "Estonia", "Finland", "France","Spain", "Sweden", "Slovenia")) {
+for (i in c("Greece")) {
   rmarkdown::render("./Code/Country Report Test.Rmd", 
                     params = list(country = i),
                     output_file=paste0(i, " Validation Report", ".html"),

@@ -18,6 +18,8 @@ suppressMessages(library(kableExtra))
 knitr::opts_chunk$set(echo = F)
 
 df<- import_list(paste0("./Outcomes/Pretest/", params$country, "/", params$country, ".xlsx"))
+source("paragraph.R")
+par<- paragraph(params$country)
 ```
 
 
@@ -25,11 +27,8 @@ df<- import_list(paste0("./Outcomes/Pretest/", params$country, "/", params$count
 threshold<- df$tps_comparisson
 time<- df$time_changes
 
-time2<-left_join(time, threshold, by = join_by(variable == "GPP_Variable_Name"), relationship = "many-to-many")
-
-time<- time2%>%
-  select("country","variable", "ttestResult","current_score","previous_score", "warning","curr_year", "prev_year", Pillar, Sub_Pillar )%>%
-  distinct()
+time<- time%>%
+  select(-tpsvars)
 
 experts<- threshold%>%
   filter(Type_Survey == "expert")
@@ -185,16 +184,16 @@ problematicex<- sort(problematic)
 
 
 warnings<- time%>%
-  group_by(Pillar)%>%
+  group_by(pillar)%>%
   count(warning)
 
 problematic<- c()
 notproblematic<- c()
 
-for (p in unique(time$Pillar)){
+for (p in unique(time$pillar)){
   
   pillar<- warnings%>%
-    filter(Pillar == p)
+    filter(pillar == p)
   
   sp<- sum(pillar$n)
   
@@ -325,6 +324,7 @@ Overall, this platform is a tool to help accelerate the process of identifying p
 
 **We have found that the data from `r params$country` is `r probl`.**
 
+`r par`
 
 Since the data from `r params$country` is overall `r probl`, `r rec`
 
@@ -375,7 +375,7 @@ warningsoutput[is.na(warningsoutput)] <- 0
   
 warningsoutput<- warningsoutput%>%
   mutate(sum = `Green light` + `Red light` + `Yellow light`)%>%
-  select(Pillar, `Green light`, `Yellow light`, `Red light`, sum)
+  select(pillar, `Green light`, `Yellow light`, `Red light`, sum)
 
 warningsoutput$Label<- ifelse(warningsoutput$`Red light`> warningsoutput$sum/4, "Significantly Different", ifelse(warningsoutput$`Red light`+warningsoutput$`Yellow light` > warningsoutput$sum/2, "Significantly Different", ifelse(warningsoutput$`Yellow light` > warningsoutput$sum/2, "Significantly Different", "Not Significantly Different")))
 
@@ -481,10 +481,10 @@ colnames(e)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Que
 appendixtt <- merge(time, cb2, by.x="variable", by.y =  "Variable", all.x = TRUE)
 
 b<- appendixtt%>%
-  select(Sub_Pillar, `2023  EU Questionnaire`, warning, Description, prev_year, previous_score, current_score,   ttestResult, Pillar )%>%
-  arrange(Sub_Pillar)
+  select(subpillar, `2023  EU Questionnaire`, warning, Description, prev_year, previous_score, current_score, ttestResult, direction, pillar )%>%
+  arrange(subpillar)
 
-colnames(b)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question", "Comparison Year", "Previous Score", "Current Score", "P value",   "Pillar" )
+colnames(b)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question", "Comparison Year", "Previous Score", "Current Score", "P value",  "Direction", "Pillar" )
 
 b$Flag<- ifelse(b$Flag == "Red light", "Red", ifelse(b$Flag == "Green light", "Green", ifelse(b$Flag == "Yellow light", "Yellow", NA)))
 
@@ -494,7 +494,7 @@ b$Flag<- ifelse(b$Flag == "Red light", "Red", ifelse(b$Flag == "Green light", "G
 ```{r}
 ttestex<- "In the T-test, a red flag indicates statistical significance with a p-value of 0.01. A yellow flag indicates statistical significance with a p-value between 0.01 and 0.1. A green flag indicates statistical significance only with a p-value greater than 0.1, or no statistical significance."
 
-threshex<- "In the threshold difference, a red flag indicates a difference of 0.25 or more. A yellow flag indicates a difference between 0.10 and 0.25. A green flag indicates a difference of less than 0.10."
+threshex<- "In the threshold difference, a red flag indicates a difference of 0.25 or more. A yellow flag indicates a difference between 0.10 and 0.25. A green flag indicates a difference of less than 0.10. DISCLAIMER: some large differences may be caused by low matches between the content of the GPP and TPS questions. Make sure to account for how similar (or dissimilar) each pair is when performing qualitative checks."
 ```
 
 
