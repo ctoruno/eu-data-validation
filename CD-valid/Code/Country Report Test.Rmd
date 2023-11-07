@@ -762,7 +762,7 @@ e2<- e%>%
   filter(Pillar == "5: Order and Security")%>%
   select(-Pillar)
 
-e2$Flag = cell_spec(e2$Flag, color = ifelse(e2$Flag == "Green", "green", ifelse(e2$Flag == "Red", "red", "gold")))
+#e2$Flag = cell_spec(e2$Flag, color = ifelse(e2$Flag == "Green", "green", ifelse(e2$Flag == "Red", "red", "gold")))
 
 
 knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%

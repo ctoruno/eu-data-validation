@@ -96,7 +96,7 @@ tps_comparisson.df <- TPS_function(country = country,
                                    mat = matched_tps,
                                    type = "real")
 
-sociodem_comparisson.df <- sociodem_comparisson()
+#sociodem_comparisson.df <- sociodem_comparisson()
 
 #missing_values.df<- missing_values(data= master_data.df, 
 #                                   country= country)
@@ -107,8 +107,8 @@ if(type_data == "pretest") {
   
   analysis_functions <- list(
     time_changes = time_changes.df,
-    tps_comparisson = tps_comparisson.df,
-    sociodem_comparisson = sociodem_comparisson.df
+    tps_comparisson = tps_comparisson.df
+    #sociodem_comparisson = sociodem_comparisson.df
     )
   
 } else {
