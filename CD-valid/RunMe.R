@@ -134,12 +134,20 @@ openxlsx::write.xlsx(analysis.list,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-for (i in c("Greece")) {
+countries<- c("Greece")
+authors<- c("Santiago Pardo")
+
+report<- function(ctry, auth){
+  
   rmarkdown::render("./Code/Country Report Test.Rmd", 
-                    params = list(country = i),
-                    output_file=paste0(i, " Validation Report", ".html"),
-                    output_dir = paste0("./Outcomes/Pretest/", i)
-                    )
+                    params = list(country = ctry, author = auth, date= Sys.Date()),
+                    output_file=paste0(ctry, " Validation Report", ".html"),
+                    output_dir = paste0("./Outcomes/Pretest/", ctry))
 }
 
+for (i in 1:length(countries)){
+  
+  report(countries[[i]], authors[[i]])
+  
+}
 

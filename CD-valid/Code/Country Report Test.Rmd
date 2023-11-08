@@ -1,11 +1,14 @@
 ---
 title: '`r params$country` Validation Report'
-author: "Dalia Habiby"
-date: "2023-10-27"
+author: '`r params$author`'
+date: '`r params$date`'
 output:
   html_document: default
 params:
   country: Greece
+  author: 'Dalia Habiby'
+  date: '2023-11-08'
+
 ---
 
 ```{r setup, echo = F}
@@ -15,6 +18,7 @@ suppressMessages(library(haven))
 suppressMessages(library(caret))
 suppressMessages(library(rio))
 suppressMessages(library(kableExtra))
+suppressMessages(library(htmltools))
 knitr::opts_chunk$set(echo = F)
 
 df<- import_list(paste0("./Outcomes/Pretest/", params$country, "/", params$country, ".xlsx"))
@@ -326,7 +330,10 @@ Overall, this platform is a tool to help accelerate the process of identifying p
 
 ## Country Level Findings {.tabset}
 
-`r par`
+```{r, results= 'asis'}
+par
+```
+
 
 
 ```{r}
@@ -337,14 +344,14 @@ flagsoutput[is.na(flagsoutput)] <- 0
   
 flagsoutput<- flagsoutput%>%
   mutate(sum = green + red + yellow )%>%
-  mutate(perc = paste0(round(green/sum*100, digits = 1), "%"))
+  mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))
 
 flagsoutput$Label<- ifelse(flagsoutput$red >= flagsoutput$sum/2, "Significantly Different", ifelse(flagsoutput$red+flagsoutput$yellow >= 3*flagsoutput$sum/4, "Significantly Different", ifelse(flagsoutput$yellow >= 3*flagsoutput$sum/4, "Significantly Different", "Not Significantly Different")))
 
 flagsoutput<- flagsoutput%>%
   select(Pillar, green, yellow, red, perc, Label)
 
-colnames(flagsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Green Flags", "Label")
+colnames(flagsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 
 
@@ -358,14 +365,14 @@ flagsoutput2[is.na(flagsoutput2)] <- 0
   
 flagsoutput2<- flagsoutput2%>%
   mutate(sum = green + red + yellow )%>%
-  mutate(perc = paste0(round(green/sum*100, digits = 1), "%"))
+  mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))
 
 flagsoutput2$Label<- ifelse(flagsoutput2$red >= flagsoutput2$sum/2, "Significantly Different", ifelse(flagsoutput2$red+flagsoutput2$yellow >= 3*flagsoutput2$sum/4, "Significantly Different", ifelse(flagsoutput2$yellow >= 3*flagsoutput2$sum/4, "Significantly Different", "Not Significantly Different")))
 
 flagsoutput2<- flagsoutput2%>%
   select(Pillar, green, yellow, red, perc, Label)
 
-colnames(flagsoutput2)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Green Flags", "Label")
+colnames(flagsoutput2)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 ```
 
@@ -379,7 +386,7 @@ warningsoutput[is.na(warningsoutput)] <- 0
   
 warningsoutput<- warningsoutput%>%
   mutate(sum = `Green light` + `Red light` + `Yellow light`)%>%
-  mutate(perc = paste0(round(`Green light`/sum*100, digits = 1), "%"))
+  mutate(perc = paste0(round(`Red light`/sum*100, digits = 1), "%"))
 
 warningsoutput$Label<- ifelse(warningsoutput$`Red light` >= warningsoutput$sum/2, "Significantly Different", ifelse(warningsoutput$`Red light`+warningsoutput$`Yellow light` >= 3*warningsoutput$sum/4, "Significantly Different", ifelse(warningsoutput$`Yellow light` >= 3*warningsoutput$sum/4, "Significantly Different", "Not Significantly Different")))
 
@@ -393,9 +400,11 @@ colnames(warningsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags
 Below are three tables summarizing each of the validation analyses to provide further details about the issues we have flagged. If you are interested in exploring which specific variables are flagged, please see the Appendix.
   
 
-### Internal Validation (T-Test Analysis)
+### GPP Over Time
   
 Since the t-test analysis this year is comparing to the previous Global GPP, there are some indicators that are new this year and do not match with the Global indicators. Therefore, there are less indicators evaluated in this analysis than the threshold analysis. Additionally, we expect many of our indicators to change in significant ways as the world changes. Therefore, it is up to the discretion of the EU GPP team whether or not the t-test results are concerning.
+  
+**The previous GPP data from Greece is from 2017 (over 6 years old). Therefore, significant changes are expected.**
 
 ```{r}
 knitr::kable(warningsoutput, caption = "T-Test Analysis Summary")%>%
@@ -404,7 +413,7 @@ knitr::kable(warningsoutput, caption = "T-Test Analysis Summary")%>%
 ```
 
 
-### External Validation (Threshold Analysis with Population Polls)
+### TPS Public Opinion Polls
 Given the nature of third party sources, there are a limited number of external indicators that match with our EU GPP indicators. As of now, we do not have any matches for Pillar 6. Furthermore, all of the third party indicators may not be available for each country and thus the percentage of problematic indicators in each Pillar may vary. 
 
 
@@ -417,7 +426,7 @@ knitr::kable(flagsoutput, caption = "Threshold Analysis Summary")%>%
 ```
   
   
-### External Validation (Threshold Analysis with Expert Surveys)
+### TPS Expert Data
 Given the nature of third party sources, there are a limited number of external indicators that match with our EU GPP indicators. As of now, we do not have any matches for Pillar 6. Furthermore, all of the third party indicators may not be available for each country and thus the percentage of problematic indicators in each Pillar may vary. 
 
 
@@ -508,7 +517,7 @@ threshex<- "In the threshold difference, a red flag indicates a difference of 0.
 
 ### Pillar 1 {.tabset}
 
-#### T-Test (Internal) Analysis
+#### GPP Over Time
 
 `r ttestex`
 
@@ -524,7 +533,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 ```
 
 
-#### Population Threshold (External) Analysis
+#### TPS Public Opinion Polls
 
 `r threshex`
 
@@ -542,7 +551,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, 
   
 ```
 
-#### Experts Threshold (External) Analysis
+#### TPS Expert Data
 
 `r threshex`
 
@@ -563,7 +572,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 
 ### Pillar 2 {.tabset}
 
-#### T-Test (Internal) Analysis
+#### GPP Over Time
 
 `r ttestex`
 
@@ -579,7 +588,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 ```
 
 
-#### Population Threshold (External) Analysis
+#### TPS Public Opinion Polls
 
 `r threshex`
 
@@ -597,7 +606,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, 
   
 ```
 
-#### Experts Threshold (External) Analysis
+#### TPS Expert Data
 
 `r threshex`
 
@@ -617,7 +626,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 
 ### Pillar 3 {.tabset}
 
-#### T-Test (Internal) Analysis
+#### GPP Over Time
 
 `r ttestex`
 
@@ -633,7 +642,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 ```
 
 
-#### Population Threshold (External) Analysis
+#### TPS Public Opinion Polls
 
 `r threshex`
 
@@ -651,7 +660,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, 
   
 ```
 
-#### Experts Threshold (External) Analysis
+#### TPS Expert Data
 
 `r threshex`
 
@@ -671,7 +680,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 
 ### Pillar 4 {.tabset}
 
-#### T-Test (Internal) Analysis
+#### GPP Over Time
 
 `r ttestex`
 
@@ -687,7 +696,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 ```
 
 
-#### Population Threshold (External) Analysis
+#### TPS Public Opinion Polls
 
 `r threshex`
 
@@ -706,7 +715,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 ```
 
 
-#### Experts Threshold (External) Analysis
+#### TPS Expert Data
 
 `r threshex`
 
@@ -726,7 +735,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 
 ### Pillar 5 {.tabset}
 
-#### T-Test (Internal) Analysis
+#### GPP Over Time
 
 `r ttestex`
 
@@ -743,7 +752,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 ```
 
 
-#### Population Threshold (External) Analysis {.tabset}
+#### TPS Public Opinion Polls
 
 `r threshex`
 
@@ -762,7 +771,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 ```
 
 
-#### Experts Threshold (External) Analysis
+#### TPS Expert Data
 
 `r threshex`
 
@@ -782,7 +791,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 
 ### Pillar 7 {.tabset}
 
-#### T-Test (Internal) Analysis
+#### GPP Over Time
 
 `r ttestex`
 
@@ -798,7 +807,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 ```
 
 
-#### Population Threshold (External) Analysis {.tabset}
+#### TPS Public Opinion Polls
 
 `r threshex`
 
@@ -817,7 +826,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 ```
 
 
-#### Experts Threshold (External) Analysis
+#### TPS Expert Data
 
 `r threshex`
 
@@ -837,7 +846,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 
 ### Pillar 8 {.tabset}
 
-#### T-Test (Internal) Analysis
+#### GPP Over Time
 
 `r ttestex`
 
@@ -853,7 +862,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 ```
 
 
-#### Population Threshold (External) Analysis
+#### TPS Public Opinion Polls
 
 `r threshex`
 
@@ -871,7 +880,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, 
   
 ```
 
-#### Experts Threshold (External) Analysis
+#### TPS Expert Data
 
 `r threshex`
 
@@ -892,7 +901,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 
 ### Overall {.tabset}
 
-#### T-Test (Internal) Analysis
+#### GPP Over Time
 
 `r ttestex`
 
@@ -907,7 +916,7 @@ knitr::kable(b, caption = "Variable List and Flags", booktabs = T, escape = F)%>
   kable_styling(bootstrap_options = c("striped"))
 ```
 
-#### Population Threshold (External) Analysis
+#### TPS Public Opinion Polls
 
 `r threshex`
 
@@ -924,7 +933,7 @@ knitr::kable(a, caption = "Variable List and Flags", booktabs = T, escape = F)%>
 ```
 
 
-#### Experts Threshold (External) Analysis
+#### TPS Expert Data
 
 `r threshex`
 
