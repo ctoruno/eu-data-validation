@@ -48,18 +48,7 @@ master_data.df <- haven::read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/1. 
                                          "/",
                                          country_name, "_clean.dta"))
 
-GPP_previous.df <- haven::read_dta(paste0("Input/eu_merge.dta")) %>%
-  mutate(country_code = 
-           case_when(
-             country_name_ltn %in% "Czechia" ~ "CZE",
-             country_name_ltn %in% "Estonia" ~ "EE",
-             country_name_ltn %in% "Finland" ~ "FI",
-             country_name_ltn %in% "France" ~ "FR",
-             country_name_ltn %in% "Slovenia" ~ "SI",
-             country_name_ltn %in% "Spain" ~ "ES",
-             country_name_ltn %in% "Sweden" ~ "SE",
-             country_name_ltn %in% "Greece" ~ "EL"
-           ))
+GPP_previous.df <- haven::read_dta(paste0("Input/eu_merge.dta")) 
 
 TPS.df <- read_csv("Input/TPS_data.csv")
 
@@ -89,7 +78,6 @@ sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
 # Define analysis functions
 
 time_changes.df <- time_changes(data = master_data.df,
-                                country_code = country_ind,
                                 type= "real")
 
 tps_comparisson.df <- TPS_function(country = country,

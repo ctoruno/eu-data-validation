@@ -1,5 +1,5 @@
 time_changes <- function(data.df = master_data.df, 
-                         country_code = country_ind,
+                         country = country_name,
                          type = "dummy") {
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -21,55 +21,32 @@ time_changes <- function(data.df = master_data.df,
     pull()
   
   missings <- GPP_previous.df %>%
-    filter(country_code %in% country_code) %>%
-    select(country_code, year, all_of(list_var_t.test)) %>% 
-    pivot_longer(cols = !c(country_code, year), names_to = "variable", values_to = "values") %>%
+    filter(country_name_ltn %in% country) %>%
+    select(country_name_ltn, year, all_of(list_var_t.test)) %>% 
+    pivot_longer(cols = !c(country_name_ltn, year), names_to = "variable", values_to = "values") %>%
     left_join(variable_list.df, by = c("variable" = "gppvars")) %>%
     drop_na() %>%
     distinct(variable) %>%
     pull()
 
   GPP.df <- GPP_previous.df %>%
-    filter(!is.na(country_code)) %>%
-    select(country_code, year, all_of(list_var_t.test)) %>%
-    filter(country_code %in% country_ind) %>%
-    select(country_code, year, all_of(list_var_t.test))
-  
-  if (type == "dummy"){
-  
-  data_subset.df <- data %>%
-    mutate(country_code = 
-             case_when(
-               country_name_ltn == 1 ~ "CZE",
-               country_name_ltn == 2 ~ "EST",
-               country_name_ltn == 3 ~ "FIN",
-               country_name_ltn == 4 ~ "FRA",
-               country_name_ltn == 5 ~ "SVN",
-               country_name_ltn == 6 ~ "ESP",
-               country_name_ltn == 7 ~ "SWE"
-             )) %>%
-    select(country_code, year, all_of(list_var_t.test))
-  
-  data2test <- data_subset.df %>% 
-    bind_rows(GPP.df) 
-  } else if (type == "real"){
+    filter(!is.na(country_name_ltn)) %>%
+    select(country_name_ltn, year, all_of(list_var_t.test)) %>%
+    filter(country_name_ltn %in% country) %>%
+    select(country_name_ltn, year, all_of(list_var_t.test))
     
-    data_subset.df <- data.df %>%
-      select(country_code_nuts, year, all_of(list_var_t.test))%>%
-      rename(country_code = country_code_nuts)
-    
-    data2test <-data_subset.df %>% 
+  data_subset.df <- data.df %>%
+    select(country_name_ltn, year, all_of(list_var_t.test))
+  
+  data2test <-data_subset.df %>% 
       bind_rows(GPP.df) 
     
-  }
-  
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
   ## 2.  Standardize and normalize all variables                                                             ----
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
-  
+
   oriented <- data2test
   for(i in list_var_t.test){
     
@@ -95,7 +72,6 @@ time_changes <- function(data.df = master_data.df,
          "COR_govt_national",
          "COR_govt_local",
          "COR_judges",
-         "BRB_health_B",
          "IRE_govtbudget",
          "IRE_govtcontracts",
          "IRE_disclosure",
@@ -114,6 +90,16 @@ time_changes <- function(data.df = master_data.df,
     oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
                                                          ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
   }
+  
+  ro2<- c("BRB_health_B")
+  
+  for(i in ro2){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 0, 
+                           ifelse(oriented[[i]] == 2, 1, 
+                                  ifelse(oriented[[i]] == 0, 1, NA_real_)))
+  }
+  
   
 
   oriented <- oriented %>%
@@ -134,8 +120,7 @@ time_changes <- function(data.df = master_data.df,
     # Subset data for the current variable
     
     data_sub <- normalized %>%
-      filter(country_code == country_ind) %>%
-      select(country_code, year, {{var_name}}) %>%
+      select(country_name_ltn, year, {{var_name}}) %>%
       arrange(year)
     
     # country_code <- data_sub %>%
@@ -177,7 +162,7 @@ time_changes <- function(data.df = master_data.df,
                             y = previous_year_data[[var_name]])
     
     return(tibble(
-      country = country_code,
+      country = country,
       variable = var_name,
       ttestResult = t_test_result$p.value,
       current_score = t_test_result$estimate[[1]],

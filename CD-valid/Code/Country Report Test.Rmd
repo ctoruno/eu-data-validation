@@ -55,11 +55,11 @@ for (p in unique(threshold$Pillar)){
   
   if ("red" %in% unique(pillar$Flag)){
   
-    if (pillar$n[pillar$Flag == "red"]/sp >0.25){
+    if (pillar$n[pillar$Flag == "red"]/sp >= 0.5){
       
       problematic<- c(problematic, p)
     
-    } else if ( (pillar$n[pillar$Flag == "red"] + pillar$n[pillar$Flag == "yellow"])/sp > 0.5){
+    } else if ( (pillar$n[pillar$Flag == "red"] + pillar$n[pillar$Flag == "yellow"])/sp >= 0.75){
     
       problematic<- c(problematic, p)
       
@@ -73,7 +73,7 @@ for (p in unique(threshold$Pillar)){
   
   else if ("yellow" %in% unique(pillar$Flag)){
     
-    if (pillar$n[pillar$Flag == "yellow"]/sp > 0.5){
+    if (pillar$n[pillar$Flag == "yellow"]/sp >= 0.75){
       
       problematic<- c(problematic, p)
 
@@ -118,19 +118,19 @@ notproblematic<- c()
 
 for (p in unique(experts$Pillar)){
   
-  pillar<- flags2%>%
+  pillar <- flags2%>%
     filter(Pillar == p)
   
-  sp<- sum(pillar$n)
+  sp <- sum(pillar$n)
   
   
   if ("red" %in% unique(pillar$Flag)){
   
-    if (pillar$n[pillar$Flag == "red"]/sp >0.25){
+    if (pillar$n[pillar$Flag == "red"]/sp >= 0.5){
       
-      problematic<- c(problematic, p)
+      problematic <- c(problematic, p)
     
-    } else if ( (pillar$n[pillar$Flag == "red"] + pillar$n[pillar$Flag == "yellow"])/sp > 0.5){
+    } else if ( (pillar$n[pillar$Flag == "red"] + pillar$n[pillar$Flag == "yellow"])/sp >= 0.75){
     
       problematic<- c(problematic, p)
       
@@ -140,22 +140,18 @@ for (p in unique(experts$Pillar)){
 
   }
     
-  }
-  
-  else if ("yellow" %in% unique(pillar$Flag)){
+  } else if ("yellow" %in% unique(pillar$Flag)){
     
-    if (pillar$n[pillar$Flag == "yellow"]/sp > 0.5){
+    if (pillar$n[pillar$Flag == "yellow"]/sp >= 0.75){
       
       problematic<- c(problematic, p)
 
-    }
-    else {
+    } else {
       notproblematic<- c(notproblematic, p)
 
   }
   
-  }
-  else {
+  } else {
     notproblematic<- c(notproblematic, p)
 
   }
@@ -200,7 +196,7 @@ for (p in unique(time$pillar)){
   
   if ("Red light" %in% unique(pillar$warning)){
   
-    if (pillar$n[pillar$warning == "Red light"]/sp >0.25 ){
+    if (pillar$n[pillar$warning == "Red light"]/sp >= 0.5 ){
       
       problematic<- c(problematic, p)
     
@@ -208,7 +204,7 @@ for (p in unique(time$pillar)){
     
     else if ("Yellow light" %in% unique(pillar$warning)){
       
-      if ((pillar$n[pillar$warning == "Red light"] + pillar$n[pillar$warning == "Yellow light"])/sp > 0.5){
+      if ((pillar$n[pillar$warning == "Red light"] + pillar$n[pillar$warning == "Yellow light"])/sp >= 0.75){
         
         problematic<- c(problematic, p)
         
@@ -223,7 +219,7 @@ for (p in unique(time$pillar)){
   
   else if ("Yellow light" %in% unique(pillar$warning)){
     
-    if (pillar$n[pillar$warning == "Yellow light"]/sp > 0.5){
+    if (pillar$n[pillar$warning == "Yellow light"]/sp >= 0.75){
       
       problematic<- c(problematic, p)
 
@@ -298,21 +294,19 @@ The first analysis is a t-test between a subset of EU GPP indicators and their c
   
 We define a pillar as "significantly different" in the t-test analysis in one of two cases:
   
-1. If 25% or more of the indicators have a statistically significant difference from our last GPP with a p-value below 0.01 (red flag)
+1. If 50% or more of the indicators have a statistically significant difference from our last GPP with a p-value below 0.01 (red flag)
   
-2. If 50% or more of the indicators have a statistically significant difference from our last GPP with a p-value below 0.1 (yellow flag)
+2. If 75% or more of the indicators have a statistically significant difference from our last GPP with a p-value below 0.1 (yellow flag)
   
 The second is a threshold difference between a few EU GPP indicators and their matched third party source indicators for each sub-pillar. 
   
 We define a pillar as "significantly different" in the threshold analysis in one of two cases:
   
-1. If 25% or more of the indicators have a threshold difference above 0.25 (red flag), or
+1. If 50% or more of the indicators have a threshold difference above 0.30 (red flag), or
   
-2. If 50% or more of the indicators have a threshold difference above 0.10 (yellow flag)
+2. If 75% or more of the indicators have a threshold difference above 0.15 (yellow flag)
   
 In both of these tests, we flag the country as a whole if at lease half of the Pillars evaluated are labelled "significantly different." If the country is labelled "significantly different" in both tests, then we find cause for concern. 
-  
-Furthermore, the structural analysis describes the proportion of respondents who answered "Don't Know" or "Prefer Not to Say" in at least 10% of questions. This is helpful in the pretest specifically because we want to minimize the number of missing or NA values we receive. 
   
 **Process**
   
@@ -340,7 +334,7 @@ flagsoutput<- flagsoutput%>%
   mutate(sum = green + red + yellow )%>%
   select(Pillar, green, yellow, red, sum)
 
-flagsoutput$Label<- ifelse(flagsoutput$red> flagsoutput$sum/4, "Significantly Different", ifelse(flagsoutput$red+flagsoutput$yellow > flagsoutput$sum/2, "Significantly Different", ifelse(flagsoutput$yellow > flagsoutput$sum/2, "Significantly Different", "Not Significantly Different")))
+flagsoutput$Label<- ifelse(flagsoutput$red >= flagsoutput$sum/2, "Significantly Different", ifelse(flagsoutput$red+flagsoutput$yellow >= 3*flagsoutput$sum/4, "Significantly Different", ifelse(flagsoutput$yellow >= 3*flagsoutput$sum/4, "Significantly Different", "Not Significantly Different")))
 
 
 colnames(flagsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Total Indicators", "Label")
@@ -359,7 +353,7 @@ flagsoutput2<- flagsoutput2%>%
   mutate(sum = green + red + yellow )%>%
   select(Pillar, green, yellow, red, sum)
 
-flagsoutput2$Label<- ifelse(flagsoutput2$red> flagsoutput2$sum/4, "Significantly Different", ifelse(flagsoutput2$red+flagsoutput2$yellow > flagsoutput2$sum/2, "Significantly Different", ifelse(flagsoutput2$yellow > flagsoutput2$sum/2, "Significantly Different", "Not Significantly Different")))
+flagsoutput2$Label<- ifelse(flagsoutput2$red >= flagsoutput2$sum/2, "Significantly Different", ifelse(flagsoutput2$red+flagsoutput2$yellow >= 3*flagsoutput2$sum/4, "Significantly Different", ifelse(flagsoutput2$yellow >= 3*flagsoutput2$sum/4, "Significantly Different", "Not Significantly Different")))
 
 
 colnames(flagsoutput2)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Total Indicators", "Label")
@@ -377,7 +371,7 @@ warningsoutput<- warningsoutput%>%
   mutate(sum = `Green light` + `Red light` + `Yellow light`)%>%
   select(pillar, `Green light`, `Yellow light`, `Red light`, sum)
 
-warningsoutput$Label<- ifelse(warningsoutput$`Red light`> warningsoutput$sum/4, "Significantly Different", ifelse(warningsoutput$`Red light`+warningsoutput$`Yellow light` > warningsoutput$sum/2, "Significantly Different", ifelse(warningsoutput$`Yellow light` > warningsoutput$sum/2, "Significantly Different", "Not Significantly Different")))
+warningsoutput$Label<- ifelse(warningsoutput$`Red light` >= warningsoutput$sum/2, "Significantly Different", ifelse(warningsoutput$`Red light`+warningsoutput$`Yellow light` >= 3*warningsoutput$sum/4, "Significantly Different", ifelse(warningsoutput$`Yellow light` >= 3*warningsoutput$sum/4, "Significantly Different", "Not Significantly Different")))
 
 
 colnames(warningsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Total Indicators", "Label")
@@ -494,7 +488,7 @@ b$Flag<- ifelse(b$Flag == "Red light", "Red", ifelse(b$Flag == "Green light", "G
 ```{r}
 ttestex<- "In the T-test, a red flag indicates statistical significance with a p-value of 0.01. A yellow flag indicates statistical significance with a p-value between 0.01 and 0.1. A green flag indicates statistical significance only with a p-value greater than 0.1, or no statistical significance."
 
-threshex<- "In the threshold difference, a red flag indicates a difference of 0.25 or more. A yellow flag indicates a difference between 0.10 and 0.25. A green flag indicates a difference of less than 0.10. DISCLAIMER: some large differences may be caused by low matches between the content of the GPP and TPS questions. Make sure to account for how similar (or dissimilar) each pair is when performing qualitative checks."
+threshex<- "In the threshold difference, a red flag indicates a difference of 0.30 or more. A yellow flag indicates a difference between 0.15 and 0.30. A green flag indicates a difference of less than 0.10. DISCLAIMER: some large differences may be caused by low matches between the content of the GPP and TPS questions. Make sure to account for how similar (or dissimilar) each pair is when performing qualitative checks."
 ```
 
 
@@ -726,7 +720,8 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 b2<- b%>%
   filter(Pillar == "5: Order and Security")%>%
   select(-Pillar)
-#b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
+
+b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
 
 knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
   kable_classic(html_font = "Arial", )%>%

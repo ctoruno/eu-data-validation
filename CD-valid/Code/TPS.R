@@ -238,7 +238,7 @@ TPS_function<- function(gpp, tps, country, mat, type){
     ex<- ifelse(src %in% c("Varieties of Democracy", "Freedom in the World"), "expert", "population")
     
     f<- tibble("Country" = country, "GPP_Variable_Name" = gppvars[[i]], "GPP_datapoint" = gp, "TPS_Variable_Name" = tpsvars[i], 
-           "TPS_datapoint" = tp, "TPS_Source" = src, "TPS_Year" = y, "TPS_Question" = q, "Difference" = diff, "Flag" = ifelse(diff > .25, "red", ifelse(diff> .1, "yellow", "green")),
+           "TPS_datapoint" = tp, "TPS_Source" = src, "TPS_Year" = y, "TPS_Question" = q, "Difference" = diff, "Flag" = ifelse(diff > .30, "red", ifelse(diff> .15, "yellow", "green")),
            "Pillar" = pillarnew[i], "Sub_Pillar"= spnew[i], "Type_Survey" = ex)
     final<- rbind(final, f)
   }
