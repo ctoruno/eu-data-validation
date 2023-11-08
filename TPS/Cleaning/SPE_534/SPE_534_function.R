@@ -88,10 +88,17 @@ SPE_534_clean<- function(df){
       
     }
     
-    if (n %in% c("QA15_4", "QA15_7", "QA15_10", "QA15_11", "QA15_13")){
+    if (n %in% c("QA15_4", "QA15_11")){
       
       vals<-dfq[[1]]
       new_vals<- c(0,1/3, 2/3,1)
+      
+    }
+    
+    if (n %in% c("QA15_7", "QA15_10", "QA15_13")){
+      
+      vals<-dfq[[1]]
+      new_vals<- c(1,2/3, 1/3,0)
       
     }
     
