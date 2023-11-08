@@ -35,7 +35,7 @@ TPS_function<- function(gpp, tps, country, mat, type){
   ind<- which(countries == country)
   cy<- ns[[ind]]
   
-  expertmatches<- import_list("./Input/Selected GPP&TPS for QCC.xlsx")
+  expertmatches<- suppressMessages(import_list("./Input/Selected GPP&TPS for QCC.xlsx"))
   exm<- expertmatches$`Experts matches`
   exm<- exm%>%
     filter(TPS_source %in% c("VDEM", "Freedom House"))
@@ -214,6 +214,8 @@ TPS_function<- function(gpp, tps, country, mat, type){
   yr<- yr[! yr %in% c("NA")]
   question<- c(match$TPS_Q, exqs)
   question<- question[! question %in% c("NA")]
+  m<- c(match$MATCH, exm$MATCH)
+  m<- m[! m %in% c("NA")]
   
   for (i in c(1:length(tpsvars))){
     
@@ -239,7 +241,7 @@ TPS_function<- function(gpp, tps, country, mat, type){
     
     f<- tibble("Country" = country, "GPP_Variable_Name" = gppvars[[i]], "GPP_datapoint" = gp, "TPS_Variable_Name" = tpsvars[i], 
            "TPS_datapoint" = tp, "TPS_Source" = src, "TPS_Year" = y, "TPS_Question" = q, "Difference" = diff, "Flag" = ifelse(diff > .30, "red", ifelse(diff> .15, "yellow", "green")),
-           "Pillar" = pillarnew[i], "Sub_Pillar"= spnew[i], "Type_Survey" = ex)
+           "Pillar" = pillarnew[i], "Sub_Pillar"= spnew[i], "Type_Survey" = ex, "Match" = m[[i]])
     final<- rbind(final, f)
   }
   

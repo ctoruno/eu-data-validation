@@ -252,24 +252,34 @@ problematictt<- sort(problematic)
 ```{r}
 #Country overall
 
-if (clevel[[1]] == 1 & clevel[[3]] == 1){
+if (clevel[[1]] == 1 & clevel[[2]] == 1 & clevel[[3]] == 1){
+  probl<- "significantly different from the previous GPP, the Third Party Population Polls, and the Third Party Expert Surveys"
   
-  probl<- "significantly different from both the previous GPP and the Third Party Sources"
-  rec<- paste0("we recommend to check the indicators in pillar(s) ", paste(problematictt, sep="", collapse=", "), " in the t-test analysis and pillar(s) ", paste(problematicth, sep="", collapse=", "), " in the threshold analysis.")
-  
-} else if (clevel[[1]] == 1 & clevel[[3]] == 0) {
-  probl<- "significantly different from only the Third Party Sources"
-  rec<- paste0("we recommend to check the indicators in pillar(s) ", paste(problematicth, sep="", collapse=", "), " in the threshold analysis.")
-  
-} else if (clevel[[1]] == 0 & clevel[[3]] == 1){
-  probl<- "significantly different from only the previous GPP"
-  rec<- paste0("we recommend to check the indicators in pillar(s) ", paste(problematictt, sep="", collapse=", "), " in the t-test analysis.")
-  
-} else if (clevel[[1]] == 0 & clevel[[3]] == 0){
+} else if (clevel[[1]] == 0 & clevel[[2]] == 0 & clevel[[3]] == 0){
   probl<- "not significantly different from the previous GPP or the Third Party Sources"
-  rec<- "we recommend that the EU GPP team continue monitoring and make note of any other concern"
   
-}
+} else if (clevel[[1]] == 1 & clevel[[2]] == 0 & clevel[[3]] == 0) {
+  probl<- "significantly different from only the Third Party Population Polls"
+  
+} else if (clevel[[1]] == 0 & clevel[[2]] == 1 & clevel[[3]] == 0) {
+  probl<- "significantly different from only the Third Party Expert Surveys"
+  
+} else if (clevel[[1]] == 0 & clevel[[2]] == 0 & clevel[[3]] == 1){
+  probl<- "significantly different from only the previous GPP"
+  
+} else if (clevel[[1]] == 1 & clevel[[2]] == 1 & clevel[[3]] == 0) {
+  probl<- "significantly different from the Third Party Population Polls and the Third Party Expert Surveys"
+  
+} else if (clevel[[1]] == 1 & clevel[[2]] == 0 & clevel[[3]] == 1) {
+  probl<- "significantly different from the previous GPP and the Third Party Population Polls"
+  
+} else if (clevel[[1]] == 0 & clevel[[2]] == 1 & clevel[[3]] == 1){
+  probl<- "significantly different from the previous GPP and the Third Party Expert Surveys"
+  
+} 
+
+#(**We have found that the data from `r params$country` is `r probl`.**)
+
 ```
 
 # Report {.tabset}
@@ -316,12 +326,7 @@ Overall, this platform is a tool to help accelerate the process of identifying p
 
 ## Country Level Findings {.tabset}
 
-**We have found that the data from `r params$country` is `r probl`.**
-
 `r par`
-
-Since the data from `r params$country` is overall `r probl`, `r rec`
-
 
 
 ```{r}
@@ -332,12 +337,14 @@ flagsoutput[is.na(flagsoutput)] <- 0
   
 flagsoutput<- flagsoutput%>%
   mutate(sum = green + red + yellow )%>%
-  select(Pillar, green, yellow, red, sum)
+  mutate(perc = paste0(round(green/sum*100, digits = 1), "%"))
 
 flagsoutput$Label<- ifelse(flagsoutput$red >= flagsoutput$sum/2, "Significantly Different", ifelse(flagsoutput$red+flagsoutput$yellow >= 3*flagsoutput$sum/4, "Significantly Different", ifelse(flagsoutput$yellow >= 3*flagsoutput$sum/4, "Significantly Different", "Not Significantly Different")))
 
+flagsoutput<- flagsoutput%>%
+  select(Pillar, green, yellow, red, perc, Label)
 
-colnames(flagsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Total Indicators", "Label")
+colnames(flagsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Green Flags", "Label")
 
 
 
@@ -351,12 +358,15 @@ flagsoutput2[is.na(flagsoutput2)] <- 0
   
 flagsoutput2<- flagsoutput2%>%
   mutate(sum = green + red + yellow )%>%
-  select(Pillar, green, yellow, red, sum)
+  mutate(perc = paste0(round(green/sum*100, digits = 1), "%"))
 
 flagsoutput2$Label<- ifelse(flagsoutput2$red >= flagsoutput2$sum/2, "Significantly Different", ifelse(flagsoutput2$red+flagsoutput2$yellow >= 3*flagsoutput2$sum/4, "Significantly Different", ifelse(flagsoutput2$yellow >= 3*flagsoutput2$sum/4, "Significantly Different", "Not Significantly Different")))
 
+flagsoutput2<- flagsoutput2%>%
+  select(Pillar, green, yellow, red, perc, Label)
 
-colnames(flagsoutput2)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Total Indicators", "Label")
+colnames(flagsoutput2)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Green Flags", "Label")
+
 ```
 
 
@@ -369,12 +379,14 @@ warningsoutput[is.na(warningsoutput)] <- 0
   
 warningsoutput<- warningsoutput%>%
   mutate(sum = `Green light` + `Red light` + `Yellow light`)%>%
-  select(pillar, `Green light`, `Yellow light`, `Red light`, sum)
+  mutate(perc = paste0(round(`Green light`/sum*100, digits = 1), "%"))
 
 warningsoutput$Label<- ifelse(warningsoutput$`Red light` >= warningsoutput$sum/2, "Significantly Different", ifelse(warningsoutput$`Red light`+warningsoutput$`Yellow light` >= 3*warningsoutput$sum/4, "Significantly Different", ifelse(warningsoutput$`Yellow light` >= 3*warningsoutput$sum/4, "Significantly Different", "Not Significantly Different")))
 
+warningsoutput<- warningsoutput%>%
+  select(pillar, `Green light`, `Yellow light`, `Red light`, perc, Label)
 
-colnames(warningsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Total Indicators", "Label")
+colnames(warningsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 ```
 
@@ -456,29 +468,31 @@ Each tab below holds the full information for each analysis for each pillar in o
 appendixth <- merge(threshold, cb2, by.x="GPP_Variable_Name", by.y =  "Variable", all.x = TRUE)
 
 a<- appendixth%>%
-  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference,  Pillar )%>%
+  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference,  Pillar )%>%
   arrange(Sub_Pillar)
+a$Direction<- ifelse(a$GPP_datapoint-a$TPS_datapoint>0, "Positive", ifelse(a$GPP_datapoint-a$TPS_datapoint<0, "Negative", "No Change"))
 a$Flag<- ifelse(a$Flag == "red", "Red", ifelse(a$Flag == "green", "Green", ifelse(a$Flag == "yellow", "Yellow", NA)))
 
-colnames(a)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Pillar")
+colnames(a)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Pillar", "Direction")
 
 appendixex <- merge(experts, cb2, by.x="GPP_Variable_Name", by.y =  "Variable", all.x = TRUE)
 
 e<- appendixex%>%
-  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference,  Pillar )%>%
+  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference,  Pillar )%>%
   arrange(Sub_Pillar)
+e$Direction<- ifelse(e$GPP_datapoint-e$TPS_datapoint>0, "Positive", ifelse(e$GPP_datapoint-e$TPS_datapoint<0, "Negative", "No Change"))
 e$Flag<- ifelse(e$Flag == "red", "Red", ifelse(e$Flag == "green", "Green", ifelse(e$Flag == "yellow", "Yellow", NA)))
 
-colnames(e)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Pillar")
+colnames(e)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Pillar", "Direction")
 
 
 appendixtt <- merge(time, cb2, by.x="variable", by.y =  "Variable", all.x = TRUE)
 
 b<- appendixtt%>%
-  select(subpillar, `2023  EU Questionnaire`, warning, Description, prev_year, previous_score, current_score, ttestResult, direction, pillar )%>%
+  select(subpillar, `2023  EU Questionnaire`, warning, Description, prev_year, current_score, previous_score, ttestResult, direction, pillar )%>%
   arrange(subpillar)
 
-colnames(b)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question", "Comparison Year", "Previous Score", "Current Score", "P value",  "Direction", "Pillar" )
+colnames(b)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question", "Comparison Year", "Current Score", "Previous Score", "P value",  "Direction", "Pillar" )
 
 b$Flag<- ifelse(b$Flag == "Red light", "Red", ifelse(b$Flag == "Green light", "Green", ifelse(b$Flag == "Yellow light", "Yellow", NA)))
 
@@ -883,6 +897,9 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 `r ttestex`
 
 ```{r}
+b<- b%>%
+  select(Pillar, everything())
+
 b$Flag = cell_spec(b$Flag, color = ifelse(b$Flag == "Green", "green", ifelse(b$Flag == "Red", "red", "gold")))
 
 knitr::kable(b, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
@@ -895,6 +912,8 @@ knitr::kable(b, caption = "Variable List and Flags", booktabs = T, escape = F)%>
 `r threshex`
 
 ```{r}
+a<- a%>%
+  select(Pillar, everything())
 a$Flag = cell_spec(a$Flag, color = ifelse(a$Flag == "Green", "green", ifelse(a$Flag == "Red", "red", "gold")))
 
 knitr::kable(a, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
@@ -910,6 +929,8 @@ knitr::kable(a, caption = "Variable List and Flags", booktabs = T, escape = F)%>
 `r threshex`
 
 ```{r}
+e<- e%>%
+  select(Pillar, everything())
 e$Flag = cell_spec(e$Flag, color = ifelse(e$Flag == "Green", "green", ifelse(e$Flag == "Red", "red", "gold")))
 
 knitr::kable(e, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
