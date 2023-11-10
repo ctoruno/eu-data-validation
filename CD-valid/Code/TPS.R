@@ -151,8 +151,8 @@ TPS_function<- function(gpp, tps, country, mat, type){
   } else if (type == "real"){
     
   
-  gpp2<- gpp%>% 
-    select(country_name_ltn, all_of(gppvars))
+  gpp2<- gpp %>% 
+    select(country_name_ltn, all_of(gppvars)) 
     
   }
   ## 1.3 Re-orient indicators ==================================================================================
@@ -184,16 +184,33 @@ TPS_function<- function(gpp, tps, country, mat, type){
   }
 
   ## 1.4 Normalize indicators ==================================================================================
+  cols_oriented <- names(oriented)[2:length(oriented)]
+  max_values <- lapply(cols_oriented, function(col_name){
+    
+    codebook.df %>% 
+      filter(Variable %in% col_name) %>%
+      mutate(max_value = 
+               case_when(
+                 Scale == "Scale 2" ~ 2,
+                 Scale == "Scale 3" ~ 3,
+                 Scale == "Scale 4" ~ 4,
+                 Scale == "Scale 5" ~ 5
+               )) %>%
+      pull(max_value)
+  })
+  
+  oriented[nrow(oriented) + 1,] <- c("maxs", max_values)
   oriented[nrow(oriented) + 1,] <- c("mins", rep(list(1), ncol(oriented)-1))
   
-  process<- preProcess(oriented, method = c("range"))
+  
+  process    <- preProcess(oriented, method = c("range"))
   normalized <- predict(process, oriented)
   
-  normalized <- slice(normalized, 1:(n() - 1))
+  normalized <- slice(normalized, 1:(n() - 2))
   
   ## 1.5 Aggregate indicators at the country level =============================================================
   
-  gppaggregate<- normalized%>%
+  gppaggregate <- normalized%>%
     group_by(country_name_ltn)%>%
     summarise_at(gppvars, mean, na.rm= TRUE)
   
