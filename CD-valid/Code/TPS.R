@@ -169,7 +169,7 @@ TPS_function<- function(gpp, tps, country, mat, type){
          "IPR_easy2read", "IPR_rights", "IPR_easy2find", "IPR_easy2find_online", "TRT_parliament", "TRT_police", 
          "TRT_pparties", "CTZ_laborcond_A", "JSE_equality", "CJP_proofburden", "JSE_rightsaware", "JSE_access2assis",
          "JSE_affordcosts", "JSE_quickresol", "COR_judges", "JSE_enforce", "LEP_indpolinv", "COR_police", "LEP_indprosecutors",
-         "CJP_resprights", "CJP_fairtrial", "CJP_saferights")
+         "CJP_resprights", "CJP_fairtrial", "CJP_saferights", "CPB_community")
   for(i in ro){
     
     oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
