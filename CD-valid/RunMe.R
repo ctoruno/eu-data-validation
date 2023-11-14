@@ -125,7 +125,7 @@ analysis.list <- analysis_functions
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 openxlsx::write.xlsx(analysis.list,
-                     paste0("Outcomes/Pretest/",
+                     paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/",
                             country,
                             "/",
                             country,
@@ -142,10 +142,10 @@ authors<- c("Santiago Pardo")
 
 report<- function(ctry, auth){
   
-  rmarkdown::render("./Code/Country Report Test.Rmd", 
+  rmarkdown::render("./Code/Country Report Template.Rmd", 
                     params = list(country = ctry, author = auth, date= Sys.Date()),
                     output_file=paste0(ctry, " Validation Report", ".html"),
-                    output_dir = paste0("./Outcomes/Pretest/", ctry))
+                    output_dir = paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", ctry))
 }
 
 for (i in 1:length(countries)){

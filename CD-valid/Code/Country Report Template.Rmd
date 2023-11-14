@@ -21,7 +21,11 @@ suppressMessages(library(kableExtra))
 suppressMessages(library(htmltools))
 knitr::opts_chunk$set(echo = F)
 
-df<- import_list(paste0("./Outcomes/Pretest/", params$country, "/", params$country, ".xlsx"))
+df<- import_list(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", 
+                        params$country, 
+                        "/", 
+                        params$country, 
+                        ".xlsx"))
 source("paragraph.R")
 par<- paragraph(params$country)
 ```
