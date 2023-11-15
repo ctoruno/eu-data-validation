@@ -21,6 +21,20 @@ suppressMessages(library(kableExtra))
 suppressMessages(library(htmltools))
 knitr::opts_chunk$set(echo = F)
 
+if (Sys.info()["user"] == "ctoruno") {
+  path2eu <- paste0("/Users/ctoruno/OneDrive - World Justice Project/EU Subnational")
+  
+} else if (Sys.info()["user"] == "santiagopardo") {
+  path2eu <- paste0("/Users/santiagopardo/OneDrive - World Justice Project/EU Subnational")
+  
+} else if (Sys.info()["user"]=="Dhabiby"){
+  path2eu<- paste0("/Users/Dhabiby/World Justice Project/Research - EU Subnational")
+  
+} else {
+  path2eu <- "PLEASE INSERT YOUR PERSONAL PATH TO THE  WJP - EU SUBNATIONAL DIRECTORY"
+  
+}
+
 df<- import_list(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", 
                         params$country, 
                         "/", 
@@ -638,11 +652,15 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 b2<- b%>%
   filter(Pillar == "3: Open Government")%>%
   select(-Pillar)
-b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
+#b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
 
-knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
+knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
   kable_classic(html_font = "Arial", )%>%
-  kable_styling(bootstrap_options = c("striped"), full_width = T)
+  kable_styling(bootstrap_options = c("striped"), full_width = T)%>%
+  row_spec(which(b2$Flag == "Red"), background = "#F88888")%>%
+  row_spec(which(b2$Flag == "Green"), background = "#CAF888")%>%
+  row_spec(which(b2$Flag == "Yellow"), background = "#F8F688")%>%
+  scroll_box(width = "100%", height = "500px", fixed_thead = T)
 ```
 
 
@@ -650,17 +668,23 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 
 `r threshex`
 
-```{r}
+```{r,}
 a2<- a%>%
   filter(Pillar == "3: Open Government")%>%
   select(-Pillar)
 
-a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
+#a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
 
 
-knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial", )%>%
-  kable_styling(bootstrap_options = c("striped"), full_width = T)
+knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial")%>%
+  kable_styling(full_width = F)%>%
+  row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
+  remove_column(3)%>%
+  scroll_box(width = "940px", height = "500px", fixed_thead = T)
+
   
 ```
 
@@ -917,7 +941,7 @@ b$Flag = cell_spec(b$Flag, color = ifelse(b$Flag == "Green", "green", ifelse(b$F
 
 knitr::kable(b, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
   kable_classic(html_font = "Arial")%>%
-  kable_styling(bootstrap_options = c("striped"))
+  kable_styling(bootstrap_options = c("striped"), full_width = T)
 ```
 
 #### TPS Public Opinion Polls
@@ -931,7 +955,7 @@ a$Flag = cell_spec(a$Flag, color = ifelse(a$Flag == "Green", "green", ifelse(a$F
 
 knitr::kable(a, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
   kable_classic(html_font = "Arial", )%>%
-  kable_styling(bootstrap_options = c("striped"), full_width = T)
+  kable_styling(bootstrap_options = c("striped"), full_width = T, font_size = 12)
 # %>%
 #   scroll_box(width = "100%")
 ```
@@ -948,7 +972,7 @@ e$Flag = cell_spec(e$Flag, color = ifelse(e$Flag == "Green", "green", ifelse(e$F
 
 knitr::kable(e, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
   kable_classic(html_font = "Arial", )%>%
-  kable_styling(bootstrap_options = c("striped"), full_width = T)
+  kable_styling(bootstrap_options = c("striped"), full_width = T, font_size = 12)
 
 ```
 
