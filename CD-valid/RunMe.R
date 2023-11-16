@@ -26,27 +26,25 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#!/usr/bin/env Rscript 
+args = commandArgs(trailingOnly=TRUE)
+args[1] <- "Greece"
+args[2] <- "Santiago Pardo"
+
 source("Code/settings.R")
 source("Code/sociodem.R")
 source("Code/time_changes.R")
 source("Code/TPS.R")
 source("Code/missing_values.R")
 
-# Please fill the country code to be validated
-
-country_name <- "Greece"
-country_ind <- "EL"
-country <- "Greece"
-type<- "real"
-
 # List of chosen analyses (add/remove as needed)
 type_data <- "pretest"
 
 master_data.df <- haven::read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/1. PTR/", 
-                                         country_name,
+                                         args[1],
                                          "/1. Clean Data", 
                                          "/",
-                                         country_name, "_clean.dta"))
+                                         args[1], "_clean.dta"))
 
 GPP_previous.df <- haven::read_dta(paste0("Input/eu_merge.dta")) 
 
@@ -60,7 +58,7 @@ matched_tps <- suppressMessages(import_list("Input/Selected GPP&TPS for QCC.xlsx
 matched_tps <- matched_tps$`Selection and matching`
 variable_list.df <- match_indicators()
 sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
-  filter(country_code %in% country_ind)
+  filter(country %in% args[1])
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -83,7 +81,7 @@ sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
 time_changes.df <- time_changes(data.df = master_data.df,
                                 type= "real")
 
-tps_comparisson.df <- TPS_function(country = country,
+tps_comparisson.df <- TPS_function(country = args[1],
                                    gpp = master_data.df,
                                    tps = TPS.df,
                                    mat = matched_tps,
@@ -126,9 +124,9 @@ analysis.list <- analysis_functions
 
 openxlsx::write.xlsx(analysis.list,
                      paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/",
-                            country,
+                            args[1],
                             "/",
-                            country,
+                            args[1],
                             ".xlsx"))
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -137,20 +135,10 @@ openxlsx::write.xlsx(analysis.list,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-countries<- c("Greece")
-authors<- c("Santiago Pardo")
 
-report<- function(ctry, auth){
-  
   rmarkdown::render("./Code/Country Report Template.Rmd", 
-                    params = list(country = ctry, author = auth, date= Sys.Date()),
-                    output_file=paste0(ctry, " Validation Report", ".html"),
-                    output_dir = paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", ctry))
-}
+                    params = list(country = args[1], author = args[2], date= Sys.Date()),
+                    output_file=paste0(args[1], " Validation Report", ".html"),
+                    output_dir = paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", args[1]))
 
-for (i in 1:length(countries)){
-  
-  report(countries[[i]], authors[[i]])
-  
-}
 
