@@ -19,6 +19,8 @@ suppressMessages(library(caret))
 suppressMessages(library(rio))
 suppressMessages(library(kableExtra))
 suppressMessages(library(htmltools))
+suppressWarnings(library(DT))
+suppressWarnings(library(crosstalk))
 knitr::opts_chunk$set(echo = F)
 
 if (Sys.info()["user"] == "ctoruno") {
@@ -46,15 +48,15 @@ par<- paragraph(params$country)
 
 
 ```{r}
-threshold<- df$tps_comparisson
+threshold1<- df$tps_comparisson
 time<- df$time_changes
 
 time<- time%>%
   select(-tpsvars)
 
-experts<- threshold%>%
+experts<- threshold1%>%
   filter(Type_Survey == "expert")
-threshold<- threshold%>%
+threshold<- threshold1%>%
   filter(Type_Survey == "population")
 ```
 
@@ -523,6 +525,17 @@ colnames(b)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question", "Comparis
 
 b$Flag<- ifelse(b$Flag == "Red light", "Red", ifelse(b$Flag == "Green light", "Green", ifelse(b$Flag == "Yellow light", "Yellow", NA)))
 
+
+appendixtps <- merge(threshold1, cb2, by.x="GPP_Variable_Name", by.y =  "Variable", all.x = TRUE)
+
+tps<- appendixtps%>%
+  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Type_Survey, Pillar )%>%
+  arrange(Sub_Pillar)
+tps$Direction<- ifelse(tps$GPP_datapoint-tps$TPS_datapoint>0, "Positive", ifelse(tps$GPP_datapoint-tps$TPS_datapoint<0, "Negative", "No Change"))
+tps$Flag<- ifelse(tps$Flag == "red", "Red", ifelse(tps$Flag == "green", "Green", ifelse(tps$Flag == "yellow", "Yellow", NA)))
+
+colnames(tps)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Survey Type", "Pillar", "Direction")
+
 ```
 
 
@@ -934,12 +947,12 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F, 
 `r ttestex`
 
 ```{r}
-b<- b%>%
+b2<- b%>%
   select(Pillar, everything())
 
-b$Flag = cell_spec(b$Flag, color = ifelse(b$Flag == "Green", "green", ifelse(b$Flag == "Red", "red", "gold")))
+b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
 
-knitr::kable(b, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
+knitr::kable(b2, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"), full_width = T)
 ```
@@ -949,15 +962,14 @@ knitr::kable(b, caption = "Variable List and Flags", booktabs = T, escape = F)%>
 `r threshex`
 
 ```{r}
-a<- a%>%
+a2<- a%>%
   select(Pillar, everything())
-a$Flag = cell_spec(a$Flag, color = ifelse(a$Flag == "Green", "green", ifelse(a$Flag == "Red", "red", "gold")))
+a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
 
-knitr::kable(a, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
+knitr::kable(a2, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
   kable_classic(html_font = "Arial", )%>%
   kable_styling(bootstrap_options = c("striped"), full_width = T, font_size = 12)
-# %>%
-#   scroll_box(width = "100%")
+
 ```
 
 
@@ -966,13 +978,98 @@ knitr::kable(a, caption = "Variable List and Flags", booktabs = T, escape = F)%>
 `r threshex`
 
 ```{r}
-e<- e%>%
+e2<- e%>%
   select(Pillar, everything())
-e$Flag = cell_spec(e$Flag, color = ifelse(e$Flag == "Green", "green", ifelse(e$Flag == "Red", "red", "gold")))
+e2$Flag = cell_spec(e2$Flag, color = ifelse(e2$Flag == "Green", "green", ifelse(e2$Flag == "Red", "red", "gold")))
 
-knitr::kable(e, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
+knitr::kable(e2, caption = "Variable List and Flags", booktabs = T, escape = F)%>%
   kable_classic(html_font = "Arial", )%>%
   kable_styling(bootstrap_options = c("striped"), full_width = T, font_size = 12)
+
+```
+
+## Search
+
+
+```{r}
+# set up a group of SharedData objects
+varslist<- unique(c(a$`GPP Indicator`, e$`GPP Indicator`, b$`GPP Indicator`))
+z<- tibble("GPP Indicator" = varslist)
+
+b2<- b%>%
+  select(-Pillar)
+tps2<- tps%>%
+  select(-Pillar)
+
+shared_gpp <- SharedData$new(b2, key = ~`GPP Indicator`, group = "shared_obj")
+shared_tps <- SharedData$new(tps2, key = ~`GPP Indicator`, group = "shared_obj")
+shared_comb <- SharedData$new(z, key = ~`GPP Indicator`, group = "shared_obj")
+
+# send the group to the filtering selection box
+filter_select(
+  id = "id-selector", label = "GPP Indicator", 
+  sharedData = shared_comb, group = ~`GPP Indicator`
+)
+
+datatable(shared_gpp, 
+          rownames= FALSE, 
+          caption = "GPP Over Time",
+          options = list(ordering=F, dom = 't'))%>%
+    formatRound(columns=c("Current Score", "Previous Score", "P value"), digits=3)
+datatable(shared_tps, rownames= FALSE, 
+          caption = "Third Party Source",
+          options = list(ordering=F, dom = 't'))%>%
+    formatRound(columns=c("GPP Score", "TPS Score", "Difference"), digits=3)
+
+```
+
+
+```{r echo = FALSE}
+
+# varslist<- unique(c(a$`GPP Indicator`, e$`GPP Indicator`, b$`GPP Indicator`))
+# 
+# selectInput("var", label = "Variable",
+#               choices = c(varslist), selected = "q10")
+# 
+# reactive(b2<- b%>%
+#     filter(`GPP Indicator` == input$var))
+
+# clr<- b2$Flag[[1]]
+# 
+# if (clr == "Red"){
+#   
+#   bkg<- "#FC7661"
+# }
+# if (clr == "Yellow"){
+#   
+#   bkg<- "#FFFD69"
+# }
+# if (clr == "Green"){
+#   
+#   bkg<- "#B6F161"
+# }
+#   
+  
+```
+```{r echo = FALSE}
+
+
+# htmlOutput("tableset") 
+# 
+# # server component
+# output$tableset <- renderText({
+#   kable(b2%>%
+#     filter(`GPP Indicator` == input$var), caption = "GPP Over Time", booktabs = F, escape = F, digits=3)%>%
+#   kable_classic(html_font = "Arial")%>%
+#   kable_styling(full_width = F)
+# })
+# 
+# 
+
+# renderTable({
+#   b%>%
+#     filter(`GPP Indicator` == input$var)
+# })
 
 ```
 
