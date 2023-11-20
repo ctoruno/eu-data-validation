@@ -3,7 +3,7 @@
 ##
 ## Script:            Pre-settings
 ##
-## Author(s):         Carlos A. Toruño Paniagua   (ctoruno@worldjusticeproject.org)
+## Author(s):         Carlos A. ToruC1o Paniagua   (ctoruno@worldjusticeproject.org)
 ##                    A. Santiago Pardo G.        (spardo@worldjusticeproject.org)
 ##                    Dalia Habiby                (dhabiby@worldjusticeproject.org)
 ##
@@ -77,10 +77,86 @@ if (Sys.info()["user"] == "ctoruno") {
   
 }
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 3.  Re-orienting, normalizing, aggregating                                                               ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+aggregatingvars<- function(gppctry, gppvars){
+
+  oriented<- gppctry
+  
+  for(i in gppvars){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] %in% c(98,99), NA_real_, oriented[[i]])
+    
+  }
+  
+  ro<- c("JSE_indjudges", "ORC_govtefforts", "ORC_impartial_measures", "CPA_freevote", "CPA_cleanelec_local", 
+         "CPA_media_freeop", "CPB_freexp_cso", "CPA_freepolassoc", "CPB_freexp", "LEP_bribesreq", "IRE_campaign",
+         "IPR_easy2read", "IPR_rights", "IPR_easy2find", "IPR_easy2find_online", "TRT_parliament", "TRT_police", 
+         "TRT_pparties", "CTZ_laborcond", "JSE_equality", "CJP_proofburden", "JSE_rightsaware", "JSE_access2assis",
+         "JSE_affordcosts", "JSE_quickresol", "COR_judges", "JSE_enforce", "LEP_indpolinv", "COR_police", "LEP_indprosecutors",
+         "CJP_resprights", "CJP_fairtrial", "CJP_saferights", "CPB_community", "CPB_freeassoc", "COR_govt_local", 
+         "COR_parliament", "ROL_equality_sig", "JSE_polinfluence", "COR_govt_national", "IRE_govtbudget", "IRE_govtcontracts",
+         "IRE_disclosure", "SEC_walking", "CPA_law_langaval", "CPB_unions", "CPB_freemedia", "CPA_partdem_congress",  
+         "CPB_freexp_pp","CPA_partdem_localgvt")
+  
+  ro2<- c("CPA_protest", "CPA_cso")
+  
+  gppro<- intersect(gppvars, ro)
+  gppro2<- intersect(gppvars, ro2)
+  
+  for(i in gppro){
+  
+      oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
+                                                       ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
+  }
+
+  for(i in gppro2){
+  
+      oriented[[i]]<- ifelse(oriented[[i]] == 1, 2, ifelse(oriented[[i]] == 2, 1, NA_real_))
+    }
+
+## 1.4 Normalize indicators ==================================================================================
+cols_oriented <- names(oriented)[2:length(oriented)]
+max_values <- lapply(cols_oriented, function(col_name){
+  
+  codebook.df %>% 
+    filter(Variable %in% col_name) %>%
+    mutate(max_value = 
+             case_when(
+               Scale == "Scale 2" ~ 2,
+               Scale == "Scale 3" ~ 3,
+               Scale == "Scale 4" ~ 4,
+               Scale == "Scale 5" ~ 5
+             )) %>%
+    pull(max_value)
+})
+
+oriented[nrow(oriented) + 1,] <- c("maxs", max_values)
+oriented[nrow(oriented) + 1,] <- c("mins", rep(list(1), ncol(oriented)-1))
+
+
+process    <- preProcess(oriented, method = c("range"))
+normalized <- predict(process, oriented)
+
+normalized <- slice(normalized, 1:(n() - 2))
+
+## 1.5 Aggregate indicators at the country level =============================================================
+
+gppaggregate <- normalized%>%
+  group_by(country_name_ltn)%>%
+  summarise_at(gppvars, mean, na.rm= TRUE)
+
+return(gppaggregate)
+
+}
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 3.  Data list                                                                                  ----
+## 4.  Data list                                                                                  ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
