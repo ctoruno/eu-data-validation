@@ -1,5 +1,5 @@
 time_changes <- function(data.df = master_data.df, 
-                         country = country_name,
+                         country = args[1],
                          type = "dummy") {
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -132,8 +132,15 @@ time_changes <- function(data.df = master_data.df,
     
     years <- unique(data_sub$year)
     current_year <- max(years)
-    previous_year <- years[[2]]
     
+    if(length(years) == 2) {
+      
+      previous_year <- min(years)
+    } else {
+      
+      previous_year <- years[[2]]
+    }
+
     # Subset data for the most recent and previous year
     
     recent_year_data <- data_sub %>% 

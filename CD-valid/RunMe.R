@@ -28,7 +28,7 @@
 
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
-args[1] <- "Greece"
+args[1] <- "Cyprus"
 args[2] <- "Santiago Pardo"
 
 source("Code/settings.R")
@@ -79,13 +79,14 @@ sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
 # Define analysis functions
 
 time_changes.df <- time_changes(data.df = master_data.df,
-                                type= "real")
+                                type    = "real",
+                                country = args[1])
 
 tps_comparisson.df <- TPS_function(country = args[1],
-                                   gpp = master_data.df,
-                                   tps = TPS.df,
-                                   mat = matched_tps,
-                                   type = "real")
+                                   gpp     = master_data.df,
+                                   tps     = TPS.df,
+                                   mat     = matched_tps,
+                                   type    = "real")
 
 #sociodem_comparisson.df <- sociodem_comparisson()
 
