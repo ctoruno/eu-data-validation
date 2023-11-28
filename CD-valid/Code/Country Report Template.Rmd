@@ -78,16 +78,25 @@ for (p in unique(threshold$Pillar)){
   
   
   if ("red" %in% unique(pillar$Flag)){
-  
-    if (pillar$n[pillar$Flag == "red"]/sp >= 0.5){
       
-      problematic<- c(problematic, p)
-    
-    } else if ( (pillar$n[pillar$Flag == "red"] + pillar$n[pillar$Flag == "yellow"])/sp >= 0.75){
-    
-      problematic<- c(problematic, p)
+      if ("yellow" %in% unique(pillar$Flag)){
       
-  }
+        if ((pillar$n[pillar$Flag == "red"] + pillar$n[pillar$Flag == "yellow"])/sp >= 0.75){
+      
+          problematic <- c(problematic, p)
+      
+        } else if (pillar$n[pillar$Flag == "red"]/sp >= 0.5){
+          
+          problematic <- c(problematic, p)
+      }
+        else {
+          notproblematic<- c(notproblematic, p)
+
+      }
+    } else if (pillar$n[pillar$Flag == "red"]/sp >= 0.5){
+          
+          problematic <- c(problematic, p)
+      }
     else {
       notproblematic<- c(notproblematic, p)
 
@@ -101,14 +110,12 @@ for (p in unique(threshold$Pillar)){
       
       problematic<- c(problematic, p)
 
-    }
-    else {
+    } else {
       notproblematic<- c(notproblematic, p)
 
   }
   
-  }
-  else {
+  } else {
     notproblematic<- c(notproblematic, p)
 
   }
@@ -149,16 +156,25 @@ for (p in unique(experts$Pillar)){
   
   
   if ("red" %in% unique(pillar$Flag)){
-  
-    if (pillar$n[pillar$Flag == "red"]/sp >= 0.5){
       
-      problematic <- c(problematic, p)
-    
-    } else if ( (pillar$n[pillar$Flag == "red"] + pillar$n[pillar$Flag == "yellow"])/sp >= 0.75){
-    
-      problematic<- c(problematic, p)
+      if ("yellow" %in% unique(pillar$Flag)){
       
-  }
+        if ((pillar$n[pillar$Flag == "red"] + pillar$n[pillar$Flag == "yellow"])/sp >= 0.75){
+      
+          problematic <- c(problematic, p)
+      
+        } else if (pillar$n[pillar$Flag == "red"]/sp >= 0.5){
+          
+          problematic <- c(problematic, p)
+      }
+        else {
+          notproblematic<- c(notproblematic, p)
+
+      }
+    } else if (pillar$n[pillar$Flag == "red"]/sp >= 0.5){
+          
+          problematic <- c(problematic, p)
+      }
     else {
       notproblematic<- c(notproblematic, p)
 
@@ -219,29 +235,31 @@ for (p in unique(time$pillar)){
   
   
   if ("Red light" %in% unique(pillar$warning)){
-  
-    if (pillar$n[pillar$warning == "Red light"]/sp >= 0.5 ){
-      
-      problematic<- c(problematic, p)
     
-    }
-    
-    else if ("Yellow light" %in% unique(pillar$warning)){
+    if ("Yellow light" %in% unique(pillar$warning)){
       
       if ((pillar$n[pillar$warning == "Red light"] + pillar$n[pillar$warning == "Yellow light"])/sp >= 0.75){
         
         problematic<- c(problematic, p)
         
-      }
-      else {
+      } else if (pillar$n[pillar$warning == "Red light"]/sp >= 0.5 ){
+      
+          problematic<- c(problematic, p)
+    
+    } else {
         notproblematic<- c(notproblematic, p)
         
-      }
-    }
+   }
     
+  } else if (pillar$n[pillar$warning == "Red light"]/sp >= 0.5 ){
+      
+          problematic<- c(problematic, p)
+    
+  } else {
+        notproblematic<- c(notproblematic, p)
+        
   }
-  
-  else if ("Yellow light" %in% unique(pillar$warning)){
+}    else if ("Yellow light" %in% unique(pillar$warning)){
     
     if (pillar$n[pillar$warning == "Yellow light"]/sp >= 0.75){
       
