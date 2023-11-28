@@ -17,8 +17,8 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
- #gpp<- read_dta("../Input/example_clean.dta")
- #tps<- read_csv("../../TPS/TPS_data.csv")
+ #gpp<- master_data.df
+ #tps<- TPS.df
  #country<- "Greece"
  #mat<- matched_tps
  #type <- "real"
@@ -127,11 +127,6 @@ TPS_function<- function(gpp, tps, country, mat, type){
   
   ## 1.2 Sub-setting data  =====================================================================================
   
-  nuts<- c("CZ", "EE", "FI", "FR", "SI", "ES", "SE", "EL")
-  tps2<- tps%>%
-    select(country_code_nuts, all_of(tpsvars))%>%
-    filter(country_code_nuts %in% nuts)
-  
   if (type == "dummy"){
     
     
@@ -156,6 +151,8 @@ TPS_function<- function(gpp, tps, country, mat, type){
     
   }
   ## 1.3 Re-orient indicators ==================================================================================
+  
+  gppaggregate<- aggregatingvars(gpp2, gppvars)
   
   oriented<- gpp2
   for(i in gppvars){
@@ -237,7 +234,7 @@ TPS_function<- function(gpp, tps, country, mat, type){
   
   for (i in c(1:length(tpsvars))){
     
-    t<- tps2%>%
+    t<- tps%>%
       filter(country_code_nuts == cy)%>%
       select(country_code_nuts, tpsvars[[i]])
     
