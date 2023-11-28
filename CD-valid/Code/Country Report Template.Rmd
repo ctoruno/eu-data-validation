@@ -437,12 +437,27 @@ colnames(warningsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags
 
 Below are three tables summarizing each of the validation analyses to provide further details about the issues we have flagged. If you are interested in exploring which specific variables are flagged, please see the Appendix.
   
+```{r}
+prevyr<- as.numeric(time$prev_year[1])
+yrdiff<- as.numeric(time$curr_year[1]) - as.numeric(time$prev_year[1])
+
+if (yrdiff>3){
+  chnge<- "Therefore, significant changes are expected."
+  
+} else if (yrdiff <=3){
+  
+  chnge<- "Therefore, we may not expect significant changes."
+}
+
+
+```
+
 
 ### GPP Over Time
   
 Since the t-test analysis this year is comparing to the previous Global GPP, there are some indicators that are new this year and do not match with the Global indicators. Therefore, there are less indicators evaluated in this analysis than the threshold analysis. Additionally, we expect many of our indicators to change in significant ways as the world changes. Therefore, it is up to the discretion of the EU GPP team whether or not the t-test results are concerning.
   
-**The previous GPP data from Greece is from 2017 (over 6 years old). Therefore, significant changes are expected.**
+**The previous GPP data from `r params$country` is from `r prevyr` (over `r yrdiff` years old). `r chnge`**
 
 ```{r}
 
