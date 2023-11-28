@@ -83,7 +83,7 @@ if (Sys.info()["user"] == "ctoruno") {
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-aggregatingvars<- function(gppctry, gppvars){
+normalizingvars<- function(gppctry, gppvars){
 
   oriented<- gppctry
   
@@ -144,13 +144,7 @@ normalized <- predict(process, oriented)
 
 normalized <- slice(normalized, 1:(n() - 2))
 
-## 1.5 Aggregate indicators at the country level =============================================================
-
-gppaggregate <- normalized%>%
-  group_by(country_name_ltn)%>%
-  summarise_at(gppvars, mean, na.rm= TRUE)
-
-return(gppaggregate)
+return(normalized)
 
 }
 

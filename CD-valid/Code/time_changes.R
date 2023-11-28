@@ -34,6 +34,8 @@ time_changes <- function(data.df = master_data.df,
     select(country_name_ltn, year, all_of(list_var_t.test)) %>%
     filter(country_name_ltn %in% country) %>%
     select(country_name_ltn, year, all_of(list_var_t.test))
+  
+  GPP.df$BRB_health_B<- ifelse(GPP.df$BRB_health_B== 0, 2, GPP.df$BRB_health_B)
     
   data_subset.df <- data.df %>%
     select(country_name_ltn, year, all_of(list_var_t.test))
@@ -47,67 +49,13 @@ time_changes <- function(data.df = master_data.df,
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  oriented <- data2test
-  for(i in list_var_t.test){
-    
-    oriented[[i]]<- ifelse(oriented[[i]] %in% c(98,99), NA_real_, oriented[[i]])
-    
-  }
+  data2test2<- data2test%>%
+    select(-year)
+  normalized<- normalizingvars(data2test2, list_var_t.test)
+  normalized$year<- data2test$year
   
-  ro<- c("JSE_indjudges", 
-         "CPA_freevote", 
-         "CPA_cleanelec_local", 
-         "CPA_media_freeop", 
-         "CPB_freexp_cso", 
-         "CPA_freepolassoc", 
-         "CPB_freexp", 
-         "TRT_police", 
-         "TRT_pparties", 
-         "CJP_proofburden", 
-         "LEP_indprosecutors",
-         "LEP_indpolinv",
-         "CJP_fairtrial",
-         "COR_parliament",
-         "COR_govt_national",
-         "COR_govt_local",
-         "COR_judges",
-         "COR_police",
-         "IRE_govtbudget",
-         "IRE_govtcontracts",
-         "IRE_disclosure",
-         "SEC_walking",
-         "CPB_freeassoc",
-         "CPA_law_langaval",
-         "CPB_unions",
-         "CPB_community",
-         "CPB_freemedia", 
-         "CPA_partdem_congress",
-         "CPB_freexp_pp",
-         "CPA_partdem_localgvt")
-  
-  for(i in ro){
-    
-    oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
-                                                         ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
-  }
-  
-  ro2<- c("BRB_health_B")
-  
-  for(i in ro2){
-    
-    oriented[[i]]<- ifelse(oriented[[i]] == 1, 0, 
-                           ifelse(oriented[[i]] == 2, 1, 
-                                  ifelse(oriented[[i]] == 0, 1, NA_real_)))
-  }
-  
-  
-
-  oriented <- oriented %>%
-      mutate(year = as.character(year))
-  
-  process<- preProcess(oriented, method = c("range"))
-  normalized <- predict(process, oriented)
-
+  normalized<- normalized%>%
+    mutate(year = as.character(year))
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
