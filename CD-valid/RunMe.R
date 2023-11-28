@@ -59,6 +59,7 @@ matched_tps <- matched_tps$`Selection and matching`
 variable_list.df <- match_indicators()
 sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
   filter(country %in% args[1])
+metadata<- read_excel("Input/Metadata.xlsx")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -85,8 +86,8 @@ time_changes.df <- time_changes(data.df = master_data.df,
 tps_comparisson.df <- TPS_function(country = args[1],
                                    gpp     = master_data.df,
                                    tps     = TPS.df,
-                                   mat     = matched_tps,
-                                   type    = "real")
+                                   mat     = metadata
+                                   )
 
 #sociodem_comparisson.df <- sociodem_comparisson()
 
