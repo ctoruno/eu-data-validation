@@ -54,7 +54,39 @@ paragraph<- function(country){
   
   if (country == "Cyprus"){
     
-    p<- c("There is no paragraph yet")
+    p<- c("
+    <b>In general, we did not find any significant issues during the data validation process.</b>
+    <br>
+    Some minor issues that we believe are worth noticing are:
+    <br>   
+    <ul> 
+    <ul>    
+    <li>GPP Over Time:         
+    <ul>            
+    <li>We did not find any specific issue when comparing the pretest data to the previous GPP wave in Cyprus. </li>            
+    <li>Since the comparison data is from only 2 years ago, the lack of significant differences is expected.</li>            
+    <li>There is only one red flag in the t-test, regarding paying a bribe to expedite a process (q7e). However, this flag is raised because there is no variation among the pretest observations. </li>            
+    </ul>    
+    </li>
+    <br>
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>We have found significant differences in comparison to third party public opinion polls. However, this could be attributed to a combination of low matches and/or old data (especially from 2019).</li>            
+    <li>The most significant positive differences were found in subpillars related to independence of judges (q44j_G2) and freedom of media (q39b_G1). Although, the direction of the difference is not consistent among other related indicators. </li>        
+    <li>Some negative differences were found in subpillars related to freedom of CSOs (q44j_G2) and consistently in the cost of justice (q44d_G2 and q44e_G2). We suggest further research regarding the access to justice in Cyprus. </li>
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>We found some significant differences in absence of authoritarianism (q53_G1). </li>            
+    <li>There are also many flags in freedom of assembly (q39e_G1) and freedom of speech (q39e_G2). However, these come from differences with Freedom House, whose experts codings for Cyprus reflect a perfect score for the country.</li>            
+    </ul>    
+    </li>
+    </ul>
+    <br>   
+          
+          ")
     
   }
   
