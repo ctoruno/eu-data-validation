@@ -48,13 +48,17 @@ paragraph<- function(country){
     <br>  
     <br>"
     )
-    
-    return(HTML(p))
-    
+
     
   }
   
+  if (country == "Cyprus"){
+    
+    p<- c("There is no paragraph yet")
+    
+  }
   
+  return(HTML(p))
 }
 
 # <li>Regarding Pillar 4, we have identified large disparities when comparing the pretest data with our own 2017 data and the data from the TPS (Third-Party Source). 
