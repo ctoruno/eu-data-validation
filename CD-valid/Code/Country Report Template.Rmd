@@ -13,12 +13,12 @@ params:
 
 ```{r setup, echo = F}
 #add to gpp folder to make sure everyone has access
-suppressMessages(library(tidyverse))
-suppressMessages(library(haven))
-suppressMessages(library(caret))
-suppressMessages(library(rio))
-suppressMessages(library(kableExtra))
-suppressMessages(library(htmltools))
+suppressWarnings(suppressMessages(library(tidyverse)))
+suppressWarnings(suppressMessages(library(haven)))
+suppressWarnings(suppressMessages(library(caret)))
+suppressWarnings(suppressMessages(library(rio)))
+suppressWarnings(suppressMessages(library(kableExtra)))
+suppressWarnings(suppressMessages(library(htmltools)))
 suppressWarnings(library(DT))
 suppressWarnings(library(crosstalk))
 knitr::opts_chunk$set(echo = F)
