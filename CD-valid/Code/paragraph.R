@@ -90,6 +90,30 @@ paragraph<- function(country){
     
   }
   
+  if (country == "Portugal"){
+    
+    p<- c("There is no paragraph")
+    
+  }
+  
+  if (country == "Austria"){
+    
+    p<- c("There is no paragraph")
+    
+  }
+  
+  if (country == "Belgium"){
+    
+    p<- c("There is no paragraph")
+    
+  }
+  
+  if (country == "Bulgaria"){
+    
+    p<- c("There is no paragraph")
+    
+  }
+  
   return(HTML(p))
 }
 
