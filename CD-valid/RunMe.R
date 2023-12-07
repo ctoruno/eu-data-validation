@@ -28,8 +28,8 @@
 
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
-args[1] <- "Portugal"
-args[2] <- "Carlos Toruño Paniagua"
+args[1] <- "Cyprus"
+args[2] <- "Carlos ToruC1o Paniagua"
 
 source("Code/settings.R")
 source("Code/sociodem.R")
@@ -56,10 +56,10 @@ codebook.df <- read_excel("Input/EU2 GPP 2023 Codebook.xlsx") %>%
 
 matched_tps <- suppressMessages(import_list("Input/Selected GPP&TPS for QCC.xlsx"))
 matched_tps <- matched_tps$`Selection and matching`
-variable_list.df <- match_indicators()
+variable_list.df <- read_excel("Input/Metadatatt.xlsx")
 sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
   filter(country %in% args[1])
-metadata<- read_excel("Input/Metadata.xlsx")
+metadata<- read_excel("Input/Metadatatps.xlsx")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##

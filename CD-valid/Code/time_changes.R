@@ -24,7 +24,7 @@ time_changes <- function(data.df = master_data.df,
     filter(country_name_ltn %in% country) %>%
     select(country_name_ltn, year, all_of(list_var_t.test)) %>% 
     pivot_longer(cols = !c(country_name_ltn, year), names_to = "variable", values_to = "values") %>%
-    left_join(variable_list.df, by = c("variable" = "gppvars")) %>%
+    left_join(variable_list.df, by = c("variable" = "variable")) %>%
     drop_na() %>%
     distinct(variable) %>%
     pull()
@@ -132,7 +132,7 @@ time_changes <- function(data.df = master_data.df,
   
   # Combine the results into a single tibble
   time_test.df <- bind_rows(t_test_results) %>%
-    left_join(variable_list.df, by = c("variable" = "gppvars")) %>%
+    left_join(variable_list.df, by = c("variable" = "variable")) %>%
     arrange(pillar) 
   
   return(time_test.df)

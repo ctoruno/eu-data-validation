@@ -51,9 +51,6 @@ par<- paragraph(params$country)
 threshold1<- df$tps_comparisson
 time<- df$time_changes
 
-time<- time%>%
-  select(-tpsvars)
-
 experts<- threshold1%>%
   filter(Type_Survey == "expert")
 threshold<- threshold1%>%
@@ -505,40 +502,10 @@ knitr::kable(flagsoutput2, caption = "Threshold Analysis Summary", escape = F)%>
 
 Each tab below holds the full information for each analysis for each pillar in order to facilitate the evaluation of the results. At the moment, we do not have any matches in Pillar 6, and therefore there are no analysis tables for Pillar 6. Furthermore, there are no previous index matches for Pillar 5, and thus the table for the T-Test in Pillar 5 is empty.
 
-```{r}
-# th<- threshold%>%
-#   select(Country, GPP_Variable_Name, Flag, Pillar, Sub_Pillar)
-# tt<- time2%>%
-#   select(variable, warning)
- codebook<- import_list("../Input/EU2 GPP 2023 Codebook.xlsx")
- cb<- codebook$Codebook
- 
- cb2<-cb%>%
-   select(Variable, `2023  EU Questionnaire`, Description)
-# 
-# 
-# 
-# appendix<- left_join(th, tt, by = join_by("GPP_Variable_Name"== variable), relationship = "many-to-many")
-# appendix <- merge(appendix, cb2, by.x="GPP_Variable_Name", by.y =  "Variable", all.x = TRUE)
-# 
-# appendix<- appendix%>%
-#   select(Country, `2023  EU Questionnaire`, Description, Flag, warning, Pillar, Sub_Pillar)%>%
-#   distinct()%>%
-#   arrange(`2023  EU Questionnaire`, Pillar)
-# 
-# appendix$Flag<- ifelse(appendix$Flag == "red", "Red", ifelse(appendix$Flag == "yellow", "Yellow", ifelse(appendix$Flag == "green", "Green", "Not Assessed")))
-# appendix$warning<- ifelse(appendix$warning == "Red light", "Red", ifelse(appendix$warning == "Yellow light", "Yellow", ifelse(appendix$warning == "Green light", "Green", "Not Assessed")))
-# 
-# colnames(appendix)<- c("Country", "GPP Variable", "Question Text", "Flag Threshold", "Flag T-Test", "Pillar", "Sub-Pillar")
-
-
-```
-
 
 ```{r}
-appendixth <- merge(threshold, cb2, by.x="GPP_Variable_Name", by.y =  "Variable", all.x = TRUE)
 
-a<- appendixth%>%
+a<- threshold%>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference,  Pillar )%>%
   arrange(Sub_Pillar)
 a$Direction<- ifelse(a$GPP_datapoint-a$TPS_datapoint>0, "Positive", ifelse(a$GPP_datapoint-a$TPS_datapoint<0, "Negative", "No Change"))
@@ -546,9 +513,8 @@ a$Flag<- ifelse(a$Flag == "red", "Red", ifelse(a$Flag == "green", "Green", ifels
 
 colnames(a)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Pillar", "Direction")
 
-appendixex <- merge(experts, cb2, by.x="GPP_Variable_Name", by.y =  "Variable", all.x = TRUE)
 
-e<- appendixex%>%
+e<- experts%>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference,  Pillar )%>%
   arrange(Sub_Pillar)
 e$Direction<- ifelse(e$GPP_datapoint-e$TPS_datapoint>0, "Positive", ifelse(e$GPP_datapoint-e$TPS_datapoint<0, "Negative", "No Change"))
@@ -557,9 +523,7 @@ e$Flag<- ifelse(e$Flag == "red", "Red", ifelse(e$Flag == "green", "Green", ifels
 colnames(e)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Pillar", "Direction")
 
 
-appendixtt <- merge(time, cb2, by.x="variable", by.y =  "Variable", all.x = TRUE)
-
-b<- appendixtt%>%
+b<- time%>%
   select(subpillar, `2023  EU Questionnaire`, warning, Description, prev_year, current_score, previous_score, ttestResult, direction, pillar )%>%
   arrange(subpillar)
 
@@ -568,9 +532,7 @@ colnames(b)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question", "Comparis
 b$Flag<- ifelse(b$Flag == "Red light", "Red", ifelse(b$Flag == "Green light", "Green", ifelse(b$Flag == "Yellow light", "Yellow", NA)))
 
 
-appendixtps <- merge(threshold1, cb2, by.x="GPP_Variable_Name", by.y =  "Variable", all.x = TRUE)
-
-tps<- appendixtps%>%
+tps<- threshold1%>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Type_Survey, Pillar )%>%
   arrange(Sub_Pillar)
 tps$Direction<- ifelse(tps$GPP_datapoint-tps$TPS_datapoint>0, "Positive", ifelse(tps$GPP_datapoint-tps$TPS_datapoint<0, "Negative", "No Change"))
