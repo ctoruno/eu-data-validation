@@ -14,10 +14,82 @@ paragraph<- function(country){
   
   if (country == "Bulgaria"){
     
-    p<- c("There is no paragraph")
+    p<- c("<b>In general, we found no significant issues.</b>
+    <br>
+    Some issues that we believe are worth noting are:
+    <br>   
+    <ul> 
+    <ul>    
+    <li>GPP Over Time:         
+    <ul>            
+    <li>Despite the comparative data being old, distinguishable changes over time were not identified. Consequently, we recommend directing the research focus toward aspects anticipated to have evolved over the years, which are not listed below.</li> 
+    <li>Significant decreases were observed in Media Freedom (q39b_G1), Accountability (q57_G1 and q57G2), Corruption in Parliament (q3a) and Corruption in National Government (q3b).</li>            
+    </ul>    
+    </li>
+    <br>
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>Although some noteworthy differences were uncovered, these could potentially be attributed to outdated data.</li>          
+    <li>The pretest data revealed a more favorable score than the TPS indicator in relation to CSO Freedom of Opinion (q39h_G2).</li>
+    <li>Contrarily, the pretest data was consistently lower than the TPS indicators concerning Right to Protection in Court (q59e), Deficiency of Courts (44a_G2, 44d_G2, 44e_G2), and the Performance of Prosecutors (q43f_G2).</li>
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>We found that TPS expert scores are lower than our pretest scores in terms of the Independence of the Judiciary (q44j_G2 and q52_G1) and Freedom of Assembly (q39f_G2).</li>          
+    <li>Although, there is a positive change regarding Freedom of Assembly (q39c_G2).</li>    
+    <li>These comparisons also confirm the differences in Accountability (q57_G1 and q57G2) and Corruption in Parliament (q3a) that were previously identified.</li>   
+    </ul>    
+    </li>
+    </ul>
+    <br>   
+    The DAU point person for this report is Carlos Toruño.
+    <br>
+    <br>
+ ")
     
   }
   
+  # GPP Over Time
+  # Pillar1 q39b_G1 (media, decrease), freedom of speech (q39e_G2, improve), accountability (q57_Gx decrease)
+  # Pillar2 corruption natl gov (q3a and q3b sig decrease)
+  # P3 pol trus (q1j) media (q39_G1, repeat), q39e repeat
+  #   P4 q39b_G1 and q39e repeat
+  #     Justice is good
+  # 
+  # didnt find anything worrying
+  # highlight we found sig diffs in q39b_g1 fee media and q3a corr parliament q3b corr nat gov and q57 accountability
+  # 
+  # TPS population
+  # 
+  # Pillar 1 cso freedom/gov checks q39h_G2 positive and large
+  # Pillar 3 q8b,d right to info (negative medium), q39h_G2 repeated
+  # Pillar 4 q59e justice
+  # Pillar 7 q44a_G2, d, e a2j/civil justice (negative, large)
+  # Pillar 8 q43e_G2 (positive medium) q43f_G2 negative large, q44f_G1 negative medium
+  # 
+  # Some issues that have high match and old data are disregarded
+  # q39hg2 feedom opinion with cso (only pos)
+  # we are consistently below the tps indicators for: (old data)
+  # q59e right to protection upheld in court
+  # q44eg2 deficiency of courts
+  # q43fg2 
+  # 
+  # TPS expert
+  # 
+  # Pillar 1
+  # q44j_G2 (judicial constraints negative large )
+  # q39c_G2 freedom of assembly positive medium
+  # q52_G1 absence of authoritarianism (negative medium)
+  # pillar 2
+  # q3a q4d absence of bribery (negative medium)
+  # q57_G1 and q57_G2	positive medium absence of embezzlement
+  # q39f_G2 freedom of assembly negative medium
+  # q59a negative , q58a positive
+  # 
+  # we found sig diffs regarding freedom of assembly q39c &f and independence of judiciary (44jg2 52jg1)
+  # also accountability and corruption of parliament that have been already mentioned
   
   if (country == "Croatia"){
     
@@ -190,7 +262,42 @@ paragraph<- function(country){
   
   if (country == "Malta"){
     
-    p<- c("There is no paragraph")
+    p<- c("<b>In general, we did not find any significant issues during the data validation process.</b>
+    <br>
+    There are some minor issues that are worth noting:
+    <br>   
+    <ul> 
+    <ul>    
+    <li>GPP Over Time:         
+    <ul>            
+    <li>We did not find any specific issue when comparing the pretest data to the previous GPP wave in Malta </li>            
+    <li>Since the comparison data is from only 2 years ago, the lack of significant differences is expected, and Malta is not known for having any large changes.</li>            
+    <li>There are only a few red flags in the t-test. However, these flags are in questions regarding the respondents' experiences and opinions, which are prone to change. </li>            
+    </ul>    
+    </li>
+    <br>
+    <li>TPS Public Opinion Polls:  
+     <ul>            
+    <li>We have found a few significant differences in comparison to third party public opinion polls in Pillars 4, 5, and 7. However, this could be attributed to a combination of low matches and/or old data (especially from 2019).</li>            
+    <li>The most significant differences were found in subpillars related to fundamental freedoms (q39b_g1 and q39h_g2), justice (q59e) and civil justice (q44a_G2 and q44e_G2). </li>        
+    <li>The direction of the difference is not consistent among the related indicators.</li>
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:  
+    <ul>            
+    <li>There are differences between the pretest data and the expert TPS in Pillars 2 and 8. </li>
+    <li>We found some yellow flag differences in absence of bribery (q3a and q4d). </li>            
+    <li>There are also flags in due process (q44h_G1) and prisons (q44k_G1). However, these come from differences with low matched expert questions.</li>            
+    </ul>    
+    </li>
+    </ul>
+    <br> 
+    The designated point person for this analysis within the DAU is Natalia Rodriguez.
+    <br>  
+    <br>
+   
+          ")
     
   }
   

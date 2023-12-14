@@ -5,7 +5,7 @@ date: '`r params$date`'
 output:
   html_document: default
 params:
-  country: Cyprus
+  country: Malta
   author: 'Dalia Habiby'
   date: '2023-11-08'
 
@@ -52,9 +52,11 @@ threshold1<- df$tps_comparisson
 time<- df$time_changes
 
 experts<- threshold1%>%
-  filter(Type_Survey == "expert")
+  filter(Type_Survey == "expert")%>%
+  drop_na()
 threshold<- threshold1%>%
-  filter(Type_Survey == "population")
+  filter(Type_Survey == "population")%>%
+  drop_na()
 ```
 
 ```{r}
