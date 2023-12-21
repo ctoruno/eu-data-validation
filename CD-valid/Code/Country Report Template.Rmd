@@ -5,7 +5,7 @@ date: '`r params$date`'
 output:
   html_document: default
 params:
-  country: Malta
+  country: Ireland
   author: 'Dalia Habiby'
   date: '2023-11-08'
 
@@ -418,6 +418,11 @@ colnames(flagsoutput2)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags",
 ```{r}
 warningsoutput<- warnings%>%
   pivot_wider(names_from = warning, values_from = n)
+
+if (!("Red light" %in% colnames(warningsoutput))){
+  
+  warningsoutput$`Red light`<- rep(0, nrow(warningsoutput))
+}
 
 warningsoutput[is.na(warningsoutput)] <- 0
   
@@ -891,8 +896,9 @@ a2<- a%>%
 
 #a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
 
-
-knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
+if (nrow(a2) >0){
+  
+  knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(full_width = F)%>%
   row_spec(0, bold= TRUE)%>%
@@ -902,6 +908,19 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "940px", height = "500px", fixed_thead = T)
+  
+} else{
+
+knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial")%>%
+  kable_styling(full_width = F)%>%
+  row_spec(0, bold= TRUE)%>%
+  row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
+  scroll_box(width = "940px", height = "500px", fixed_thead = T)
+
+}
   
 ```
 
