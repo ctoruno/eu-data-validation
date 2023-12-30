@@ -1,6 +1,16 @@
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+##  Paragraph                                                                                      ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 paragraph<- function(country){
   
   if (country == "Austria"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Austria                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("There is no paragraph")
     
@@ -8,11 +18,19 @@ paragraph<- function(country){
   
   if (country == "Belgium"){
     
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Belgium                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Bulgaria"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Bulgaria                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("<b>In general, we found no significant issues.</b>
     <br>
@@ -50,54 +68,22 @@ paragraph<- function(country){
  ")
     
   }
-  
-  # GPP Over Time
-  # Pillar1 q39b_G1 (media, decrease), freedom of speech (q39e_G2, improve), accountability (q57_Gx decrease)
-  # Pillar2 corruption natl gov (q3a and q3b sig decrease)
-  # P3 pol trus (q1j) media (q39_G1, repeat), q39e repeat
-  #   P4 q39b_G1 and q39e repeat
-  #     Justice is good
-  # 
-  # didnt find anything worrying
-  # highlight we found sig diffs in q39b_g1 fee media and q3a corr parliament q3b corr nat gov and q57 accountability
-  # 
-  # TPS population
-  # 
-  # Pillar 1 cso freedom/gov checks q39h_G2 positive and large
-  # Pillar 3 q8b,d right to info (negative medium), q39h_G2 repeated
-  # Pillar 4 q59e justice
-  # Pillar 7 q44a_G2, d, e a2j/civil justice (negative, large)
-  # Pillar 8 q43e_G2 (positive medium) q43f_G2 negative large, q44f_G1 negative medium
-  # 
-  # Some issues that have high match and old data are disregarded
-  # q39hg2 feedom opinion with cso (only pos)
-  # we are consistently below the tps indicators for: (old data)
-  # q59e right to protection upheld in court
-  # q44eg2 deficiency of courts
-  # q43fg2 
-  # 
-  # TPS expert
-  # 
-  # Pillar 1
-  # q44j_G2 (judicial constraints negative large )
-  # q39c_G2 freedom of assembly positive medium
-  # q52_G1 absence of authoritarianism (negative medium)
-  # pillar 2
-  # q3a q4d absence of bribery (negative medium)
-  # q57_G1 and q57_G2	positive medium absence of embezzlement
-  # q39f_G2 freedom of assembly negative medium
-  # q59a negative , q58a positive
-  # 
-  # we found sig diffs regarding freedom of assembly q39c &f and independence of judiciary (44jg2 52jg1)
-  # also accountability and corruption of parliament that have been already mentioned
-  
+
   if (country == "Croatia"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Croatia                                                                                       ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Cyprus"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Cyprus                                                                                       ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("
     <b>In general, we did not find any significant issues during the data validation process.</b>
@@ -137,11 +123,19 @@ paragraph<- function(country){
   
   if (country == "Czechia"){
     
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Czechia                                                                                       ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Denmark"){
+   
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Denmark                                                                                      ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("There is no paragraph")
     
@@ -149,11 +143,19 @@ paragraph<- function(country){
   
   if (country == "Estonia"){
     
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Estonia                                                                                     ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Finland"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Finland                                                                                      ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("There is no paragraph")
     
@@ -161,11 +163,19 @@ paragraph<- function(country){
   
   if (country == "France"){
     
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## France                                                                                       ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Germany"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Germany                                                                                       ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("There is no paragraph")
     
@@ -173,6 +183,10 @@ paragraph<- function(country){
   
   
   if (country == "Greece"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Greece                                                                                ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c( 
     " <b>In general, we have found significant differences in Pillars 4, 5, 7, and 8.</b>
@@ -226,17 +240,61 @@ paragraph<- function(country){
   
   if (country == "Hungary"){
     
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Hungary                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Ireland"){
     
-    p<- c("There is no paragraph")
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Ireland                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    p<- c("
+    <b>In general, we did not find any significant issues during the data validation process.</b>
+    <br>
+    <br>
+    Some minor issues that we believe are worth noticing are:
+    <br>  
+    <br>
+    <ul>    
+    <li><b>GPP Over Time:</b>
+    <br>
+    <br>
+    <ul>            
+    <li>We did not find any specific issue when comparing the pretest data to the previous GPP wave in Ireland. </li>            
+    <li>As the comparison data hails from only two years ago, it's not surprising that there aren't significant differences. This indicates a satisfactory level of consistency initially. </li>
+    </ul>    
+    </li>
+    <br>
+    <li><b>TPS Public Opinion Polls and TPS expert data:</b>
+    <br>
+    <br>
+    <ul>            
+    <li>Notable disparities have been identified between third-party public opinion polls conducted during elections and the actual free voting results <b>(q39d_G1)</b>. This variance might be linked to the timing of the third-party survey, which occurred a year after the elections and could mirror certain dissatisfaction with the process.</li>    
+    <li>The most noteworthy positive variances were observed within subpillars associated with Open Government, particularly concerning media freedom <b>(q39b_G1)</b> and the freedom of civil society to express dissenting opinions against the government <b>(q39h_G2)</b>. These variations remain consistent across both the TPS expert's party source and other public opinion polls. We recommend to explain better this differences.</li>    
+    <li>Negative disparities were identified in subpillars concerning people's awareness of their rights <b>(q44a_G2)</b> and consistently in the cost of justice <b>(q44d_G2 and q44e_G2)</b>. We recommend conducting further research specifically focusing on access to justice in Ireland.</li>    
+    </ul>
+    </li>
+    </ul>
+    <br> 
+    <br>  
+    The designated point person for this analysis within the DAU is Santiago Pardo.
+    <br>  
+    <br> 
+          ")
     
   }
   
   if (country == "Italy"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Italy                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("There is no paragraph")
     
@@ -244,23 +302,69 @@ paragraph<- function(country){
   
   if (country == "Latvia"){
     
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Latvia                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Lithuania"){
     
-    p<- c("There is no paragraph")
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Lithuania                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    p<- c("
+    <b>In general, we did not find any significant issues during the data validation process.</b>
+    <br>
+    <br>
+    Some minor issues that we believe are worth noticing are:
+    <br>  
+    <br>
+    <ul>    
+    <li><b>GPP Over Time:</b>
+    <br>
+    <br>
+    <ul>            
+    <li>We find significative differences on Civil Justice subpillar, specially in question <b>q44j_G2</b>. However, when we compare this question with the TPS, we find that the data points are similar. We suggest further research regarding this question, mainly because this subpillar is consistently flagging in all the tests. </li>            
+    </ul>    
+    </li>
+    <br>
+    <li><b>TPS Public Opinion Polls and TPS expert data:</b>
+    <br>
+    <br>
+    <ul>            
+    <li>The most noteworthy positive variances were observed within subpillars associated with Criminal Justice. Negative disparities were identified in subpillars concerning people's awareness of their rights <b>(q44a_G2)</b>, and consistently in the cost of justice <b>(q44d_G2 and q44e_G2)</b>. We recommend to explain better this differences.</li>    
+    <li>While significant differences are noticeable across almost all subpillars compared to the expert data, these disparities don't correspond with consistently similar results from other tests. As a result, concerns regarding their validity are mitigated.</li>
+    </ul>
+    </li>
+    </ul>
+    <br> 
+    <br>  
+    The designated point person for this analysis within the DAU is Santiago Pardo.
+    <br>  
+    <br>          
+          ")
     
   }
   
   if (country == "Luxembourg"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Luxembourg                                                                                       ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Malta"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Malta                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("<b>In general, we did not find any significant issues during the data validation process.</b>
     <br>
@@ -303,17 +407,29 @@ paragraph<- function(country){
   
   if (country == "Netherlands"){
     
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Netherlands                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Poland"){
     
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Poland                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Portugal"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Portugal                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("
     
@@ -353,11 +469,19 @@ paragraph<- function(country){
   
   if (country == "Romania"){
     
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Romania                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Slovakia"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Slovakia                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("There is no paragraph")
     
@@ -365,17 +489,29 @@ paragraph<- function(country){
   
   if (country == "Slovenia"){
     
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Slovenia                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Spain"){
     
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Spain                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     p<- c("There is no paragraph")
     
   }
   
   if (country == "Sweden"){
+    
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ## Sweden                                                                                        ----
+    ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("There is no paragraph")
     

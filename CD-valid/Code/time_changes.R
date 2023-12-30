@@ -63,6 +63,11 @@ time_changes <- function(data.df = master_data.df,
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
+  if (country == "Ireland"){
+    
+    list_var_t.test<- setdiff(list_var_t.test, c("IRE_govtbudget","IRE_govtcontracts","IRE_disclosure"))
+  }
+  
   t_test_results <- lapply(list_var_t.test, function(var_name) {
     
     # Subset data for the current variable

@@ -28,8 +28,8 @@
 
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
-args[1] <- "Bulgaria"
-args[2] <- "Carlos Toruño"
+args[1] <- "Lithuania"
+args[2] <- "Santiago Pardo"
 
 source("Code/settings.R")
 source("Code/sociodem.R")
