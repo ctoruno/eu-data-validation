@@ -53,8 +53,9 @@ VDM_clean<- function(df){
   ## 1.2 Sub-setting data=======================================================================================
 
   dfv <- df%>%
-    select(all_of(targetvars))%>%
-    filter(country_name %in% cntry)
+    filter(year == max(year))%>%
+    select(all_of(targetvars))
+    
 
   ## 1.3 Re-orient indicators ==================================================================================
 
@@ -90,7 +91,8 @@ VDM_clean<- function(df){
   
   aggregate <- df3%>%
     group_by(country_name) %>%
-    summarise_at(targetvars[-1], mean, na.rm= TRUE)
+    summarise_at(targetvars[-1], mean, na.rm= TRUE)%>%
+    filter(country_name %in% cntry)
 
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
