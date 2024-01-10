@@ -55,9 +55,10 @@ paragraph<- function(country){
     <br>
     <li>TPS Expert Data:         
     <ul>            
-    <li>We found that TPS expert scores are lower than our pretest scores in terms of the Independence of the Judiciary (q44j_G2 and q52_G1) and Freedom of Assembly (q39f_G2).</li>          
-    <li>Although, there is a positive change regarding Freedom of Assembly (q39c_G2).</li>    
-    <li>These comparisons also confirm the differences in Accountability (q57_G1 and q57G2) and Corruption in Parliament (q3a) that were previously identified.</li>   
+    <li>In general, our pretest scores are lower than TPS expert scores across all flag colors. </li>  
+    <li>We found consistently lower scores in terms of the Independence of the Judiciary (q44j_G2 and q44i_G2) and Absence of Authoritarianism (q52_G2, q53_G1,and q56_G1). However, many of these may be caused by low question match or perfect expert scores.</li>          
+    <li>Although, there is a positive change regarding Equality (q58a).</li>    
+    <li> Since these disparities don't correspond with consistently similar results from other tests, concerns regarding their validity are mitigated. </li>
     </ul>    
     </li>
     </ul>
@@ -110,8 +111,10 @@ paragraph<- function(country){
     <br>
     <li>TPS Expert Data:         
     <ul>            
-    <li>We found some significant differences in absence of authoritarianism (q53_G1). </li>            
-    <li>There are also many flags in freedom of assembly (q39e_G1) and freedom of speech (q39e_G2). However, these come from differences with Freedom House, whose experts codings for Cyprus reflect a perfect score for the country.</li>            
+    <li>In general, our pretest scores are lower than TPS expert scores across all flag colors. </li>  
+    <li>We found some significant differences in absence of authoritarianism (q52_G2, q53_G1,and q56_G1) and Independence of the Judiciary (q44j_G2 and q44i_G2). </li> 
+    <li>There are also many flags in freedom of assembly (q39e_G1) and freedom of speech (q39e_G2). However, these come from differences with Freedom House, whose experts codings for Cyprus reflect a perfect score for the country.</li>     
+    <li> Since these disparities don't correspond with consistently similar results from other tests, concerns regarding their validity are mitigated. </li>
     </ul>    
     </li>
     </ul>
@@ -189,7 +192,7 @@ paragraph<- function(country){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c( 
-    " <b>In general, we have found significant differences in Pillars 4, 5, 7, and 8.</b>
+    " <b>In general, we have found significant differences in Pillars 4, 5, 7, and 8.  Overall, almost all of the comparisons with expert sources are significant and negative.</b>
     <br>
     <br>   
     <ul> 
@@ -255,10 +258,10 @@ paragraph<- function(country){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     p<- c("
-    <b>In general, we did not find any significant issues during the data validation process.</b>
+    <b>In general, we only found significant issues with the TPS expert sources during the data validation process.</b>
     <br>
     <br>
-    Some minor issues that we believe are worth noticing are:
+    Some issues that we believe are worth noticing are:
     <br>  
     <br>
     <ul>    
@@ -271,15 +274,24 @@ paragraph<- function(country){
     </ul>    
     </li>
     <br>
-    <li><b>TPS Public Opinion Polls and TPS expert data:</b>
+    <li><b>TPS Public Opinion Polls: </b>
     <br>
     <br>
     <ul>            
     <li>Notable disparities have been identified between third-party public opinion polls conducted during elections and the actual free voting results <b>(q39d_G1)</b>. This variance might be linked to the timing of the third-party survey, which occurred a year after the elections and could mirror certain dissatisfaction with the process.</li>    
-    <li>The most noteworthy positive variances were observed within subpillars associated with Open Government, particularly concerning media freedom <b>(q39b_G1)</b> and the freedom of civil society to express dissenting opinions against the government <b>(q39h_G2)</b>. These variations remain consistent across both the TPS expert's party source and other public opinion polls. We recommend to explain better this differences.</li>    
+    <li>The most noteworthy positive variances were observed within subpillars associated with Open Government, particularly concerning media freedom <b>(q39b_G1)</b> and the freedom of civil society to express dissenting opinions against the government <b>(q39h_G2)</b>. These variations remain consistent across other public opinion polls. We recommend to explain better this differences.</li>    
     <li>Negative disparities were identified in subpillars concerning people's awareness of their rights <b>(q44a_G2)</b> and consistently in the cost of justice <b>(q44d_G2 and q44e_G2)</b>. We recommend conducting further research specifically focusing on access to justice in Ireland.</li>    
     </ul>
     </li>
+    <br>
+    <li><b>TPS expert data: </b>
+    <br>
+    <br>
+    <ul>
+    <li> In general, our pretest scores are lower than TPS expert scores across all flag colors. </li>
+    <li> We found consistently lower scores in terms of the Independence of the Judiciary (q44j_G2 and q44i_G2) and Absence of Authoritarianism (q52_G2 and q56_G1). However, many of these may be caused by low question match or perfect expert scores.</li>  
+    <li> There are also many flags in freedom of assembly (q39e_G1) and freedom of speech (q39e_G2). However, these come from differences with Freedom House, whose experts codings for Cyprus reflect a perfect score for the country. </li>
+    <li> Since these disparities don't correspond with consistently similar results from other tests, concerns regarding their validity are mitigated. </li>
     </ul>
     <br> 
     <br>  
@@ -392,7 +404,7 @@ paragraph<- function(country){
     <ul>            
     <li>There are differences between the pretest data and the expert TPS in Pillars 2 and 8. </li>
     <li>We found some yellow flag differences in absence of bribery (q3a and q4d). </li>            
-    <li>There are also flags in due process (q44h_G1) and prisons (q44k_G1). However, these come from differences with low matched expert questions.</li>            
+    <li>There are also flags in due process (q44h_G1) and prisons (q44k_G1 and q44g_G1). However, these come from differences with low matched expert questions.</li>            
     </ul>    
     </li>
     </ul>
@@ -458,6 +470,8 @@ paragraph<- function(country){
     <li>TPS Expert Data:         
     <ul>            
     <li>Analysis indicates that TPS expert scores are systemically lower than our pretest scores in terms of the Independence of Judges (q44j_G2 and q43_G1), Anti-corruption Government Efforts (q4d), and Equality before the Law (q59a).</li>            
+    <li> We found lower scores across many comparisons, and consistently in terms of the Independence of the Judiciary (q44j_G2 and q44i_G2) and Absence of Authoritarianism (q52_G2 and q56_G1). However, many of these may be caused by low question match or perfect expert scores.</li>  
+    <li> Since these disparities don't correspond with consistently similar results from other tests, concerns regarding their validity are mitigated. </li>
     </ul>    
     </li>
     </ul>
