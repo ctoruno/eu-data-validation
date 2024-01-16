@@ -28,8 +28,8 @@
 
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
-args[1] <- "Lithuania"
-args[2] <- "Santiago Pardo"
+args[1] = "Slovakia"
+args[2] = "Carlos Toruño"
 
 source("Code/settings.R")
 source("Code/sociodem.R")
@@ -137,7 +137,9 @@ openxlsx::write.xlsx(analysis.list,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  Sys.sleep(10)
+a<- 2+2
+
+Sys.sleep(10)
 
   rmarkdown::render("./Code/Country Report Template.Rmd", 
                     params = list(country = args[1], author = args[2], date= Sys.Date()),
