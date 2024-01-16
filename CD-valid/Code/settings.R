@@ -57,7 +57,10 @@ if (Sys.info()["user"] == "ctoruno") {
 } else if (Sys.info()["user"]=="Dhabiby"){
   path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics")
   
-} else {
+} else if (Sys.info()["user"] == "apillai") {
+  path2SP <-"/Users/apillai/OneDrive - World Justice Project/Data Analytics/"
+
+}else {
   path2SP <- "PLEASE INSERT YOUR PERSONAL PATH TO THE  WJP - DATA ANALYTICS DIRECTORY"
   
 }
@@ -71,6 +74,9 @@ if (Sys.info()["user"] == "ctoruno") {
   
 } else if (Sys.info()["user"]=="Dhabiby"){
   path2eu<- paste0("/Users/Dhabiby/World Justice Project/Research - EU Subnational")
+  
+} else if (Sys.info()["user"]=="apillai"){
+  path2eu<- paste0("/Users/apillai/OneDrive - World Justice Project/EU Subnational")
   
 } else {
   path2eu <- "PLEASE INSERT YOUR PERSONAL PATH TO THE  WJP - EU SUBNATIONAL DIRECTORY"
