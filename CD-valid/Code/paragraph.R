@@ -247,7 +247,44 @@ paragraph<- function(country){
     ## Hungary                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>Overall, we encountered no significant issues during the data validation process. We are aware that numerous flags appeared in the GPP validation over time, but this can be attributed to the time gap between comparisons. Additionally, these differences do not align with TPS public opinions, which are remarkably similar. As a result, while these discrepancies are intriguing and warrant understanding, they are not substantial enough to cast doubt on the polling company.</b>
+    <br>
+    <br>
+    Some issues that we believe are worth noticing are:
+    <br>  
+    <br>
+    <ul>    
+    <li><b>GPP Over Time:</b>
+    <br>
+    <br>
+    <ul>            
+    <li>We observed significant differences in Civil Justice topics, particularly in questions <b>q44j_G2</b> and <b>q3d</b>. Upon comparison with the TPS, we noted consistent discrepancies, especially in variables <b>q44a_G2</b>, <b>q44d_G2</b>, and <b>q44e_G2</b>. We recommend further research on this question, primarily because this subpillar consistently flags in all tests.</li>
+    </ul>
+    <ul>            
+    <li>We noted substantial differences in Criminal Justice variables. Nearly all the variables related to police, prosecutors, and judges show significant negativity in the pretest data. Upon comparison with the TPS, we observed that these negative discrepancies also exist for certain sources. Hence, we recommend further investigation into these differences.</li>
+    </ul>
+    <ul>            
+    <li>Note: We are aware of discrepancies in the first four pillars. However, it's important to highlight that Hungary has undergone significant changes in these topics over the last seven years. In fact, these four factors in the ROLI are the ones that have experienced the most decline in Hungary.</li>
+    </ul>  
+    </li>
+    <br>
+    <li><b>TPS Public Opinion Polls and TPS expert data:</b>
+    <br>
+    <br>
+    <ul>            
+    <li>The most noteworthy positive variances were observed within subpillars associated with Criminal Justice. Negative disparities were identified in subpillars concerning people's awareness of their rights <b>(q44a_G2)</b>, and consistently in the cost of justice <b>(q44d_G2 and q44e_G2)</b>. We recommend to explain better this differences.</li>    
+    <li>As mentioned, there are differences in Criminal Justice variables related to criminal investigation (<b>q3g</b>), the respect of victims' rights (<b>q44f_G1</b>), and perceptions about prosecutors and judges (<b>q43f_G2</b> and <b>q3d</b>). We will focus on these discrepancies, as we have observed their persistence in the GPP comparisons over the years.</li>
+    <li>While significant differences are noticeable across almost all subpillars compared to the expert data, these disparities don't correspond with consistently similar results from other tests. As a result, concerns regarding their validity are mitigated.</li>
+    </ul>
+    </li>
+    </ul>
+    <br> 
+    <br>  
+    The designated point person for this analysis within the DAU is Santiago Pardo.
+    <br>  
+    <br>          
+          ")
     
   }
   

@@ -28,8 +28,13 @@
 
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
+<<<<<<< Updated upstream
 args[1] = "Netherlands"
 args[2] = "Natalia Rodriguez"
+=======
+args[1] = "Hungary"
+args[2] = "Santiago Pardo"
+>>>>>>> Stashed changes
 
 source("Code/settings.R")
 source("Code/sociodem.R")
