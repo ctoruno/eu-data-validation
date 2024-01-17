@@ -11,7 +11,7 @@
 ##
 ## Creation date:     October 25th, 2023
 ##
-## This version:      October 26th, 2023
+## This version:      January 17th, 2024
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -28,8 +28,8 @@
 
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
-args[1] = "Slovakia"
-args[2] = "Carlos Toruño"
+args[1] = "Netherlands"
+args[2] = "Natalia Rodriguez"
 
 source("Code/settings.R")
 source("Code/sociodem.R")
@@ -123,6 +123,10 @@ analysis.list <- analysis_functions
 ## 2. Saving function                                                                   ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+if (!dir.exists(file.path(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", args[1]))){
+  dir.create(file.path(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", args[1]))
+}
 
 openxlsx::write.xlsx(analysis.list,
                      paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/",
