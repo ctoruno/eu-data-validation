@@ -368,7 +368,44 @@ paragraph<- function(country){
     ## Luxembourg                                                                                       ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+          <b>In general, we only found significant issues with the TPS expert sources during the data validation process.</b>
+    <br>
+    <br>
+    Some comparisons that we believe are worth noting are:
+    <br>  
+    <br>
+    <ul>    
+    <li><b>GPP Over Time:</b>
+    <br>
+    <br>
+    <ul>            
+    <li> We do not have any comments for the GPP over time comparisons. </li>            
+    </ul>    
+    </li>
+    <br>
+    <li><b>TPS Public Opinion Polls:</b>
+    <br>
+    <br>
+    <ul>            
+    <li>The most noteworthy differences were observed within subpillars associated with Justice (q59e, q44e_G2, and q43f_G2). </li>    
+    <li>These are all negative differences, meaning that our pretest data is lower than other public opinion polls. However, these come from comparisons with our oldest TPS data. </li>
+    </ul>
+    </li>
+    <br>
+    <li><b>TPS Expert Data:</b>
+    <br>
+    <br>
+    <ul>            
+    <li> These comparisons indicate significant differences in Pillar 1, Pillar 7, and Pillar 8, which are negative for the most part. </li>
+    </ul>
+    </li>
+    </ul>
+    <br> 
+    <br>  
+    The designated point person for this analysis within the DAU is Carlos Toruño.
+    <br>  
+    <br>")
     
   }
   
@@ -497,7 +534,33 @@ paragraph<- function(country){
     ## Slovakia                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+          <b>In general, we only found issues with the TPS comparisons.</b>
+    <br>
+    Some issues we would like to note are:
+    <br>   
+    <br>
+    <ul> 
+    <ul>    
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>Although some noteworthy distinctions were uncovered, these could potentially be attributed to the outdated data or low matches between GPP questions and TPS indicators.</li>            
+    <li>Our pretest data is consistently lower than the Public Opinion TPS comparison indicators in relation to Justice (q59e, q44a_G2, q44d_G2, q44e_G2, and q43f_G2).</li>        
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>Analysis indicates that our pretest scores are systemically lower than TPS expert scores in almost all of the indicators in Pillar 1 and Pillar 4. We suggest futher research into these topic areas. </li>            
+    <li> We also found that our pretest data is lower than the expert scores in Pillar 8. </li>  
+    <li> Many of these comparisons involved near-perfect scores from the TPS expert evaluations. It may be worthwhile to investigate why experts scored Slovakia so highly. </li>
+    </ul>    
+    </li>
+    </ul>
+    <br>  
+    The designated point person for this analysis within the DAU is Carlos Toruño.
+    <br>  
+    <br>  ")
     
   }
   
