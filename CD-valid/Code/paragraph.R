@@ -12,7 +12,37 @@ paragraph<- function(country){
     ## Austria                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we found some issues in all of the analyses.</b>
+    <br>
+    Some issues that we believe are worth noting are:
+    <br>   
+    <ul> 
+    <ul>    
+    <li>GPP Over Time:         
+    <ul>            
+    <li>There are some differences between the 2017 data and the current pretest data. However, the previous round is very old, and these differences could be fine. </li> 
+    <li>However, check Pillar 1, 3, and 4 and focus on the questions with red flags.</li>            
+    </ul>    
+    </li>
+    <br>
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>Some of the Public Opinion Surveys have higher scores than the GPP data. Check Pillars 3, 4, and 7 and focus on the questions with red and yellow flags.</li>
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>The expert data shows significant differences from the pretest data. Most of the expert data points have a medium-low match with the GPP questions. </li>  
+    <li>However, please check the questions that have red and medium coloring and have medium-high matches in Pillars 1 and 4.</li>
+    </ul>    
+    </li>
+    </ul>
+    <br>   
+    The DAU point person for this report is Natalia Rodriguez.
+    <br>
+    <br>")
     
   }
   
@@ -22,7 +52,36 @@ paragraph<- function(country){
     ## Belgium                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we found some issues in all of the analyses.</b>
+    <br>
+    Some issues that we believe are worth noting are:
+    <br>   
+    <ul> 
+    <ul>    
+    <li>GPP Over Time:         
+    <ul>            
+    <li>Most of the changes over time with the previous round of the GPP (2018) are negative. Pay special attention to the red flags in Pillars 1, 3, and 4. </li> 
+    </ul>    
+    </li>
+    <br>
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>Review the questions with yellow/red coloring in pillars P3, P4 and P7, with special focus on the high matching TPS.</li>
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>There are significant differences between the expert data and the pretest data. However, most of the expert data has a low match with the GPP. </li>  
+    <li>Please review P1 and P4 and focus mainly on the red flags and high matching TPS.</li>
+    </ul>    
+    </li>
+    </ul>
+    <br>   
+    The DAU point person for this report is Natalia Rodriguez.
+    <br>
+    <br>")
     
   }
   
@@ -130,7 +189,38 @@ paragraph<- function(country){
     ## Czechia                                                                                       ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we only found issues with comparisons regarding Civic Participation and Justice.</b>
+    <br>
+    Some issues we would like to note are:
+    <br>   
+    <br>
+    <ul> 
+    <ul> 
+    <li>GPP Over Time:         
+    <ul>            
+    <li>We found some instances where our pretest data is lower than the previous GPP in Civic Participation (q39b_G1, and q39d_G1) which are consistent with the other analyses. </li>            
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>Although some noteworthy distinctions were uncovered, these could potentially be attributed to the outdated data or low matches between GPP questions and TPS indicators.</li>            
+    <li>Our pretest data is higher than the Public Opinion TPS comparison indicators in relation to Civic Participation (q39d_G1) and consistently lower Justice (q59e, q44d_G2, q44e_G2, q44f_G1, q44g_G1, and q43f_G2).</li>        
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>Analysis indicates that our pretest scores are systemically lower than TPS expert scores in many of the indicators, specifically related to Justice in Pillars 1, 3, 4, 7, and 8. We suggest futher research into these areas. </li>            
+    <li> Many of these comparisons involved very high scores from the TPS expert evaluations. It may be worthwhile to investigate why experts scored Czechia so highly. </li>
+    </ul>    
+    </li>
+    </ul>
+    <br>  
+    The designated point person for this analysis within the DAU is Carlos Toruño.
+    <br>  
+    <br>")
     
   }
   
@@ -140,7 +230,37 @@ paragraph<- function(country){
     ## Denmark                                                                                      ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we found some issues in all of the analyses.</b>
+    <br>
+    Some issues that we believe are worth noting are:
+    <br>   
+    <ul> 
+    <ul>    
+    <li>GPP Over Time:         
+    <ul>            
+    <li>No further checks needed. </li> 
+    </ul>    
+    </li>
+    <br>
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>The public opinion data for Denmark is more positive compared to the pretest data, particularly in P1, P4, and P7.</li>
+    <li>Please complement the analysis with qualitative research to assess if the pretest data is too negative.</li>
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>The expert data shows several red flags, particularly in P1, P2, and P7. The expert data is significantly more positive than the GPP. </li>  
+    <li>However, check the pillars mentioned above and complement the analysis with qualitative research to assess if the pretest data is too negative. </li>
+    </ul>    
+    </li>
+    </ul>
+    <br>   
+    The DAU point person for this report is Natalia Rodriguez.
+    <br>
+    <br>")
     
   }
   
@@ -150,7 +270,32 @@ paragraph<- function(country){
     ## Estonia                                                                                     ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we only found issues with the TPS comparisons.</b>
+    <br>
+    Some issues we would like to note are:
+    <br>   
+    <br>
+    <ul> 
+    <ul>    
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>Although some noteworthy distinctions were uncovered, these could potentially be attributed to the outdated data or low matches between GPP questions and TPS indicators.</li>            
+    <li>Our pretest data is consistently lower than the Public Opinion TPS comparison indicators in relation to Justice (q44a_g2, q44d_G2, q44e_G2, and q44h_G1).</li>        
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>Analysis indicates that our pretest scores are systemically lower than TPS expert scores in many of the indicators in Pillar 1. We suggest futher research into the relevant topic areas. </li>            
+    <li> Many of these comparisons involved near-perfect scores from the TPS expert evaluations. It may be worthwhile to investigate why experts scored Estonia so highly. </li>
+    </ul>    
+    </li>
+    </ul>
+    <br>  
+    The designated point person for this analysis within the DAU is Carlos Toruño.
+    <br>  
+    <br>")
     
   }
   
@@ -160,7 +305,25 @@ paragraph<- function(country){
     ## Finland                                                                                      ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("<b>In general, we only found issues with the TPS Expert Data</b>
+    <br>
+    Some issues we would like to note are:
+    <br>   
+    <br>
+    <ul> 
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>Analysis indicates that our pretest scores are systemically lower than TPS expert scores regarding Absence of Authoritarianism (q52_G2 and q53_G2), Constraints (q39e_G2 and q44i_G2), and Free and Fair Elections (q39c_G1). We suggest futher research into these topic areas. </li>            
+    <li> Some of these comparisons could be attributed to low question match. </li>
+    </ul>    
+    </li>
+    </ul>
+    <br>  
+    The designated point person for this analysis within the DAU is Carlos Toruño.
+    <br>  
+    <br>")
     
   }
   
@@ -170,7 +333,32 @@ paragraph<- function(country){
     ## France                                                                                       ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we only found issues with the TPS comparisons.</b>
+    <br>
+    Some issues we would like to note are:
+    <br>   
+    <br>
+    <ul> 
+    <ul>    
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>Although some noteworthy distinctions were uncovered, these could potentially be attributed to the outdated data or low matches between GPP questions and TPS indicators.</li>            
+    <li>Our pretest data is consistently different from the Public Opinion TPS comparison indicators in relation to Justice (q44a_g2, q44d_G2, q44e_G2, and q44f_G2).</li>        
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>Analysis indicates that our pretest scores are systemically lower than TPS expert scores in many of the indicators in Pillar 1. We suggest futher research into the relevant topic areas. </li>            
+    <li> Some of these comparisons may be influenced by low question match. </li>
+    </ul>    
+    </li>
+    </ul>
+    <br>  
+    The designated point person for this analysis within the DAU is Carlos Toruño.
+    <br>  
+    <br>")
     
   }
   
@@ -180,7 +368,37 @@ paragraph<- function(country){
     ## Germany                                                                                       ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we found some issues in all of the analyses.</b>
+    <br>
+    Some issues that we believe are worth noting are:
+    <br>   
+    <ul> 
+    <ul>    
+    <li>GPP Over Time:         
+    <ul>            
+    <li>No further checks needed. </li> 
+    </ul>    
+    </li>
+    <br>
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>The civic participation questions in Pillar 3 are consistently more negative than the public opinion TPS. </li>
+    <li>Please review these questions and the justice questions in Pillar 7.</li>
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>The pretest data is consistently more negative compared to the expert data.  </li>  
+    <li>Pay special attention to the red and yellow flags for questions with high-match level in pillars 1, 2, 4, 7, and 8. </li>
+    </ul>    
+    </li>
+    </ul>
+    <br>   
+    The DAU point person for this report is Natalia Rodriguez.
+    <br>
+    <br>")
     
   }
   
@@ -345,7 +563,32 @@ paragraph<- function(country){
     ## Italy                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we only found issues with the TPS comparisons.</b>
+    <br>
+    Some issues we would like to note are:
+    <br>   
+    <br>
+    <ul> 
+    <ul>    
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>Although some noteworthy distinctions were uncovered, these could potentially be attributed to the outdated data or low matches between GPP questions and TPS indicators.</li>            
+    <li>Our pretest data is consistently lower than the Public Opinion TPS comparison indicators in relation to Solidarity (q45c_G1 and q45c_G2) and Justice (q59e, q44d_G2, q44e_G2, q44f_G1, and q43f_G2).</li>        
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>Analysis indicates that our pretest scores are systemically lower than TPS expert scores in almost all of the indicators in Pillar 1, Pillar 2, and Pillar 7. We suggest futher research into these topic areas. </li>            
+    <li> Many of these comparisons involved very high scores from the TPS expert evaluations. It may be worthwhile to investigate why experts scored Italy so highly. </li>
+    </ul>    
+    </li>
+    </ul>
+    <br>  
+    The designated point person for this analysis within the DAU is Natalia Rodriguez.
+    <br>  
+    <br>")
     
   }
   
@@ -497,7 +740,32 @@ paragraph<- function(country){
     ## Netherlands                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we only found issues with the TPS comparisons.</b>
+    <br>
+    Some issues we would like to note are:
+    <br>   
+    <br>
+    <ul> 
+    <ul>    
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>Although some noteworthy distinctions were uncovered, these could potentially be attributed to the outdated data or low matches between GPP questions and TPS indicators.</li>            
+    <li>Our pretest data is consistently lower than the Public Opinion TPS comparison indicators in relation to Solidarity (q45c_G1 and q45c_G2) and Justice (q59e, q44d_G2, q44e_G2, q44f_G1, and q43f_G2).</li>        
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>Analysis indicates that our pretest scores are systemically lower than TPS expert scores in many of the indicators in Pillar 1 and Pillar 2. We suggest futher research into these topic areas. </li>            
+    <li> However, many of the red flags noted across the TPS Expert comparisons are close to the cutoff between yellow and red flags. Therefore, the differences in scores are not as alarming. </li>
+    </ul>    
+    </li>
+    </ul>
+    <br>  
+    The designated point person for this analysis within the DAU is Natalia Rodriguez.
+    <br>  
+    <br>")
     
   }
   
@@ -607,7 +875,38 @@ paragraph<- function(country){
     ## Slovenia                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we found significant issues in all of the analyses.</b>
+    <br>
+    Some issues we would like to note are:
+    <br>   
+    <ul> 
+    <ul>    
+    <li>GPP Over Time:         
+    <ul>            
+    <li> We found that our pretest data is lower than the previous GPP in regards to Absence of Corruption (q7e, q3a, and q3b), Civic Participation (q1j, q39e_G1, q39c_G2 and q39g_G1), and Civil Justice (q3d, q44j_G2).</li>            
+    <li> Since the previous GPP data is from 2017, we expect significant changes to be present.</li>            
+    </ul>    
+    </li>
+    <br>
+    <li>TPS Public Opinion Polls:  
+     <ul>            
+    <li>We have found that our pretest data is lower than TPS Public Opinion Polls in comparisons regarding Justice (q59e, q44d_G2, q44e_G2, q43f_G2, and q44f_G1) and Solidarity (q45c_G1 and q45c_G2).</li>            
+    <li>The direction of the difference is not consistent among the related indicators.</li>
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:  
+    <ul>            
+    <li>Analysis indicates that our pretest scores are systemically lower than TPS expert scores in many of the indicators in Pillars 1, 3, and 4. We suggest futher research into these topic areas. </li>            
+    <li> Most of these comparisons involved near-perfect scores from the TPS expert evaluations. It may be worthwhile to investigate why experts scored Slovenia so highly. </li>          
+    </ul>    
+    </li>
+    </ul>
+    <br> 
+    The designated point person for this analysis within the DAU is Carlos Toruño.
+    <br>  
+    <br>")
     
   }
   
@@ -617,7 +916,33 @@ paragraph<- function(country){
     ## Spain                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we only found issues with the TPS comparisons.</b>
+    <br>
+    Some issues we would like to note are:
+    <br>   
+    <br>
+    <ul> 
+    <ul>    
+    <li>TPS Public Opinion Polls:         
+    <ul>            
+    <li>Although some noteworthy distinctions were uncovered, these could potentially be attributed to the outdated data or low matches between GPP questions and TPS indicators.</li>            
+    <li>Our pretest data is significantly different from the Public Opinion TPS comparison indicators in relation to Justice (q59e, q44a_G2, q44d_G2, q44e_G2, q43e_G2, and q43f_G2) and Freedoms (q39b_G1, q39h_G2).</li>        
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>Analysis indicates that our pretest scores are systemically lower than TPS expert scores in almost all of the indicators in Pillar 1 and Pillar 7. We suggest futher research into these topic areas. </li>            
+    <li> We also found that our pretest data is lower than the expert scores in Pillar 8. </li>  
+    <li> Many of these comparisons involved high scores from the TPS expert evaluations. It may be worthwhile to investigate why experts scored Spain so highly compared to what their citizens think. </li>
+    </ul>    
+    </li>
+    </ul>
+    <br>  
+    The designated point person for this analysis within the DAU is Carlos Toruño.
+    <br>  
+    <br>")
     
   }
   
@@ -627,7 +952,26 @@ paragraph<- function(country){
     ## Sweden                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we only found issues with the TPS Expert Data</b>
+    <br>
+    Some issues we would like to note are:
+    <br>   
+    <br>
+    <ul> 
+    <ul>  
+    <br>
+    <li>TPS Expert Data:         
+    <ul>            
+    <li>Analysis indicates that our pretest scores are systemically lower than TPS expert scores in many of the indicators in Pillars 1, 2, 3, and 8. We suggest futher research into these topic areas. </li>            
+    <li> Most of these comparisons involved near-perfect scores from the TPS expert evaluations. It may be worthwhile to investigate why experts scored Sweden so highly compared to what the citizens think. </li>
+    </ul>    
+    </li>
+    </ul>
+    <br>  
+    The designated point person for this analysis within the DAU is Carlos Toruño.
+    <br>  
+    <br>")
     
   }
 
