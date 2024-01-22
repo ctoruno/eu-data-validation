@@ -135,7 +135,39 @@ paragraph<- function(country){
     ## Croatia                                                                                       ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we found significant differences from the TPS Expert Data.</b>
+    <br>
+    There are some issues that are worth noting:
+    <br>   
+    <ul> 
+    <ul>    
+    <li>GPP Over Time:         
+    <ul>            
+    <li>The pretest data is generally more negative compared to the previous round (2018). Please review Pillars 1, 3, and 4. </li>
+    </ul>    
+    </li>
+    <br>
+    <li>TPS Public Opinion Polls:  
+     <ul>            
+    <li>Some of the Public Opinion Surveys have higher scores than the GPP data. Check Pillars 4, 7, and 8, and focus on the questions with red and yellow flags.</li>            
+    </ul>  
+    </li>
+    <br>
+    <li>TPS Expert Data:  
+    <ul>            
+    <li>The expert data shows significant differences from the pretest data. The expert data has lower scores compared to the GPP. </li>
+    <li>Please check the red flags in Pillars 1, 3, 4, and 7, but focus on the questions with a higher match level (medium/high). </li>            
+    </ul>    
+    </li>
+    </ul>
+    <br> 
+    The designated point person for this analysis within the DAU is Natalia Rodriguez.
+    <br>  
+    <br>
+   
+          "
+      )
     
   }
   
