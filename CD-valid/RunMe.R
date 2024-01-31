@@ -39,6 +39,7 @@ source("Code/TPS.R")
 source("Code/missing_values.R")
 
 # List of chosen analyses (add/remove as needed)
+# Options are "pretest" or "full"
 type_data <- "pretest"
 
 master_data.df <- haven::read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/1. PTR/", 
@@ -61,6 +62,8 @@ variable_list.df <- read_excel("Input/Metadatatt.xlsx")
 sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
   filter(country %in% args[1])
 metadata<- read_excel("Input/Metadatatps.xlsx")
+
+fullmerge<- read_dta(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/EU_GPP_2024.dta"))
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
