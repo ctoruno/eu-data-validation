@@ -37,6 +37,7 @@ source("Code/sociodem.R")
 source("Code/time_changes.R")
 source("Code/TPS.R")
 source("Code/missing_values.R")
+source("Code/time_length.R")
 
 # List of chosen analyses (add/remove as needed)
 # Options are "pretest" or "full"
@@ -92,6 +93,7 @@ tps_comparisson.df <- TPS_function(country = args[1],
                                    tps     = TPS.df,
                                    mat     = metadata
                                    )
+time_length.df<- time_length()
 
 #sociodem_comparisson.df <- sociodem_comparisson()
 
