@@ -36,6 +36,7 @@ source("Code/settings.R")
 source("Code/sociodem.R")
 source("Code/time_changes.R")
 source("Code/TPS.R")
+source("Code/ranking.R")
 source("Code/missing_values.R")
 source("Code/time_length.R")
 
@@ -95,6 +96,10 @@ tps_comparisson.df <- TPS_function(country = args[1],
                                    )
 time_length.df<- time_length()
 
+TPS_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = fullmerge,
+                                                   tps_data.df = TPS.df,
+                                                   metadata.df = metadata)
+
 #sociodem_comparisson.df <- sociodem_comparisson()
 
 #missing_values.df<- missing_values(data= master_data.df, 
@@ -116,7 +121,8 @@ if(type_data == "pretest") {
     time_changes = time_changes.df,
     tps_comparisson = tps_comparisson.df,
     tps_trend_comparisson = tps_trend_comparisson.df,
-    sociodem_comparisson = sociodem_comparisson.df
+    sociodem_comparisson = sociodem_comparisson.df,
+    TPS_ranking_analysis = TPS_ranking_analysis.df
   )
   
 }
