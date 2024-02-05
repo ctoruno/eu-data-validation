@@ -65,7 +65,7 @@ sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
   filter(country %in% args[1])
 metadata<- read_excel("Input/Metadatatps.xlsx")
 
-fullmerge<- read_dta(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/EU_GPP_2024.dta"))
+fullmerge<- read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/3. Merge/EU_GPP_2024.dta"))
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
