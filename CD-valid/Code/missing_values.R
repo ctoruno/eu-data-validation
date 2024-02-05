@@ -19,7 +19,9 @@
 missing_values<- function(data= fullmerge){
   
   dataNA<-data %>% 
-    mutate(across(everything(), ~ replace(., . %in% c(98, 99, -9999, -8888), NA)))
+    mutate(across(everything(), ~ replace(., . %in% c(-9999, -8888), NA)))
+  dataNA<-dataNA %>% 
+    mutate(across(!c(AJR_solvingtime,AJE_offwork_time, AJE_income_loss, AJE_healthcare_visits, AJE_hospital_time, income2), ~ replace(., . %in% c(98, 99), NA)))
   
   cntry<- data.frame(matrix(nrow=0, ncol=3))
   colnames(cntry)<- c("Country", "Prop10", "Prop15") 
@@ -28,6 +30,7 @@ missing_values<- function(data= fullmerge){
     
     df<-dataNA%>%
       filter(country_name_ltn == i)
+    df<- df[-c(1:9)]
     
     navec<- colSums(is.na(df))/nrow(df)
     perc10<- sum(navec>.10)/length(navec)
@@ -43,6 +46,7 @@ missing_values<- function(data= fullmerge){
     
     df<-dataNA%>%
       filter(nuts_id == i)
+    df<- df[-c(1:9)]
     
     navec<- colSums(is.na(df))/nrow(df)
     perc10<- sum(navec>.10)/length(navec)
