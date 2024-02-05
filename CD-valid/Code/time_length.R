@@ -1,5 +1,4 @@
-time_length <- function(fullf = fullmerge, 
-                         country = args[1]) {
+time_length <- function(fullf = fullmerge) {
   
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -40,7 +39,12 @@ time_length <- function(fullf = fullmerge,
     summarise("Average_Time" = mean(interview_length), "Time_With_A2J" = mean(avg_time_withA2J, na.rm=TRUE), "Time_No_A2J" = mean(avg_time_noA2J, na.rm =TRUE))%>%
     arrange(desc(Average_Time))
   
+  nuts<- fullf%>%
+    group_by(nuts_id)%>%
+    summarise("Average_Time" = mean(interview_length), "Time_With_A2J" = mean(avg_time_withA2J, na.rm=TRUE), "Time_No_A2J" = mean(avg_time_noA2J, na.rm =TRUE))%>%
+    arrange(desc(Average_Time))
+  
     
-  return(list("country" = cntry, "sociodem"= socio))
+  return(list("country" = cntry, "nuts" = nuts, "sociodem"= socio))
 }
   
