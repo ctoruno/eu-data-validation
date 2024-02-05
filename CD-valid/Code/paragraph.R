@@ -630,7 +630,34 @@ paragraph<- function(country){
     ## Latvia                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c("
+    <b>In general, we did not find any significant inconsistency with other Public Opinion Polls or our own 2021 data.</b>
+    <br>  
+    <br>
+    <ul>    
+    <li><b>GPP Over Time:</b>
+    <br>
+    <br>
+    <ul>            
+    <li>We did not find any significant changes from our last GPP round in Latvia. If it was expected that there should have been significant changes in any topic area, we are not seeng it. </li>            
+    </ul>    
+    </li>
+    <br>
+    <li><b>TPS Public Opinion Polls and TPS expert data:</b>
+    <br>
+    <br>
+    <ul>            
+    <li>We did not find any significant differences from other public opinion polls.</li>    
+    <li>Regarding third party expert surveys, our data is scoring consistently lower than expert opinions, especially in Pillars 1.</li>
+    </ul>
+    </li>
+    </ul>
+    <br> 
+    <br>  
+    The designated point person for this analysis within the DAU is Carlos Toruño.
+    <br>  
+    <br>          
+          ")
     
   }
   
