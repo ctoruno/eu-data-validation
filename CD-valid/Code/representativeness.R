@@ -7,45 +7,45 @@ representativeness <- function(data = fullmerge,
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  sociodem_sampling_plan.df <- sampling_plan_data%>%
-    mutate(rural = as.numeric(rural),
-           urban = as.numeric(urban)) %>% 
-    group_by(country)%>%
-    summarise(across(!c(country_code, NUTS_code), sum))%>%
-    mutate(across(!country, ~.x/sample_size))
-  
-  gpp.df <- data %>%
-    mutate(age_category = 
-             case_when(
-               age > 17 & age < 25 ~ "age_18-24",
-               age > 24 & age < 35 ~ "age_25-34",
-               age > 34 & age < 45 ~ "age_35-44",
-               age > 44 & age < 55 ~ "age_45-54",
-               age > 54 & age < 65 ~ "age_55-64",
-               age > 65 ~ "age_65"
-             ),
-           gender = 
-             case_when(
-               gend == 1 ~ "gender_female",
-               gend == 2 ~ "gender_male"
-             ),
-           sample_size = n(),
-           counter = 1) %>%
-    select(country_name_ltn, age_category, gender, sample_size, counter) 
-  
+  # sociodem_sampling_plan.df <- sampling_plan_data%>%
+  #   mutate(rural = as.numeric(rural),
+  #          urban = as.numeric(urban)) %>% 
+  #   group_by(country)%>%
+  #   summarise(across(!c(country_code, NUTS_code), sum))%>%
+  #   mutate(across(!country, ~.x/sample_size))
+  # gpp.df <- data %>%
+  #   mutate(age_category = 
+  #            case_when(
+  #              age > 17 & age < 25 ~ "age_18-24",
+  #              age > 24 & age < 35 ~ "age_25-34",
+  #              age > 34 & age < 45 ~ "age_35-44",
+  #              age > 44 & age < 55 ~ "age_45-54",
+  #              age > 54 & age < 65 ~ "age_55-64",
+  #              age > 65 ~ "age_65"
+  #            ),
+  #          gender = 
+  #            case_when(
+  #              gend == 1 ~ "gender_female",
+  #              gend == 2 ~ "gender_male"
+  #            ),
+  #          sample_size = n(),
+  #          counter = 1) %>%
+  #   select(country_name_ltn, age_category, gender, sample_size, counter) 
+  # 
+  ### COUNTRY LEVEL ###
   
   sociodem_sampling_plan.df <- sampling_plan_data %>%  
-    group_by(country_code) %>%
+    group_by(country) %>%
     mutate(rural = as.numeric(rural),
            urban = as.numeric(urban)) %>%
     summarise(
-      across(!c(country, NUTS_code), sum)) %>%
+      across(!c(country_code, NUTS_code), sum)) %>%
     mutate(
-      across(!country_code, ~.x/sample_size)
+      across(!country, ~.x/sample_size)
     ) %>%
     select(!starts_with("quintile")) %>%
-    select(!c(rural, urban, sample_size)) %>%
-    mutate(dataframe = "sampling_plan")
+    select(!c(rural, urban, sample_size))%>%
+    pivot_longer(cols=!country, names_to = "category", values_to = "ideal_prop")
   
   gpp.df <- data %>%
     mutate(age_category = 
@@ -68,45 +68,90 @@ representativeness <- function(data = fullmerge,
   
   gend<- gpp.df%>%
     group_by(country_name_ltn, gender)%>%
-    summarise(gend_sample = sum(sample_size))
+    summarise(gend_sample = sum(sample_size))%>%
+    group_by(country_name_ltn)%>%
+    mutate(total = sum(gend_sample))%>%
+    ungroup()%>%
+    mutate(prop = gend_sample/total)%>%
+    select(country_name_ltn, gender, prop)%>%
+    rename(category = gender)
   
   age<- gpp.df%>%
     group_by(country_name_ltn, age_category)%>%
-    summarise(age_sample = sum(sample_size))
-#########################################################################
-  # Define a list of grouping variables
-  group_vars <- c("gender", "age_category")
+    summarise(age_sample = sum(sample_size))%>%
+    group_by(country_name_ltn)%>%
+    mutate(total = sum(age_sample))%>%
+    ungroup()%>%
+    mutate(prop = age_sample/total)%>%
+    select(country_name_ltn, age_category, prop)%>%
+    rename(category = age_category)
   
-  # Apply the same operations to each grouping variable
-  gpp_list <- lapply(group_vars, function(var) {
-    gpp.df %>%
-      group_by(!!sym(var)) %>%
-      summarise(!!paste0(var, "_sum") := sum(counter/sample_size)) %>%
-      drop_na() %>%
-      pivot_wider(names_from = var, values_from = paste0(var, "_sum"))
-  })
+  samples<- rbind(gend, age)
   
-  # Combine the results into one data frame
-  sociodem_gpp.df <- bind_cols(gpp_list) %>%
-    mutate(country_code = country_ind,
-           dataframe = "gpp")
+  country<- left_join(sociodem_sampling_plan.df, samples, by = c("country"= "country_name_ltn", "category" = "category"))%>%
+    mutate("difference"= ideal_prop-prop)
+  colnames(country)<- c("Country", "Category", "Ideal Proportion", "Actual Proportion", "Diffrerence")
   
+  ### NUTS LEVEL ###
   
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ##
-  ## 2. Threshold analysis                                                          ----
-  ##
-  ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  sociodem_sampling_plan.df <- sampling_plan_data %>%  
+    group_by(NUTS_code) %>%
+    mutate(rural = as.numeric(rural),
+           urban = as.numeric(urban)) %>%
+    summarise(
+      across(!c(country_code, country), sum)) %>%
+    mutate(
+      across(!NUTS_code, ~.x/sample_size)
+    ) %>%
+    select(!starts_with("quintile")) %>%
+    select(!c(rural, urban, sample_size))%>%
+    pivot_longer(cols=!NUTS_code, names_to = "category", values_to = "ideal_prop")
   
-  final_result <- bind_rows(sociodem_gpp.df, sociodem_sampling_plan.df) %>%
-    pivot_longer(cols = !c(country_code, dataframe), names_to = "category", values_to = "values") %>%
-    pivot_wider(id_cols = c(country_code, category), names_from = c("dataframe"), values_from = "values") %>%
-    mutate(difference = abs(sampling_plan - gpp),
-           warning = if_else(difference > 0.05, "Yellow light", 
-                             if_else(difference > 0.05 & difference > 0.1, "Yellow light", "Green light"))) %>%
-    select(country_code, category, sampling_plan, gpp, difference, warning)
+  gpp.df <- data %>%
+    mutate(age_category = 
+             case_when(
+               age > 17 & age < 25 ~ "age_18-24",
+               age > 24 & age < 35 ~ "age_25-34",
+               age > 34 & age < 45 ~ "age_35-44",
+               age > 44 & age < 55 ~ "age_45-54",
+               age > 54 & age < 65 ~ "age_55-64",
+               age > 65 ~ "age_65"
+             ),
+           gender = 
+             case_when(
+               gend == 1 ~ "gender_female",
+               gend == 2 ~ "gender_male"
+             )) %>%
+    group_by(nuts_id, age_category, gender)%>%
+    summarise(sample_size = n())%>%
+    select(nuts_id, age_category, gender, sample_size) 
   
+  gend<- gpp.df%>%
+    group_by(nuts_id, gender)%>%
+    summarise(gend_sample = sum(sample_size))%>%
+    group_by(nuts_id)%>%
+    mutate(total = sum(gend_sample))%>%
+    ungroup()%>%
+    mutate(prop = gend_sample/total)%>%
+    select(nuts_id, gender, prop)%>%
+    rename(category = gender)
   
-  return(final_result)
+  age<- gpp.df%>%
+    group_by(nuts_id, age_category)%>%
+    summarise(age_sample = sum(sample_size))%>%
+    group_by(nuts_id)%>%
+    mutate(total = sum(age_sample))%>%
+    ungroup()%>%
+    mutate(prop = age_sample/total)%>%
+    select(nuts_id, age_category, prop)%>%
+    rename(category = age_category)
+  
+  samples<- rbind(gend, age)
+  
+  nuts<- left_join(sociodem_sampling_plan.df, samples, by = c("NUTS_code"= "nuts_id", "category" = "category"))%>%
+    mutate("difference"= ideal_prop-prop)
+  colnames(country)<- c("Country", "Category", "Ideal Proportion", "Actual Proportion", "Diffrerence")
+
+  return(list("country" = country, "nuts" = nuts))
   
 }
