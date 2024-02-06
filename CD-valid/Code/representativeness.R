@@ -150,7 +150,7 @@ representativeness <- function(data = fullmerge,
   
   nuts<- left_join(sociodem_sampling_plan.df, samples, by = c("NUTS_code"= "nuts_id", "category" = "category"))%>%
     mutate("difference"= ideal_prop-prop)
-  colnames(country)<- c("Country", "Category", "Ideal Proportion", "Actual Proportion", "Diffrerence")
+  colnames(nuts)<- c("NUTS ID", "Category", "Ideal Proportion", "Actual Proportion", "Diffrerence")
 
   return(list("country" = country, "nuts" = nuts))
   
