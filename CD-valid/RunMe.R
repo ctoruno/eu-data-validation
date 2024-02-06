@@ -39,6 +39,8 @@ source("Code/TPS.R")
 source("Code/ranking.R")
 source("Code/missing_values.R")
 source("Code/time_length.R")
+source("Code/representativeness.R")
+source("Code/difficulty_score.R")
 
 # List of chosen analyses (add/remove as needed)
 # Options are "pretest" or "full"
@@ -61,8 +63,15 @@ codebook.df <- read_excel("Input/EU2 GPP 2023 Codebook.xlsx") %>%
 matched_tps <- suppressMessages(import_list("Input/Selected GPP&TPS for QCC.xlsx"))
 matched_tps <- matched_tps$`Selection and matching`
 variable_list.df <- read_excel("Input/Metadatatt.xlsx")
-sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
-  filter(country %in% args[1])
+
+if (type_data == "pretest"){
+  sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
+    filter(country %in% args[1])
+}
+if (type_data == "full"){
+  sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx")
+}
+
 metadata<- read_excel("Input/Metadatatps.xlsx")
 
 fullmerge<- read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/3. Merge/EU_GPP_2024.dta"))
@@ -94,16 +103,19 @@ tps_comparisson.df <- TPS_function(country = args[1],
                                    tps     = TPS.df,
                                    mat     = metadata
                                    )
-time_length.df<- time_length()
 
 TPS_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = fullmerge,
                                                    tps_data.df = TPS.df,
                                                    metadata.df = metadata)
 
-#sociodem_comparisson.df <- sociodem_comparisson()
+time_length.df<- time_length(fullf = fullmerge)
 
-#missing_values.df<- missing_values(data= master_data.df, 
-#                                   country= country)
+missing_values.df<- missing_values(data= fullmerge)
+
+representativeness.df <- representativeness(data = fullmerge,
+                                            sampling_plan_data = sampling_plans.df)
+  
+difficulty_score.df<- difficulty_score(data.df = fullmerge)
 
 # List of analysis functions
 
