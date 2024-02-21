@@ -29,8 +29,8 @@
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
 
-args[1] = "Latvia"
-args[2] = "Carlos Toruño"
+args[1] = args[1]
+args[2] = args[2]
 
 source("Code/settings.R")
 source("Code/sociodem.R")

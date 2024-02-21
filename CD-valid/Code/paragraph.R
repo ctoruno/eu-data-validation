@@ -888,7 +888,29 @@ paragraph<- function(country){
     ## Romania                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    p<- c("There is no paragraph")
+    p<- c(" 
+    <b>In general, we did not find any significant issues during the data validation process.</b>
+    <br>
+    <br>
+    Some minor issues that we believe are worth noticing are:
+    <br> 
+    <br>
+    <ul>    
+    <li>TPS Public Opinion Polls and Expert Data:      
+    <br>
+    <br>
+    <ul>            
+    <li>We observed significant differences in Civil Justice basic matters, particularly in topics about corruption (<b>q44j_G2</b>), enforcement (<b>q44j_G2</b>), accessibility(<b>q44d_G2</b>), and efficiency (<b>q44e_G2</b>). We recommend further research on this question, primarily because this subpillar consistently flags in both tests. In this case, the perceptions are critical towards the justice system.</li>
+    <li>The pretest data revealed more favorable scores than the TPS comparison indicators in relation to Fundamental Freedoms, in special with Freedom to Vote (<b>q39d_G1</b>), Media Freedom (<b>q39b_G1</b>), and Freedom of Assembly (<b>q39h_G2</b>).</li>        
+    </ul>
+    </li>
+    </ul>
+    <br> 
+    <br>  
+    The designated point person for this analysis within the DAU is Santiago Pardo.
+    <br>  
+    <br>
+    ")
     
   }
   
