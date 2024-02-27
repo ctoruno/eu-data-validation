@@ -26,6 +26,9 @@ for (i in c("Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "D
 tps$Flag<- ifelse(is.na(tps$Flag), "NA", tps$Flag )
 tps$redflag<- ifelse(tps$Flag== "red", TRUE, FALSE)
 
+tps%>%
+  distinct(GPP_Variable_Name)
+
 gpptest$redflag<- ifelse(gpptest$warning == "Red light", TRUE, FALSE)
 
 tps2<- tps%>%
@@ -64,10 +67,6 @@ final2<- tps3%>%
 final2[nrow(final2) +1,] <- list("Mean", round(mean(final2$population),2), round(mean(final2$expert),2))
 final2<- final2%>%
   mutate(population = paste0(population, "%"), expert= paste0(expert, "%"))
-
-redf<- tps%>%
-  group_by(Pillar)%>%
-  summarise(prop = sum(redflag)/n())
 
 
 ####################
@@ -322,9 +321,59 @@ tableCountry <- tibble(country = countries,
 tableCountry2<- left_join(tableCountry, total_vars_redflag, by = join_by("country" == "Country"))
 #write_xlsx(tableCountry, path = "Outcomes/Pretest/overviewCountry.xlsx")
 
+#### NUTS TPS #####
+
+euprojnuts<- readxl::read_xlsx(paste0(path2eu, "/EU Subnational GPP/Requests for Proposals/Appendices/Appendix 2_Selected NUTS Regions and Sample Sizes.xlsx"), sheet = "Selected Regions Overview")
+
+nutscodes<- euprojnuts$...3
+nutscodes<- nutscodes[-c(1:5)]
+
+EWC <- read_dta(file.path(path2SP, 
+                            "8. Data/TPS/European Working Conditions/EWC_raw.dta",
+                            fsep = "/")) 
+
+ESS <- read_dta(file.path(path2SP, 
+                            "8. Data/TPS/ESS/ESS_raw.dta",
+                            fsep = "/")) 
+
+GCB <- read_dta(file.path(path2SP, 
+                            "8. Data/TPS/Global Corruption Barometer/GCB_raw.dta",
+                            fsep = "/")) 
 
 
-tables<- list(Country_Overview = tableCountry2, Pillar_indicators = counts2, Subpillar_indicators = counts1, Pillars_proportion_Red = redf, Country_proportion_red = final2, TPS_level = final)
+ESS$nuts<- ifelse(ESS$regunit==2, gsub(".$", "", ESS$region), ifelse(ESS$regunit == 3,
+                                                    gsub(".$", "", ESS$region), ESS$region))
+
+ESS%>%
+  filter(nuts %in% nutscodes)
+
+
+
+########## NUTS level report #####
+
+reportvarslist
+
+TPSnuts<-metadata%>%
+  filter(`NUTS Level`== 1)
+length(unique(TPSnuts$GPP_Variable_Name))/length(reportvarslist)
+
+###### complete and incomplete analyses #####
+
+cases1<- unique(gpptest$variable)
+cases2<- unique(tps$GPP_Variable_Name)
+
+tps_only<- tps%>%
+  filter(GPP_Variable_Name %in% setdiff(cases2, cases1))
+
+cases3<- unique(filter(tps_only, Type_Survey == "population")$GPP_Variable_Name)
+cases4<- unique(filter(tps_only, Type_Survey == "expert")$GPP_Variable_Name)
+
+completecases<- tibble("Complete Analyses"= length(intersect(cases1, cases2)), "Only in GPP Analysis"= length(setdiff(cases1, cases2)), "Only in TPS Analysis" = length(setdiff(cases2, cases1)), "Only in Population Polls"= length(setdiff(cases3, cases4)), "Only in Expert Encodings" = length(setdiff(cases4, cases3)))
+
+tables<- list(Country_Overview = tableCountry2, Pillar_indicators = counts2, Subpillar_indicators = counts1, Pillars_proportion_Red = redf, Country_proportion_red = final2, TPS_level = final, Complete_cases=completecases)
 openxlsx::write.xlsx(tables,
                      paste0(path2eu, "/EU-S Data/",
                             "tables.xlsx"))
+
+nrow(index%>%
+  filter(`Match 1` != "A2J"))
