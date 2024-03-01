@@ -1,6 +1,6 @@
 time_changes <- function(data.df = master_data.df, 
                          country = args[1],
-                         type = "dummy") {
+                         type = "pretest") {
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ##
@@ -121,6 +121,7 @@ time_changes <- function(data.df = master_data.df,
     t_test_result <- t.test(x = recent_year_data[[var_name]], 
                             y = previous_year_data[[var_name]])
     
+    if (type == "pretest"){
     return(tibble(
       country = country,
       variable = var_name,
@@ -133,6 +134,21 @@ time_changes <- function(data.df = master_data.df,
       curr_year = current_year,
       prev_year = previous_year
     ))
+   }
+    if (type == "full"){
+      return(tibble(
+        country = country,
+        variable = var_name,
+        ttestResult = t_test_result$p.value,
+        current_score = t_test_result$estimate[[1]],
+        previous_score = t_test_result$estimate[[2]],
+        warning = if_else(t_test_result$p.value < 0.01, "Red light", "Green light"),
+        direction = direction,
+        curr_year = current_year,
+        prev_year = previous_year
+      ))
+    }
+    
   })
   
   # Combine the results into a single tibble
