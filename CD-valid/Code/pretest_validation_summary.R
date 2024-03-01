@@ -32,17 +32,16 @@ tps%>%
 gpptest$redflag<- ifelse(gpptest$warning == "Red light", TRUE, FALSE)
 
 tps2<- tps%>%
-  select(Country, TPS_Variable_Name, GPP_Variable_Name, Type_Survey, Flag, TPS_Year,TPS_Source, redflag)%>%
-  group_by(Country, TPS_Variable_Name, Type_Survey, GPP_Variable_Name)%>%
+  select(Country, TPS_Variable_Name, GPP_Variable_Name, Type_Survey, Flag, TPS_Year,TPS_Source, redflag, Sub_Pillar)%>%
+  group_by(Country, TPS_Variable_Name, Type_Survey, GPP_Variable_Name, Sub_Pillar)%>%
   mutate(sum = sum(redflag))%>%
-  distinct(Country, TPS_Variable_Name, GPP_Variable_Name, sum, .keep_all = TRUE)%>%
+  distinct(Country, TPS_Variable_Name, GPP_Variable_Name, sum, Sub_Pillar, .keep_all = TRUE)%>%
   pivot_wider(names_from = Type_Survey, values_from = sum)%>%
   select(-c(Flag, redflag))
 
-
 tps3<- tps2%>%
   group_by(Country, TPS_Variable_Name) %>%
-  mutate(GPP_Variable_Name = paste(GPP_Variable_Name, collapse = ", "))%>%
+  mutate(GPP_Variable_Name = paste(unique(GPP_Variable_Name), collapse = ", "))%>%
   mutate(population = sum(population), expert = sum(expert))%>%
   distinct()
 
@@ -50,15 +49,21 @@ tps3$popred<- ifelse(tps3$population > 0, TRUE, FALSE)
 tps3$expred<- ifelse(tps3$expert > 0, TRUE, FALSE)
   
 final<- tps3%>%
-  group_by(TPS_Variable_Name, GPP_Variable_Name, TPS_Year, TPS_Source)%>%
+  group_by(TPS_Variable_Name, GPP_Variable_Name, TPS_Year, TPS_Source, Sub_Pillar)%>%
   summarise(population = sum(popred, na.rm = TRUE), expert = sum(expred, na.rm = TRUE))%>%
   arrange(TPS_Variable_Name)
 
 final$Type_Survey <- ifelse(final$TPS_Source == "Freedom in the World" |final$TPS_Source == "Varieties of Democracy", "expert", "population")
 final<- final%>%
   mutate(Countries_Flagged = population + expert)%>%
-  select(TPS_Variable_Name, GPP_Variable_Name, Countries_Flagged, Type_Survey, TPS_Year, TPS_Source)
+  select(TPS_Variable_Name, GPP_Variable_Name, Countries_Flagged, Type_Survey, TPS_Year, TPS_Source, Sub_Pillar)
 
+
+tps_final<- final%>%
+  group_by(GPP_Variable_Name)%>%
+  mutate(Sub_Pillar = paste(unique(Sub_Pillar), collapse = ", "))%>%
+  distinct()%>%
+  arrange(Sub_Pillar)
 
 final2<- tps3%>%
   group_by(Country)%>%
@@ -332,13 +337,24 @@ EWC <- read_dta(file.path(path2SP,
                             "8. Data/TPS/European Working Conditions/EWC_raw.dta",
                             fsep = "/")) 
 
+EWC_nuts<- names(labelled::get_value_labels(EWC$NUTS_1_CODE_2021))
+openxlsx::write.xlsx(tibble("Region" = EWC_nuts),
+                     paste0(path2eu, "/EU-S Data/",
+                            "EWC_nuts_matching.xlsx"))
+
+
 ESS <- read_dta(file.path(path2SP, 
                             "8. Data/TPS/ESS/ESS_raw.dta",
                             fsep = "/")) 
+ESS$region
 
 GCB <- read_dta(file.path(path2SP, 
                             "8. Data/TPS/Global Corruption Barometer/GCB_raw.dta",
                             fsep = "/")) 
+SPE_489<- read_dta(file.path(path2SP, 
+                             "8. Data/TPS/Eurobarometer/SPE_489_raw.dta",
+                             fsep = "/")) 
+SPE_489$nuts
 
 
 ESS$nuts<- ifelse(ESS$regunit==2, gsub(".$", "", ESS$region), ifelse(ESS$regunit == 3,
@@ -370,7 +386,7 @@ cases4<- unique(filter(tps_only, Type_Survey == "expert")$GPP_Variable_Name)
 
 completecases<- tibble("Complete Analyses"= length(intersect(cases1, cases2)), "Only in GPP Analysis"= length(setdiff(cases1, cases2)), "Only in TPS Analysis" = length(setdiff(cases2, cases1)), "Only in Population Polls"= length(setdiff(cases3, cases4)), "Only in Expert Encodings" = length(setdiff(cases4, cases3)))
 
-tables<- list(Country_Overview = tableCountry2, Pillar_indicators = counts2, Subpillar_indicators = counts1, Pillars_proportion_Red = redf, Country_proportion_red = final2, TPS_level = final, Complete_cases=completecases)
+tables<- list(Country_Overview = tableCountry2, Pillar_indicators = counts2, Subpillar_indicators = counts1, Pillars_proportion_Red = redf, Country_proportion_red = final2, TPS_level = tps_final, Complete_cases=completecases)
 openxlsx::write.xlsx(tables,
                      paste0(path2eu, "/EU-S Data/",
                             "tables.xlsx"))
