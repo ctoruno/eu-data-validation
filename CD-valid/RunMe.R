@@ -41,7 +41,7 @@ source("Code/missing_values.R")
 source("Code/time_length.R")
 source("Code/representativeness.R")
 source("Code/difficulty_score.R")
-source("outlier_analysis.R")
+source("Code/outlier_analysis.R")
 
 # List of chosen analyses (add/remove as needed)
 # Options are "pretest" or "full"
