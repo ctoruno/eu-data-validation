@@ -4,7 +4,7 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-paragraph<- function(country){
+paragraph<- function(country, type){
   
   if (country == "Austria"){
     
@@ -706,7 +706,7 @@ paragraph<- function(country){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Luxembourg                                                                                       ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
           <b>In general, we only found significant issues with the TPS expert sources during the data validation process.</b>
     <br>
@@ -745,7 +745,37 @@ paragraph<- function(country){
     The designated point person for this analysis within the DAU is Carlos Toruño.
     <br>  
     <br>")
-    
+    } else{
+      p<- c("
+          <b>In general, we found minimal issues with the TPS public opinion polls and overall discrepancies with the TPS expert sources.</b>
+    <br>
+    <br>
+    Some comparisons that we believe are worth noting are:
+    <br>  
+    <br>
+    <ul>    
+    <li><b>TPS Public Opinion Polls:</b>
+    <br>
+    <br>
+    <ul>            
+    <li>The most noteworthy differences were observed within subpillars associated with Access to Civil Justice (q44a_G2, q44d_G2, and q44e_G2). </li>    
+    <li>These are all negative differences, meaning that our full fieldwork data is lower than other public opinion polls concerning access to civil justice. However, these come from comparisons with our oldest TPS data sources. </li>
+    </ul>
+    </li>
+    <br>
+    <li><b>TPS Expert Data:</b>
+    <br>
+    <br>
+    <ul>            
+    <li> These comparisons indicate many significant differences between expert surveys and our full fieldwork data across every pillar, which are negative for the most part. </li>
+    </ul>
+    </li>
+    </ul>
+    <br> 
+    The designated point person for this analysis within the DAU is Carlos Toruño.
+    <br>  
+    <br>")
+    }
   }
   
   if (country == "Malta"){
