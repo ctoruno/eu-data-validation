@@ -1,5 +1,6 @@
 time_changes <- function(data.df = master_data.df, 
                          country = args[1],
+                         gppvars = gpp_vars,
                          type = "pretest") {
   
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -10,12 +11,12 @@ time_changes <- function(data.df = master_data.df,
 
   
   list_var_t.test <- codebook.df %>%
-    filter(Variable %in% gpp_vars) %>%
+    filter(Variable %in% gppvars) %>%
     mutate(skip = if_else(str_detect(`Global GPP`, "EU_"), 1, 
                           if_else(Variable %in% c("CPA_protest", "PAB_misinfo",
                                                   "PAB_attackmedia","PAB_emergpower",
                                                   "PAB_manipulelect", "PAB_overcourts",
-                                                  "CJP_resprights", "BRB_permit_B"), 1, 0))) %>%
+                                                  "CJP_resprights", "BRB_permit_B", "CP_cso"), 1, 0))) %>%
     filter(skip == 0) %>%
     select(Variable) %>%
     pull()
@@ -35,7 +36,13 @@ time_changes <- function(data.df = master_data.df,
     filter(country_name_ltn %in% country) %>%
     select(country_name_ltn, year, all_of(list_var_t.test))
   
+  if (type == "pretest"){
   GPP.df$BRB_health_B<- ifelse(GPP.df$BRB_health_B== 0, 2, GPP.df$BRB_health_B)
+  }
+  
+  if (type == "full"){
+    GPP.df$BRB_health_A<- ifelse(GPP.df$BRB_health_A== 0, 2, GPP.df$BRB_health_A)
+  }
     
   data_subset.df <- data.df %>%
     select(country_name_ltn, year, all_of(list_var_t.test))
@@ -71,6 +78,8 @@ time_changes <- function(data.df = master_data.df,
   t_test_results <- lapply(list_var_t.test, function(var_name) {
     
     # Subset data for the current variable
+    
+    #for (var_name in list_var_t.test){
     
     data_sub <- normalized %>%
       select(country_name_ltn, year, {{var_name}}) %>%
@@ -118,8 +127,16 @@ time_changes <- function(data.df = master_data.df,
     
     direction <- if_else(difference > 0, "Positive change", "Negative change")
     
+    if (sum(!is.na(recent_year_data[[var_name]])) < 30 | sum(!is.na(previous_year_data[[var_name]]))< 30){
+      
+      t_test_result<- 99
+      
+    }else{
+    
     t_test_result <- t.test(x = recent_year_data[[var_name]], 
                             y = previous_year_data[[var_name]])
+    }
+    
     
     if (type == "pretest"){
     return(tibble(
@@ -136,6 +153,23 @@ time_changes <- function(data.df = master_data.df,
     ))
    }
     if (type == "full"){
+      
+      if (class(t_test_result) != "htest"){
+        
+        return(tibble(
+          country = country,
+          variable = var_name,
+          ttestResult = 99,
+          current_score = 99,
+          previous_score = 99,
+          warning = "Not enough info",
+          direction = "NA",
+          curr_year = current_year,
+          prev_year = previous_year
+        ))
+        
+      }else{
+      
       return(tibble(
         country = country,
         variable = var_name,
@@ -147,8 +181,9 @@ time_changes <- function(data.df = master_data.df,
         curr_year = current_year,
         prev_year = previous_year
       ))
-    }
     
+      }
+    }
   })
   
   # Combine the results into a single tibble
