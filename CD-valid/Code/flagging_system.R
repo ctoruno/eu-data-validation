@@ -97,7 +97,8 @@ flagging_system<- function(gpp_data.df = fullmerge){
                            ifelse(grepl("Red", Internal_validation) & grepl("Green", External_validation), "Yellow***",
                            ifelse(grepl("Green", Internal_validation) & grepl("Red", External_validation), "Yellow***",
                            ifelse(grepl("Green", Internal_validation) & grepl("Green", External_validation), "Green***", NA_character_))))))))))))))))))
-           )
+           ) select(-Pillar)%>%
+    distinct()
   
   return(final_flags)
 
