@@ -20,7 +20,8 @@ outlier_analysis<- function(gpp_data.df = fullmerge){
   
   ## 1.1 Identifying indicators    =============================================================================
   countries<- unique(gpp_data.df$country_name_ltn)
-  vars<- colnames(select_if(gpp_data.df, is.numeric))[-c(1:5)]
+  # vars<- colnames(select_if(gpp_data.df, is.numeric))[-c(1:5)]
+  # vars<- vars[!startsWith(vars, "AJ")]
   
   ## 1.2 Sub-setting data  =====================================================================================
   
@@ -29,7 +30,7 @@ outlier_analysis<- function(gpp_data.df = fullmerge){
   results<- data.frame(matrix(nrow = 0, ncol = 3))
   colnames(results)<- c("Country", "Question", "Flag")
   
-  for (i in vars){
+  for (i in reportvarslist){
     
     oriented[[i]]<- ifelse(oriented[[i]] %in% c(98,99, 8888, 9999), NA_real_, oriented[[i]])
     
@@ -54,9 +55,13 @@ outlier_analysis<- function(gpp_data.df = fullmerge){
             results[nrow(results)+1,]<- c(j, i, "Green Flag")
           }
           
+        }else{
+          results[nrow(results)+1,]<- c(j, i, "Not Enough Info")
         }
         
       }
+    } else{
+      results[nrow(results)+1,]<- c(j, i, "Not Enough Info")
     }
   }
   
