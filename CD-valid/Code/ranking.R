@@ -16,7 +16,7 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-TPS_ranking_analysis.fn <- function(gpp_data.df = master_data.df,
+TPS_ranking_analysis.fn <- function(gpp_data.df = fullmerge,
                                     tps_data.df = TPS.df,
                                     metadata.df = metadata) {
 
@@ -86,6 +86,15 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = master_data.df,
         flagged_pillars > 0.25 & flagged_pillars < 0.5, "Yellow Flag",
         if_else(
           flagged_pillars >= 0.5, "Red Flag", "Green Flag"
+        )
+      ),
+      diff_score = if_else(Type_Survey == "population",
+                           abs(value - tps_value),
+                           NA_real_),
+      flagged_score = if_else(
+        diff_score > 0.15 & flagged_pillars < 0.3, "Yellow Flag",
+        if_else(
+          diff_score >= 0.3, "Red Flag", "Green Flag"
         )
       )
     )

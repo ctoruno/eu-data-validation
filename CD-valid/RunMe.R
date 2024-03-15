@@ -29,7 +29,7 @@
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
 
-args[1] = args[1]
+args[1] = "Luxembourg"
 args[2] = args[2]
 
 source("Code/settings.R")
@@ -45,7 +45,7 @@ source("Code/outlier_analysis.R")
 
 # List of chosen analyses (add/remove as needed)
 # Options are "pretest" or "full"
-type_data <- "pretest"
+type_data <- "full"
 
 master_data.df <- haven::read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/1. PTR/", 
                                          args[1],
