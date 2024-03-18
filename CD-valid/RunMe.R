@@ -30,7 +30,11 @@
 args = commandArgs(trailingOnly=TRUE)
 
 args[1] = "Luxembourg"
-args[2] = args[2]
+args[2] = "Carlos Toruño"
+# List of chosen analyses (add/remove as needed)
+# Options are "pretest" "html" or "full"
+args[3] <- "html"
+
 
 source("Code/settings.R")
 source("Code/sociodem.R")
@@ -42,16 +46,24 @@ source("Code/time_length.R")
 source("Code/representativeness.R")
 source("Code/difficulty_score.R")
 source("Code/outlier_analysis.R")
+source("Code/flagging_system.R")
 
-# List of chosen analyses (add/remove as needed)
-# Options are "pretest" or "full"
-type_data <- "full"
 
+
+if (args[3] == "pretest"){
 master_data.df <- haven::read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/1. PTR/", 
                                          args[1],
                                          "/1. Clean Data", 
                                          "/",
                                          args[1], "_clean.dta"))
+} else {
+  
+  master_data.df <- haven::read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/2. FFW/", 
+                                           args[1],
+                                           "/1. Clean Data", 
+                                           "/",
+                                           args[1], "_clean.dta"))
+}
 
 GPP_previous.df <- haven::read_dta(paste0("Input/eu_merge.dta")) 
 
@@ -65,17 +77,25 @@ matched_tps <- suppressMessages(import_list("Input/Selected GPP&TPS for QCC.xlsx
 matched_tps <- matched_tps$`Selection and matching`
 variable_list.df <- read_excel("Input/Metadatatt.xlsx")
 
-if (type_data == "pretest"){
-  sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
-    filter(country %in% args[1])
-}
-if (type_data == "full"){
-  sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx")
-}
-
 metadata<- read_excel("Input/Metadatatps.xlsx")
 
-fullmerge<- read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/3. Merge/EU_GPP_2024.dta"))
+if (args[3] == "pretest"){
+  sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
+    filter(country %in% args[1])
+} else if (args[3] == "html"){
+  sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx")
+} else if (args[3] == "full"){
+  sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx")
+  fullmerge<- read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/3. Merge/EU_GPP_2024.dta"))
+  
+  reportvars<- codebook.df %>%
+    filter(Report == 1)
+  
+  reportvarslist<- reportvars$Variable
+}
+
+
+
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -94,9 +114,9 @@ fullmerge<- read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/3. Merge/EU_GPP_
 
 
 # Define analysis functions
+if (args[3] != "full"){
 
 time_changes.df <- time_changes(data.df = master_data.df,
-                                type    = "real",
                                 country = args[1])
 
 tps_comparisson.df <- TPS_function(country = args[1],
@@ -104,6 +124,8 @@ tps_comparisson.df <- TPS_function(country = args[1],
                                    tps     = TPS.df,
                                    mat     = metadata
                                    )
+}
+if (args[3] = "full"){
 
 TPS_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = fullmerge,
                                                    tps_data.df = TPS.df,
@@ -118,9 +140,14 @@ representativeness.df <- representativeness(data = fullmerge,
   
 difficulty_score.df<- difficulty_score(data.df = fullmerge)
 
+outlier_analysis.df<- outlier_analysis(gpp_data.df = fullmerge)
+
+flagging_system.df<- flagging_system(gpp_data.df = fullmerge)
+
+}
 # List of analysis functions
 
-if(type_data == "pretest") {
+if(args[3] != "full") {
   
   analysis_functions <- list(
     time_changes = time_changes.df,
@@ -135,7 +162,8 @@ if(type_data == "pretest") {
     tps_comparisson = tps_comparisson.df,
     tps_trend_comparisson = tps_trend_comparisson.df,
     sociodem_comparisson = sociodem_comparisson.df,
-    TPS_ranking_analysis = TPS_ranking_analysis.df
+    TPS_ranking_analysis = TPS_ranking_analysis.df,
+    Outlier_analysis = outlier_analysis.df,
   )
   
 }
@@ -149,16 +177,36 @@ analysis.list <- analysis_functions
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-if (!dir.exists(file.path(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", args[1]))){
-  dir.create(file.path(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", args[1]))
+if (args[3] == "pretest"){
+  if (!dir.exists(file.path(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", args[1]))){
+    dir.create(file.path(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", args[1]))
+  }
+  
+  openxlsx::write.xlsx(analysis.list,
+                       paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/",
+                              args[1],
+                              "/",
+                              args[1],
+                              ".xlsx"))
+} else if (args[3] == "html"){
+  
+  if (!dir.exists(file.path(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/", args[1]))){
+    dir.create(file.path(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/", args[1]))
+  }
+  
+  openxlsx::write.xlsx(analysis.list,
+                       paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/",
+                              args[1],
+                              "/",
+                              args[1],
+                              ".xlsx"))
+} else if (args[3] == "full"){
+  
+  
+  openxlsx::write.xlsx(flagging_system.df,
+                       paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/",
+                              "flagging_system.xlsx"))
 }
-
-openxlsx::write.xlsx(analysis.list,
-                     paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/",
-                            args[1],
-                            "/",
-                            args[1],
-                            ".xlsx"))
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -166,13 +214,18 @@ openxlsx::write.xlsx(analysis.list,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-a<- 2+2
 
-Sys.sleep(10)
-
+if (args[3] == "pretest"){
   rmarkdown::render("./Code/Country Report Template.Rmd", 
                     params = list(country = args[1], author = args[2], date= Sys.Date()),
                     output_file=paste0(args[1], " Validation Report", ".html"),
                     output_dir = paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", args[1]))
+  
+} else if (args[3] == "html"){
+  
+  rmarkdown::render("./Code/Full Fieldwork Report Template.Rmd", 
+                    params = list(country = args[1], author = args[2], date= Sys.Date()),
+                    output_file=paste0(args[1], " Full Fieldwork Validation Report", ".html"),
+                    output_dir = paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/", args[1]))
 
-
+}
