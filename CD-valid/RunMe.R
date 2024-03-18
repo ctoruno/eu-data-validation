@@ -29,8 +29,8 @@
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
 
-args[1] = "Luxembourg"
-args[2] = "Carlos Toruño"
+args[1] = "Hungary"
+args[2] = "Natalia Rodriguez"
 # List of chosen analyses (add/remove as needed)
 # Options are "pretest" "html" or "full"
 args[3] <- "html"
@@ -125,7 +125,7 @@ tps_comparisson.df <- TPS_function(country = args[1],
                                    mat     = metadata
                                    )
 }
-if (args[3] = "full"){
+if (args[3] == "full"){
 
 TPS_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = fullmerge,
                                                    tps_data.df = TPS.df,
