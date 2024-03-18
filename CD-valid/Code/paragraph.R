@@ -496,8 +496,8 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Hungary                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
-    p<- c("
+    if (type == "pretest"){
+      p<- c("
     <b>Overall, we encountered no significant issues during the data validation process. We are aware that numerous flags appeared in the GPP validation over time, but this can be attributed to the time gap between comparisons. Additionally, these differences do not align with TPS public opinions, which are remarkably similar. As a result, while these discrepancies are intriguing and warrant understanding, they are not substantial enough to cast doubt on the polling company.</b>
     <br>
     <br>
@@ -535,6 +535,9 @@ paragraph<- function(country, type){
     <br>  
     <br>          
           ")
+    } else{
+      p<- c("There is no paragraph")
+    }
     
   }
   
