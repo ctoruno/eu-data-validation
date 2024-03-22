@@ -60,11 +60,12 @@ par<- paragraph(params$country, type = "full")
 pre_thr<- pretest$tps_comparisson%>%
   select(GPP_Variable_Name, TPS_Variable_Name, Flag)%>%
   rename("Pretest Flag" = "Flag")
+pre_thr$`Pretest Flag`<- ifelse(pre_thr$`Pretest Flag` == "green", "Green", ifelse(pre_thr$`Pretest Flag` == "yellow", "Yellow", "Red"))
 
 pre_time<- pretest$time_changes%>%
   select(variable, warning)%>%
   rename("Pretest Flag" = "warning")
-pre_time$`Pretest Flag`<- ifelse(pre_time$`Pretest Flag` == "Green light", "green", ifelse(pre_time$`Pretest Flag` == "Yellow light", "yellow", "red"))
+pre_time$`Pretest Flag`<- ifelse(pre_time$`Pretest Flag` == "Green light", "Green", ifelse(pre_time$`Pretest Flag` == "Yellow light", "Yellow", "Red"))
 
 threshold1<- suppressMessages(suppressWarnings(left_join(df$tps_comparisson, pre_thr)))%>% distinct()
 time<- suppressMessages(suppressWarnings(left_join(df$time_changes, pre_time)))%>% distinct()
@@ -81,6 +82,9 @@ threshold<- threshold1%>%
 # Threshold Analysis for population polls
 flags<- threshold%>%
   group_by(Pillar)%>%
+  count(Flag)
+flagssub<- threshold%>%
+  group_by(Sub_Pillar)%>%
   count(Flag)
 
 problematic<- c()
@@ -160,6 +164,9 @@ problematicth<- sort(problematic)
 flags2<- experts%>%
   group_by(Pillar)%>%
   count(Flag)
+flags2sub<- experts%>%
+  group_by(Sub_Pillar)%>%
+  count(Flag)
 
 problematic<- c()
 notproblematic<- c()
@@ -238,6 +245,9 @@ problematicex<- sort(problematic)
 
 warnings<- time%>%
   group_by(pillar)%>%
+  count(warning)
+warningssub<- time%>%
+  group_by(subpillar)%>%
   count(warning)
 
 problematic<- c()
@@ -413,6 +423,27 @@ colnames(flagsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", 
 ```
 
 ```{r}
+flagsoutputsub<- flagssub%>%
+  pivot_wider(names_from = Flag, values_from = n)
+
+flagsoutputsub[is.na(flagsoutputsub)] <- 0
+  
+flagsoutputsub<- flagsoutputsub%>%
+  mutate(sum = green + red + yellow )%>%
+  mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))
+
+flagsoutputsub$Label<- ifelse(flagsoutputsub$red >= flagsoutputsub$sum/2, "Significantly Different", ifelse(flagsoutputsub$red+flagsoutputsub$yellow >= 3*flagsoutputsub$sum/4, "Significantly Different", ifelse(flagsoutputsub$yellow >= 3*flagsoutputsub$sum/4, "Significantly Different", "Not Significantly Different")))
+
+flagsoutputsub<- flagsoutputsub%>%
+  select(Sub_Pillar, green, yellow, red, perc, Label)
+
+colnames(flagsoutputsub)<- c("Sub-Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
+
+
+
+```
+
+```{r}
 flagsoutput2<- flags2%>%
   pivot_wider(names_from = Flag, values_from = n)
 
@@ -428,6 +459,25 @@ flagsoutput2<- flagsoutput2%>%
   select(Pillar, green, yellow, red, perc, Label)
 
 colnames(flagsoutput2)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
+
+```
+
+```{r}
+flagsoutput2sub<- flags2sub%>%
+  pivot_wider(names_from = Flag, values_from = n)
+
+flagsoutput2sub[is.na(flagsoutput2sub)] <- 0
+  
+flagsoutput2sub<- flagsoutput2sub%>%
+  mutate(sum = green + red + yellow )%>%
+  mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))
+
+flagsoutput2sub$Label<- ifelse(flagsoutput2sub$red >= flagsoutput2sub$sum/2, "Significantly Different", ifelse(flagsoutput2sub$red+flagsoutput2sub$yellow >= 3*flagsoutput2sub$sum/4, "Significantly Different", ifelse(flagsoutput2sub$yellow >= 3*flagsoutput2sub$sum/4, "Significantly Different", "Not Significantly Different")))
+
+flagsoutput2sub<- flagsoutput2sub%>%
+  select(Sub_Pillar, green, yellow, red, perc, Label)
+
+colnames(flagsoutput2sub)<- c("Sub-Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 ```
 
@@ -456,6 +506,31 @@ warningsoutput<- warningsoutput%>%
 colnames(warningsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 ```
+
+```{r}
+warningssuboutput<- warningssub%>%
+  pivot_wider(names_from = warning, values_from = n)
+
+if (!("Red light" %in% colnames(warningssuboutput))){
+  
+  warningssuboutput$`Red light`<- rep(0, nrow(warningssuboutput))
+}
+
+warningssuboutput[is.na(warningssuboutput)] <- 0
+  
+warningssuboutput<- warningssuboutput%>%
+  mutate(sum = `Green light` + `Red light` + `Yellow light`)%>%
+  mutate(perc = paste0(round(`Red light`/sum*100, digits = 1), "%"))
+
+warningssuboutput$Label<- ifelse(warningssuboutput$`Red light` >= warningssuboutput$sum/2, "Significantly Different", ifelse(warningssuboutput$`Red light`+warningssuboutput$`Yellow light` >= 3*warningssuboutput$sum/4, "Significantly Different", ifelse(warningssuboutput$`Yellow light` >= 3*warningssuboutput$sum/4, "Significantly Different", "Not Significantly Different")))
+
+warningssuboutput<- warningssuboutput%>%
+  select(subpillar, `Green light`, `Yellow light`, `Red light`, perc, Label)
+
+colnames(warningssuboutput)<- c("Sub-Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
+
+```
+
 
 Below are three tables summarizing each of the validation analyses to provide further details about the issues we have flagged. If you are interested in exploring which specific variables are flagged, please see the Appendix.
   
@@ -488,6 +563,13 @@ knitr::kable(warningsoutput, caption = "T-Test Analysis Summary", escape = F)%>%
   kable_styling(bootstrap_options = c("striped"))%>%
   column_spec(6, background = ifelse(warningsoutput$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
   column_spec(5, bold = TRUE)
+
+knitr::kable(warningssuboutput, escape = F)%>%
+  kable_classic(html_font = "Arial")%>%
+  kable_styling(bootstrap_options = c("striped"))%>%
+  column_spec(6, background = ifelse(warningssuboutput$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
+  column_spec(5, bold = TRUE)%>%
+  scroll_box(height = "500px", fixed_thead = T)
 ```
 
 
@@ -504,6 +586,13 @@ knitr::kable(flagsoutput, caption = "Threshold Analysis Summary", escape = F)%>%
   column_spec(6, background = ifelse(flagsoutput$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
   column_spec(5, bold = TRUE)
 
+knitr::kable(flagsoutputsub, escape = F)%>%
+  kable_classic(html_font = "Arial")%>%
+  kable_styling(bootstrap_options = c("striped"))%>%
+  column_spec(6, background = ifelse(flagsoutputsub$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
+  column_spec(5, bold = TRUE)%>%
+  scroll_box(height = "500px", fixed_thead = T)
+
 ```
   
   
@@ -519,6 +608,13 @@ knitr::kable(flagsoutput2, caption = "Threshold Analysis Summary", escape = F)%>
   kable_styling(bootstrap_options = c("striped"))%>%
   column_spec(6, background = ifelse(flagsoutput2$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
   column_spec(5, bold = TRUE)
+
+knitr::kable(flagsoutput2sub, escape = F)%>%
+  kable_classic(html_font = "Arial")%>%
+  kable_styling(bootstrap_options = c("striped"))%>%
+  column_spec(6, background = ifelse(flagsoutput2sub$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
+  column_spec(5, bold = TRUE)%>%
+  scroll_box(height = "500px", fixed_thead = T)
 
 ```
 
@@ -603,7 +699,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
+  column_spec(c(6,7,8,9,10), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 ```
@@ -628,7 +724,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
   
@@ -653,7 +749,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
   
@@ -679,7 +775,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
+  column_spec(c(6,7,8,9,10), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 ```
@@ -704,7 +800,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
   
@@ -729,7 +825,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
   
@@ -754,7 +850,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
+  column_spec(c(6,7,8,9,10), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 ```
@@ -779,7 +875,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 
@@ -805,7 +901,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 ```
@@ -829,7 +925,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
+  column_spec(c(6,7,8,9,10), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 ```
@@ -854,7 +950,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
   
@@ -880,7 +976,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
   
@@ -906,7 +1002,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
+  column_spec(c(6,7,8,9,10), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 ```
@@ -932,7 +1028,7 @@ if (nrow(a2) >0){
   row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
   
@@ -972,7 +1068,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
   
@@ -1009,7 +1105,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
+  column_spec(c(6,7,8,9,10), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 ```
@@ -1034,7 +1130,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
   
@@ -1060,7 +1156,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
   
@@ -1085,7 +1181,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
+  column_spec(c(6,7,8,9,10), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 ```
@@ -1110,7 +1206,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
   
@@ -1135,7 +1231,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
   
@@ -1161,7 +1257,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
+  column_spec(c(6,7,8,9,10), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 ```
@@ -1182,7 +1278,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 
@@ -1205,7 +1301,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 
