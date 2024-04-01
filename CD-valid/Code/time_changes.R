@@ -9,6 +9,7 @@ time_changes <- function(data.df = master_data.df,
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+  gppvars<- variable_list.df$variable
   
   list_var_t.test <- codebook.df %>%
     filter(Variable %in% gppvars) %>%
@@ -16,7 +17,8 @@ time_changes <- function(data.df = master_data.df,
                           if_else(Variable %in% c("CPA_protest", "PAB_misinfo",
                                                   "PAB_attackmedia","PAB_emergpower",
                                                   "PAB_manipulelect", "PAB_overcourts",
-                                                  "CJP_resprights", "BRB_permit_B", "CP_cso"), 1, 0))) %>%
+                                                  "CJP_resprights", "BRB_permit_B", "CP_cso", 
+                                                  "CTZ_headgovteval_A", "CTZ_headgovteval_B"), 1, 0))) %>%
     filter(skip == 0) %>%
     select(Variable) %>%
     pull()
@@ -40,8 +42,9 @@ time_changes <- function(data.df = master_data.df,
   GPP.df$BRB_health_B<- ifelse(GPP.df$BRB_health_B== 0, 2, GPP.df$BRB_health_B)
   }
   
-  if (type == "full"){
+  if (type == "full" |type == "html"){
     GPP.df$BRB_health_A<- ifelse(GPP.df$BRB_health_A== 0, 2, GPP.df$BRB_health_A)
+    GPP.df$BRB_health_B<- ifelse(GPP.df$BRB_health_B== 0, 2, GPP.df$BRB_health_B)
   }
     
   data_subset.df <- data.df %>%
@@ -139,6 +142,22 @@ time_changes <- function(data.df = master_data.df,
     
     
     if (type == "pretest"){
+      
+      if (class(t_test_result) != "htest"){
+        
+        return(tibble(
+          country = country,
+          variable = var_name,
+          ttestResult = 99,
+          current_score = 99,
+          previous_score = 99,
+          warning = "Not enough info",
+          direction = "NA",
+          curr_year = current_year,
+          prev_year = previous_year
+        ))
+        
+      }else {
     return(tibble(
       country = country,
       variable = var_name,
@@ -151,8 +170,9 @@ time_changes <- function(data.df = master_data.df,
       curr_year = current_year,
       prev_year = previous_year
     ))
+      }
    }
-    if (type == "full"){
+    if (type == "full" | type == "html"){
       
       if (class(t_test_result) != "htest"){
         

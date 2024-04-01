@@ -72,12 +72,14 @@ TPS.df <- read_csv("Input/TPS_data.csv")
 data_map.df <- read_excel("Input/EU2 GPP 2023 Full Datamap.xlsx", sheet = "Data Map")
 codebook.df <- read_excel("Input/EU2 GPP 2023 Codebook.xlsx") %>%
   left_join(data_map.df %>% select(Variable, Scale), by = c("2023  EU Questionnaire" = "Variable"))
+framework <- read_excel(paste0(path2eu,"/EU-S Research/Design/EU Subnational_Questions_Map.xlsx"), sheet = "GPP and CF Map")
 
 matched_tps <- suppressMessages(import_list("Input/Selected GPP&TPS for QCC.xlsx"))
 matched_tps <- matched_tps$`Selection and matching`
 variable_list.df <- read_excel("Input/Metadatatt.xlsx")
 
 metadata<- read_excel("Input/Metadatatps.xlsx")
+metareport<- read_excel("Input/metareport.xlsx")
 
 if (args[3] == "pretest"){
   sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx") %>%
@@ -117,12 +119,14 @@ if (args[3] == "pretest"){
 if (args[3] != "full"){
 
 time_changes.df <- time_changes(data.df = master_data.df,
-                                country = args[1])
+                                country = args[1],
+                                type = args[3])
 
 tps_comparisson.df <- TPS_function(country = args[1],
                                    gpp     = master_data.df,
                                    tps     = TPS.df,
-                                   mat     = metadata
+                                   mat     = metadata,
+                                   type    = args[3]
                                    )
 }
 if (args[3] == "full"){
@@ -203,9 +207,15 @@ if (args[3] == "pretest"){
 } else if (args[3] == "full"){
   
   
+ 
   openxlsx::write.xlsx(flagging_system.df,
                        paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/",
                               "flagging_system.xlsx"))
+  
+  openxlsx::write.xlsx(TPS_ranking_analysis.df,
+                       paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/Luxembourg/",
+                              "ranking.xlsx"))
+
 }
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

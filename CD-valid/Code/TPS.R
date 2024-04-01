@@ -22,7 +22,7 @@
  #country<- "Cyprus"
  #mat<- metadata
 
-TPS_function<- function(gpp, tps, country, mat){
+TPS_function<- function(gpp, tps, country, mat, type){
   
   countries<- c("Austria", "Belgium", "Bulgaria", "Cyprus", "Czechia", "Germany", "Denmark", "Estonia", "Greece", "Spain",      
                 "Finland", "France", "Croatia", "Hungary", "Ireland", "Italy", "Lithuania", "Luxembourg", "Latvia", "Malta",      
@@ -87,6 +87,8 @@ TPS_function<- function(gpp, tps, country, mat){
     
     diff<- abs(gp - tp)
     
+    if (type == "pretest"){
+    
     f<- tibble("Country" = country, "GPP_Variable_Name" = gppvars[[i]], "GPP_datapoint" = gp, 
                "TPS_Variable_Name" = tpsvars[[i]], 
                "TPS_datapoint" = tp, "TPS_Source" = mat$TPS_Source[[i]], 
@@ -95,6 +97,17 @@ TPS_function<- function(gpp, tps, country, mat){
                "Pillar" = mat$Pillar[[i]], "Sub_Pillar"= mat$Sub_Pillar[[i]], 
                "Type_Survey" = mat$Type_Survey[[i]], "Match" = mat$Match[[i]], 
                "2023  EU Questionnaire" = mat$EU_Questionnaire[[i]], "Description" = mat$Description[[i]])
+    } else {
+      
+      f<- tibble("Country" = country, "GPP_Variable_Name" = gppvars[[i]], "GPP_datapoint" = gp, 
+                 "TPS_Variable_Name" = tpsvars[[i]], 
+                 "TPS_datapoint" = tp, "TPS_Source" = mat$TPS_Source[[i]], 
+                 "TPS_Year" = mat$TPS_Year[[i]], "TPS_Question" = mat$TPS_Question[[i]], 
+                 "Difference" = diff, "Flag" = ifelse(diff > .35, "red", "green"),
+                 "Pillar" = mat$Pillar[[i]], "Sub_Pillar"= mat$Sub_Pillar[[i]], 
+                 "Type_Survey" = mat$Type_Survey[[i]], "Match" = mat$Match[[i]], 
+                 "2023  EU Questionnaire" = mat$EU_Questionnaire[[i]], "Description" = mat$Description[[i]])
+    }
     
     final<- rbind(final, f)
   }

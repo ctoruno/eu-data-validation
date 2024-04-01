@@ -49,7 +49,8 @@ flagging_system<- function(gpp_data.df = fullmerge){
   ## 1.2 External Flags  =====================================================================================
   
   ranking<- TPS_ranking_analysis.df%>%
-    select(Pillar, country_name_ltn, question, flagged_questions, flagged_score, Type_Survey)%>%
+    ungroup()%>%
+    select(country_name_ltn, question, flagged_questions, flagged_score, Type_Survey)%>%
     distinct()%>%
     pivot_wider(names_from = Type_Survey, values_from = c(flagged_questions, flagged_score), values_fn = list)%>% 
     unnest(cols = everything())%>%
@@ -79,8 +80,8 @@ flagging_system<- function(gpp_data.df = fullmerge){
                                     ifelse(outliers == "Green" & time == "Red", "Red",
                                     ifelse(outliers == "Red" & time == "Green", "Red", NA_character_))))))),
            
-           "Final_flag" = ifelse(is.na(External_validation), paste0(Internal_validation, "*"),
-                           ifelse(is.na(Internal_validation), paste0(External_validation, "*"),
+           "Final_flag" = ifelse(is.na(External_validation), "Yellow",
+                           ifelse(is.na(Internal_validation), "Yellow",
                            ifelse(External_validation == "Red" & Internal_validation == "Red", "Red", 
                            ifelse(External_validation == "Red" & Internal_validation == "Green", "Yellow",
                            ifelse(External_validation == "Green" & Internal_validation == "Red", "Yellow",
@@ -97,10 +98,93 @@ flagging_system<- function(gpp_data.df = fullmerge){
                            ifelse(grepl("Red", Internal_validation) & grepl("Green", External_validation), "Yellow***",
                            ifelse(grepl("Green", Internal_validation) & grepl("Red", External_validation), "Yellow***",
                            ifelse(grepl("Green", Internal_validation) & grepl("Green", External_validation), "Green***", NA_character_))))))))))))))))))
-           ) select(-Pillar)%>%
+           ) %>%
     distinct()
   
-  return(final_flags)
+  info<- codebook.df%>%
+    filter(Variable %in% reportvarslist)%>%
+    select(Variable, `2023  EU Questionnaire`, Scale, Direction, Description)
+  
+  info[76, 3]<- "Scale 2"
+  
+  reportdf<-fullmerge%>%
+    select(country_name_ltn, all_of(reportvarslist))
+  oriented<- reportdf
+  
+  for (i in reportvarslist){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] %in% c(98,99), NA_real_, oriented[[i]])
+    
+    info2<- info%>%
+      filter(Variable == i)
+    max = parse_number(info2$Scale[1])
+    
+    if (info2$Direction[1] == "Inverse" | info2$Direction[1] == "Proportional (after Transformation)"){
+      
+      if (max == 4){
+        oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
+                                                             ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
+      } else if (max == 5){
+        
+        oriented[[i]]<- ifelse(oriented[[i]] == 1, 5, ifelse(oriented[[i]] == 2, 4, 
+                                                             ifelse(oriented[[i]] == 4, 2, ifelse(oriented[[i]] == 5, 1, NA_real_))))
+      } else if (max == 2){
+        oriented[[i]]<- ifelse(oriented[[i]] == 1, 2, ifelse(oriented[[i]] == 2, 1, 
+                                                             NA_real_))
+      }
+    }
+    
+  }
+  
+  cols_oriented <- names(oriented)[2:length(oriented)]
+  max_values <- lapply(cols_oriented, function(col_name){
+    
+    codebook.df %>% 
+      filter(Variable %in% col_name) %>%
+      mutate(max_value = 
+               case_when(
+                 Scale == "Scale 2" ~ 2,
+                 Scale == "Scale 3" ~ 3,
+                 Scale == "Scale 4" ~ 4,
+                 Scale == "Scale 5" ~ 5
+               )) %>%
+      pull(max_value)
+  })
+  
+  oriented[nrow(oriented) + 1,] <- c("maxs", max_values)
+  oriented[nrow(oriented) + 1,] <- c("mins", rep(list(1), ncol(oriented)-1))
+  
+  
+  process    <- preProcess(oriented, method = c("range"))
+  normalized <- predict(process, oriented)
+  
+  normalized <- slice(normalized, 1:(n() - 2))
+  
+  gppaggregate <- normalized%>%
+    group_by(country_name_ltn)%>%
+    summarise_at(reportvarslist, mean, na.rm= TRUE)%>%
+    pivot_longer(cols = all_of(reportvarslist), names_to = "Variable", values_to = "Score")
+  
+  add<- left_join(gppaggregate, info%>%select(Variable, `2023  EU Questionnaire`, Description))%>%
+    rename("EU_Name" = `2023  EU Questionnaire`)
+  
+  subp<- index%>%
+    filter(ID %in% metareport$ID)%>%
+    select(ID, `Name 1`, `Name 2`, `Name 3`)%>%
+    pivot_longer(cols = c(`Name 1`, `Name 2`, `Name 3`), names_to = "level", values_to = "Subpillar" )%>%
+    drop_na()%>%
+    select(-level)
+  
+  submat<- left_join(subp, metareport)%>%
+    select(reportvarslist, Subpillar)%>%
+    rename("Variable" = "reportvarslist")
+  
+  add2<- left_join(add, submat)
+  
+  full<- left_join(flagging_system.df, add2, by = join_by("Country" == "country_name_ltn", "Question" == "Variable"))%>%
+    mutate(Pillar = substring(Subpillar, 1, 1))
+  
+  return(full)
 
   
 }
