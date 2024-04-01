@@ -536,7 +536,44 @@ paragraph<- function(country, type){
     <br>          
           ")
     } else{
-      p<- c("There is no paragraph")
+      p<- c("
+            <b>Overview</b>
+            <br>
+            We are seeing that across time, all of the pillars in the GPP are changing. For the most part, these changes indicate more negative opinions about the rule of law with some positive trends in select sub pillars. Nevertheless, the result of these trends in terms of our full fieldwork data are similar to what other sources are observing. Therefore, according to our data, people in Hungary have a decreased view of the rule of law, which is in accordance with the third party source data.
+            <br>
+            <br>
+            Given that we expect to see changes from our previous data in Hungary, we are noting sub pillars that are flagged in the TPS analyses. In this regard, all the topics that are flagged in the time comparisson but supported by green flags in the TPS are considered as something normal in the context of Hungary. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported in the TPS.
+            <br>
+            <br>
+            <b> Sub Pillars to Research </b>
+            <ul>
+            <li> Pillar 4. Fundamental Rights
+            <ul>
+            <li> Negative trend in 4.4: Solidarity </li>
+            <ul>
+            <li> When we asked if people thought that workers’ freedom to form labor unions and negotiate with employers is important, we found a score of 0.46 when our previous score was 0.61. Additionaly, when we asked if working conditions are favorable, we found a score of 0.36 while the European Social Survey found a score of 0.74 in 2021. These large discrepancies should be investigated through context about both unionization and wokring conditions. </li>
+            </ul>
+            </ul>
+            </li>
+            <li> Pillar 7. Civil Justice
+            <ul>
+            <li> Negative trend in 7.1: Legal Security </li>
+            <ul>
+            <li> When we asked if people are aware of their rights when they face a legal problem we found an score of 0.34, while the Fundamental Rights Survey shows a score of 0.758 when they asked about the views on authorities providing information for people in a simple way. The large discrepancy between these scores should be explained further. Since this source of comparison is a low match, we recommend to give a context about the knowledge of people about their rights when they faced a legal problem. </li>
+            </ul>
+            </ul>
+            </li>
+            <li> Pillar 8. Criminal Justice 
+            <ul>
+            <li> Negative trend in 8.7: Prisons </li>
+            <ul>
+            <li> When we asked how confident people are that the criminal justice system guarantees the safety and human rights of people deprived of their liberty, we found a score of 0.47, while Varieties of Democracy found a score of 0.835 when they asked if there was freedom from torture. Although the questions have a low match, they are still related and should be complemented with research about safety and human rights in the criminal justice system. </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+            The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. 
+            ")
     }
     
   }

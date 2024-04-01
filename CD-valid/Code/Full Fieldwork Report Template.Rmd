@@ -1,11 +1,11 @@
 ---
 title: '`r params$country` Full Fieldwork Validation Report'
-author: '`r params$author`'
+author: '`r params$author`, Dalia Habiby'
 date: '`r params$date`'
 output:
   html_document: default
 params:
-  country: Luxembourg
+  country: Hungary
   author: 'Dalia Habiby'
   date: '2023-11-08'
 
@@ -63,12 +63,14 @@ pre_thr<- pretest$tps_comparisson%>%
 pre_thr$`Pretest Flag`<- ifelse(pre_thr$`Pretest Flag` == "green", "Green", ifelse(pre_thr$`Pretest Flag` == "yellow", "Yellow", "Red"))
 
 pre_time<- pretest$time_changes%>%
+  filter(warning != "Not enough info")%>%
   select(variable, warning)%>%
   rename("Pretest Flag" = "warning")
 pre_time$`Pretest Flag`<- ifelse(pre_time$`Pretest Flag` == "Green light", "Green", ifelse(pre_time$`Pretest Flag` == "Yellow light", "Yellow", "Red"))
 
 threshold1<- suppressMessages(suppressWarnings(left_join(df$tps_comparisson, pre_thr)))%>% distinct()
-time<- suppressMessages(suppressWarnings(left_join(df$time_changes, pre_time)))%>% distinct()
+time<- suppressMessages(suppressWarnings(left_join(df$time_changes%>%
+  filter(warning != "Not enough info"), pre_time)))%>% distinct()
 
 experts<- threshold1%>%
   filter(Type_Survey == "expert")%>%
@@ -87,79 +89,6 @@ flagssub<- threshold%>%
   group_by(Sub_Pillar)%>%
   count(Flag)
 
-problematic<- c()
-notproblematic<- c()
-
-for (p in unique(threshold$Pillar)){
-  
-  pillar<- flags%>%
-    filter(Pillar == p)
-  
-  sp<- sum(pillar$n)
-  
-  
-  if ("red" %in% unique(pillar$Flag)){
-      
-      if ("yellow" %in% unique(pillar$Flag)){
-      
-        if ((pillar$n[pillar$Flag == "red"] + pillar$n[pillar$Flag == "yellow"])/sp >= 0.75){
-      
-          problematic <- c(problematic, p)
-      
-        } else if (pillar$n[pillar$Flag == "red"]/sp >= 0.5){
-          
-          problematic <- c(problematic, p)
-      }
-        else {
-          notproblematic<- c(notproblematic, p)
-
-      }
-    } else if (pillar$n[pillar$Flag == "red"]/sp >= 0.5){
-          
-          problematic <- c(problematic, p)
-      }
-    else {
-      notproblematic<- c(notproblematic, p)
-
-  }
-    
-  }
-  
-  else if ("yellow" %in% unique(pillar$Flag)){
-    
-    if (pillar$n[pillar$Flag == "yellow"]/sp >= 0.75){
-      
-      problematic<- c(problematic, p)
-
-    } else {
-      notproblematic<- c(notproblematic, p)
-
-  }
-  
-  } else {
-    notproblematic<- c(notproblematic, p)
-
-  }
-  
-}
-
-clevel<- c()
-
-if (length(problematic) >= length(c(problematic, notproblematic))/2){
-  clevel<-c(clevel, 1)
-} else {
-  
-  clevel<- c(clevel,0)
-}
-
-
-
-problematicth<- sort(problematic)
-
-
-```
-
-```{r}
 #Threshold analysis for expert surveys
 flags2<- experts%>%
   group_by(Pillar)%>%
@@ -168,81 +97,7 @@ flags2sub<- experts%>%
   group_by(Sub_Pillar)%>%
   count(Flag)
 
-problematic<- c()
-notproblematic<- c()
-
-for (p in unique(experts$Pillar)){
-  
-  pillar <- flags2%>%
-    filter(Pillar == p)
-  
-  sp <- sum(pillar$n)
-  
-  
-  if ("red" %in% unique(pillar$Flag)){
-      
-      if ("yellow" %in% unique(pillar$Flag)){
-      
-        if ((pillar$n[pillar$Flag == "red"] + pillar$n[pillar$Flag == "yellow"])/sp >= 0.75){
-      
-          problematic <- c(problematic, p)
-      
-        } else if (pillar$n[pillar$Flag == "red"]/sp >= 0.5){
-          
-          problematic <- c(problematic, p)
-      }
-        else {
-          notproblematic<- c(notproblematic, p)
-
-      }
-    } else if (pillar$n[pillar$Flag == "red"]/sp >= 0.5){
-          
-          problematic <- c(problematic, p)
-      }
-    else {
-      notproblematic<- c(notproblematic, p)
-
-  }
-    
-  } else if ("yellow" %in% unique(pillar$Flag)){
-    
-    if (pillar$n[pillar$Flag == "yellow"]/sp >= 0.75){
-      
-      problematic<- c(problematic, p)
-
-    } else {
-      notproblematic<- c(notproblematic, p)
-
-  }
-  
-  } else {
-    notproblematic<- c(notproblematic, p)
-
-  }
-  
-}
-
-
-if (length(problematic) >= length(c(problematic, notproblematic))/2){
-  clevel<-c(clevel, 1)
-} else {
-  
-  clevel<- c(clevel,0)
-}
-
-
-
-problematicex<- sort(problematic)
-
-
-```
-
-
-
-```{r}
 # Time change analysis
-
-
 warnings<- time%>%
   group_by(pillar)%>%
   count(warning)
@@ -250,106 +105,8 @@ warningssub<- time%>%
   group_by(subpillar)%>%
   count(warning)
 
-problematic<- c()
-notproblematic<- c()
-
-for (p in unique(time$pillar)){
-  
-  pillar<- warnings%>%
-    filter(pillar == p)
-  
-  sp<- sum(pillar$n)
-  
-  
-  if ("Red light" %in% unique(pillar$warning)){
-    
-    if ("Yellow light" %in% unique(pillar$warning)){
-      
-      if ((pillar$n[pillar$warning == "Red light"] + pillar$n[pillar$warning == "Yellow light"])/sp >= 0.75){
-        
-        problematic<- c(problematic, p)
-        
-      } else if (pillar$n[pillar$warning == "Red light"]/sp >= 0.5 ){
-      
-          problematic<- c(problematic, p)
-    
-    } else {
-        notproblematic<- c(notproblematic, p)
-        
-   }
-    
-  } else if (pillar$n[pillar$warning == "Red light"]/sp >= 0.5 ){
-      
-          problematic<- c(problematic, p)
-    
-  } else {
-        notproblematic<- c(notproblematic, p)
-        
-  }
-}    else if ("Yellow light" %in% unique(pillar$warning)){
-    
-    if (pillar$n[pillar$warning == "Yellow light"]/sp >= 0.75){
-      
-      problematic<- c(problematic, p)
-
-    }
-    else {
-      notproblematic<- c(notproblematic, p)
-
-  }
-  
-  }
-  else {
-    notproblematic<- c(notproblematic, p)
-
-  }
-  
-}
-
-if (length(problematic) >= length(c(problematic, notproblematic))/2){
-  clevel<-c(clevel, 1)
-} else {
-  
-  clevel<- c(clevel,0)
-}
-
-problematictt<- sort(problematic)
 ```
 
-
-
-```{r}
-#Country overall
-
-if (clevel[[1]] == 1 & clevel[[2]] == 1 & clevel[[3]] == 1){
-  probl<- "significantly different from the previous GPP, the Third Party Population Polls, and the Third Party Expert Surveys"
-  
-} else if (clevel[[1]] == 0 & clevel[[2]] == 0 & clevel[[3]] == 0){
-  probl<- "not significantly different from the previous GPP or the Third Party Sources"
-  
-} else if (clevel[[1]] == 1 & clevel[[2]] == 0 & clevel[[3]] == 0) {
-  probl<- "significantly different from only the Third Party Population Polls"
-  
-} else if (clevel[[1]] == 0 & clevel[[2]] == 1 & clevel[[3]] == 0) {
-  probl<- "significantly different from only the Third Party Expert Surveys"
-  
-} else if (clevel[[1]] == 0 & clevel[[2]] == 0 & clevel[[3]] == 1){
-  probl<- "significantly different from only the previous GPP"
-  
-} else if (clevel[[1]] == 1 & clevel[[2]] == 1 & clevel[[3]] == 0) {
-  probl<- "significantly different from the Third Party Population Polls and the Third Party Expert Surveys"
-  
-} else if (clevel[[1]] == 1 & clevel[[2]] == 0 & clevel[[3]] == 1) {
-  probl<- "significantly different from the previous GPP and the Third Party Population Polls"
-  
-} else if (clevel[[1]] == 0 & clevel[[2]] == 1 & clevel[[3]] == 1){
-  probl<- "significantly different from the previous GPP and the Third Party Expert Surveys"
-  
-} 
-
-#(**We have found that the data from `r params$country` is `r probl`.**)
-
-```
 
 # Report {.tabset}
 
@@ -361,37 +118,54 @@ The goal of this document is to facilitate the evaluation of concern for extreme
   
 We want to preserve the validation review process that has been implemented in the past by the GPP team, while also providing more structure and a quicker way to identify potential issues. Instead of keeping track of multiple files and documents on your device, all of the relevant information lives in one dynamic platform. 
   
-Our analyses are built to only identify cases of highly significant differences from our previous data as well as third party source data. We also acknowledge that many indicators are expected to change over time, or change when asked in a different way in another survey. Furthermore, our data is limited by the number of matches that can successfully be drawn from the EU GPP questionnaire to the Global GPP or to a Third Party Source. Ultimately, given these circumstances, it will still be up to the discretion of the GPP team about what and how they would like to communicate with the survey companies.
+Our analyses are built to only identify cases of highly significant differences from our previous data as well as third party source data. We also acknowledge that many indicators are expected to change over time, or change when asked in a different way in another survey. Furthermore, our data is limited by the number of matches that can successfully be drawn from the EU GPP questionnaire to the Global GPP or to a Third Party Source. Ultimately, given these circumstances, it will still be up to the discretion of the GPP team about what and how they would like to communicate anything that might not be justified.
+
+For the full fieldwork, our mindset is to provide the recommendations for which comparisons need more context, and the EU GPP team may dig deeper into the question level if more information is needed.
   
 **Analyses**
   
-Each country is evaluated based on three analyses: one internal, another external, and the last one structural. 
+Each country is evaluated based on two analyses, internal and external, disaggregated by pillar and sub-pillar. 
   
-The internal and external analyses are based on a flagging system which is explained below:
-  
+The internal and external analyses are based on a flagging system which is explained below. This has changed slightly from the pretest flagging system by removing yellow flags and making the thresholds more strict to avoid flagging too many questions. 
+
 The first analysis is a t-test between a subset of EU GPP indicators and their counterparts from the latest Global GPP per country. 
   
-We define a pillar as "significantly different" in the t-test analysis in one of two cases:
+We define a pillar as "significantly different" in the t-test analysis if:
+
+- 50% or more of the indicators have a statistically significant difference from our last GPP with a p-value below 0.01 (red flag)
   
-1. If 50% or more of the indicators have a statistically significant difference from our last GPP with a p-value below 0.01 (red flag)
+The second is a threshold difference between a few EU GPP indicators and their matched third party source indicators for each sub-pillar.
   
-2. If 75% or more of the indicators have a statistically significant difference from our last GPP with a p-value below 0.1 (yellow flag)
+We define a pillar as "significantly different" in the threshold analysis if:
   
-The second is a threshold difference between a few EU GPP indicators and their matched third party source indicators for each sub-pillar. 
+- If 50% or more of the indicators have a threshold difference above 0.35 (red flag)
+
+Although the analysis provides summaries at both the sub-pillar and pillar levels, the unit of analysis remains the same: the indicators. Therefore, to avoid misleading results or bias given the different sizes of sub-pillars, the number of flagged sub-pillars does not affect the number of flagged pillars. 
+
+Furthermore, the analysis classifies pillars and sub pillars differently, where pillar summaries concern whether or not they are significantly different while sub pillar summaries concern the presence and direction of underlying trends. 
   
-We define a pillar as "significantly different" in the threshold analysis in one of two cases:
-  
-1. If 50% or more of the indicators have a threshold difference above 0.30 (red flag), or
-  
-2. If 75% or more of the indicators have a threshold difference above 0.15 (yellow flag)
-  
-In both of these tests, we flag the country as a whole if at lease half of the Pillars evaluated are labelled "significantly different." If the country is labelled "significantly different" in both tests, then we find cause for concern. 
+In both of these tests, we implemented a more qualitative labeling system to incorporate general trends and direction of difference for each sub pillar. We believe that the sub pillars represent political topic areas that are tied together, and if multiple question level comparisons follow the same pattern, this may indicate a political trend that can be validated. 
+
+- If 75% or more of the indicators in a sub pillar are red flags (as indicated above), we identify a trend 
+  - If all of the indicators share the same direction of difference, this is indicated as "Potential Negative trend" or "Potential Positive trend"
+  - If these indicators do not share the same direction, this is indicated as "Potential Mixed trend"
+- Otherwise, the sub pillar is indicated as "No change"
+
   
 **Process**
   
-In order to utilize this document to the fullest, we suggest navigating to the "Country Level Findings" tab to view a summary of which Pillars in which analyses are concerning. From there, if any of the Pillars are significantly different, you can investigate further in the "Appendix" tab. Under the Appendix, you can select the Pillar of interest and view the analysis results as well as contextual information for each indicator that we tested. Based on the flags in the tables, it may be necessary to proceed with qualitative research to determine if the significant changes are unexpected, and therefore troublesome. 
+In order to utilize this document to the fullest, we suggest navigating to the "Country Level Findings" tab to view a summary of which Sub pillars or questions are concerning. The tables in each of the sub-tabs will give you an overview of all the pillars and sub pillars. From there, if any of the Pillars are significantly different, you can investigate further in the "Appendix" tab. Under the Appendix, you can select the Pillar of interest and view the analysis results as well as contextual information for each indicator that we tested. Based on the flags in the tables, it may be necessary to proceed with qualitative research to determine if the significant changes are unexpected, and therefore troublesome. 
   
 Overall, this platform is a tool to help accelerate the process of identifying possible issues that should be further investigated.
+
+As a note, scores are re-oriented, normalized, and aggregated. The scores presented in the analyses are created by re-orienting indicators if necessary to ensure that higher numbers are better for the rule of law. Then, they are normalized to fit between 0 and 1 and finally, the individual scores are aggregated by mean.
+
+Be critical about the comparisons when you are making your notes. We will provide recommendations about which comparisons need more context, however keep in mind:
+
+- Match level. The comparisons with third-party sources include a column indicating the match level between the GPP and TPS questions. Comparisons with high match level should be weighted more in the overall validation.
+- Time difference. Many relevant third party sources are from 2020 or earlier, which can cause discrepancies in the scores simply due to change over time. Comparisons with large year gaps should be weighted less in the overall validation.
+- GPP time change. In many cases, the latest global GPP data we have is from as early as 2017, which will likely result in many flags. Comparisons with large year gaps should be weighted less in the overall validation.
+
 
 ## Country Level Findings {.tabset}
 
@@ -408,16 +182,62 @@ flagsoutput<- flags%>%
 flagsoutput[is.na(flagsoutput)] <- 0
   
 flagsoutput<- flagsoutput%>%
-  mutate(sum = green + red + yellow )%>%
+  mutate(sum = green + red)%>%
   mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))
 
-flagsoutput$Label<- ifelse(flagsoutput$red >= flagsoutput$sum/2, "Significantly Different", ifelse(flagsoutput$red+flagsoutput$yellow >= 3*flagsoutput$sum/4, "Significantly Different", ifelse(flagsoutput$yellow >= 3*flagsoutput$sum/4, "Significantly Different", "Not Significantly Different")))
+flagsoutput$Label<- ifelse(flagsoutput$red >= flagsoutput$sum/2, "Significantly Different", "Not Significantly Different")
 
 flagsoutput<- flagsoutput%>%
-  select(Pillar, green, yellow, red, perc, Label)
+  select(Pillar, green, red, perc, Label)
 
-colnames(flagsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
+colnames(flagsoutput)<- c("Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
 
+
+
+```
+
+```{r}
+
+dir<- threshold
+dir$Direction<- ifelse(dir$GPP_datapoint-dir$TPS_datapoint>0, "Positive", ifelse(dir$GPP_datapoint-dir$TPS_datapoint<0, "Negative", "No Change"))
+
+dir<- dir%>%
+  group_by(Sub_Pillar, Direction, Flag)%>%
+  summarise(c = n(), .groups = 'drop')
+
+dirvec<- c()
+
+for (p in sort(unique(threshold$Sub_Pillar))){
+  
+  pillar<- dir%>%
+    filter(Sub_Pillar == p)
+  
+  r<- pillar%>%
+    filter(Flag == "red")
+  rs<- sum(r$c)
+  
+  if (nrow(pillar)==1 & pillar$Flag[[1]] == "red"){
+    d<- pillar$Direction[[1]]
+    dirvec<- c(dirvec, paste0("Potential ", d,  " trend"))
+    
+  } else if (nrow(pillar)==1 & pillar$Flag[[1]] == "green"){
+        dirvec<- c(dirvec, "No change")
+        
+     }else if (rs/sum(pillar$c)>=.75){
+            
+              if (nrow(r)== 1){
+                d<- pillar$direction[[1]]
+                dirvec<- c(dirvec, paste0("Potential ", d,  " trend"))
+                
+                  } else{
+                    dirvec<- c(dirvec, "Potential Mixed trends")
+                  }
+              
+              } else {
+                  dirvec<- c(dirvec, "No change")
+                  }
+  
+}
 
 
 ```
@@ -429,15 +249,15 @@ flagsoutputsub<- flagssub%>%
 flagsoutputsub[is.na(flagsoutputsub)] <- 0
   
 flagsoutputsub<- flagsoutputsub%>%
-  mutate(sum = green + red + yellow )%>%
+  mutate(sum = green + red )%>%
   mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))
 
-flagsoutputsub$Label<- ifelse(flagsoutputsub$red >= flagsoutputsub$sum/2, "Significantly Different", ifelse(flagsoutputsub$red+flagsoutputsub$yellow >= 3*flagsoutputsub$sum/4, "Significantly Different", ifelse(flagsoutputsub$yellow >= 3*flagsoutputsub$sum/4, "Significantly Different", "Not Significantly Different")))
+flagsoutputsub$Label<- dirvec
 
 flagsoutputsub<- flagsoutputsub%>%
-  select(Sub_Pillar, green, yellow, red, perc, Label)
+  select(Sub_Pillar, green, red, perc, Label)
 
-colnames(flagsoutputsub)<- c("Sub-Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
+colnames(flagsoutputsub)<- c("Sub-Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 
 
@@ -450,17 +270,65 @@ flagsoutput2<- flags2%>%
 flagsoutput2[is.na(flagsoutput2)] <- 0
   
 flagsoutput2<- flagsoutput2%>%
-  mutate(sum = green + red + yellow )%>%
+  mutate(sum = green + red )%>%
   mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))
 
-flagsoutput2$Label<- ifelse(flagsoutput2$red >= flagsoutput2$sum/2, "Significantly Different", ifelse(flagsoutput2$red+flagsoutput2$yellow >= 3*flagsoutput2$sum/4, "Significantly Different", ifelse(flagsoutput2$yellow >= 3*flagsoutput2$sum/4, "Significantly Different", "Not Significantly Different")))
+flagsoutput2$Label<- ifelse(flagsoutput2$red >= flagsoutput2$sum/2, "Significantly Different", "Not Significantly Different")
 
 flagsoutput2<- flagsoutput2%>%
-  select(Pillar, green, yellow, red, perc, Label)
+  select(Pillar, green, red, perc, Label)
 
-colnames(flagsoutput2)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
+colnames(flagsoutput2)<- c("Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 ```
+
+```{r}
+
+dir<- experts
+dir$Direction<- ifelse(dir$GPP_datapoint-dir$TPS_datapoint>0, "Positive", ifelse(dir$GPP_datapoint-dir$TPS_datapoint<0, "Negative", "No Change"))
+
+dir<- dir%>%
+  group_by(Sub_Pillar, Direction, Flag)%>%
+  summarise(c = n(), .groups = 'drop')
+
+dirvec<- c()
+
+for (p in sort(unique(experts$Sub_Pillar))){
+  
+  pillar<- dir%>%
+    filter(Sub_Pillar == p)
+  
+  r<- pillar%>%
+    filter(Flag == "red")
+  rs<- sum(r$c)
+  
+  if (nrow(pillar)==1 & pillar$Flag[[1]] == "red"){
+    d<- pillar$Direction[[1]]
+    dirvec<- c(dirvec, paste0("Potential ", d,  " trend"))
+    
+  } else if (nrow(pillar)==1 & pillar$Flag[[1]] == "green"){
+        dirvec<- c(dirvec, "No change")
+        
+     } else if (rs/sum(pillar$c)>=.75){
+            
+              if (nrow(r)== 1){
+                d<- pillar$direction[[1]]
+                dirvec<- c(dirvec, paste0("Potential ", d,  " trend"))
+                
+                  } else{
+                    dirvec<- c(dirvec, "Potential Mixed trends")
+                  }
+              
+              } else {
+                  dirvec<- c(dirvec, "No change")
+                  }
+  
+}
+
+
+```
+
+
 
 ```{r}
 flagsoutput2sub<- flags2sub%>%
@@ -469,15 +337,15 @@ flagsoutput2sub<- flags2sub%>%
 flagsoutput2sub[is.na(flagsoutput2sub)] <- 0
   
 flagsoutput2sub<- flagsoutput2sub%>%
-  mutate(sum = green + red + yellow )%>%
+  mutate(sum = green + red )%>%
   mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))
 
-flagsoutput2sub$Label<- ifelse(flagsoutput2sub$red >= flagsoutput2sub$sum/2, "Significantly Different", ifelse(flagsoutput2sub$red+flagsoutput2sub$yellow >= 3*flagsoutput2sub$sum/4, "Significantly Different", ifelse(flagsoutput2sub$yellow >= 3*flagsoutput2sub$sum/4, "Significantly Different", "Not Significantly Different")))
+flagsoutput2sub$Label<- dirvec
 
 flagsoutput2sub<- flagsoutput2sub%>%
-  select(Sub_Pillar, green, yellow, red, perc, Label)
+  select(Sub_Pillar, green, red, perc, Label)
 
-colnames(flagsoutput2sub)<- c("Sub-Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
+colnames(flagsoutput2sub)<- c("Sub-Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 ```
 
@@ -495,17 +363,60 @@ if (!("Red light" %in% colnames(warningsoutput))){
 warningsoutput[is.na(warningsoutput)] <- 0
   
 warningsoutput<- warningsoutput%>%
-  mutate(sum = `Green light` + `Red light` + `Yellow light`)%>%
+  mutate(sum = `Green light` + `Red light`)%>%
   mutate(perc = paste0(round(`Red light`/sum*100, digits = 1), "%"))
 
-warningsoutput$Label<- ifelse(warningsoutput$`Red light` >= warningsoutput$sum/2, "Significantly Different", ifelse(warningsoutput$`Red light`+warningsoutput$`Yellow light` >= 3*warningsoutput$sum/4, "Significantly Different", ifelse(warningsoutput$`Yellow light` >= 3*warningsoutput$sum/4, "Significantly Different", "Not Significantly Different")))
+warningsoutput$Label<- ifelse(warningsoutput$`Red light` >= warningsoutput$sum/2, "Significantly Different", "Not Significantly Different")
 
 warningsoutput<- warningsoutput%>%
-  select(pillar, `Green light`, `Yellow light`, `Red light`, perc, Label)
+  select(pillar, `Green light`, `Red light`, perc, Label)
 
-colnames(warningsoutput)<- c("Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
+colnames(warningsoutput)<- c("Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 ```
+
+```{r}
+dir<- time%>%
+  group_by(subpillar, warning, direction)%>%
+  summarise(c = n(), .groups = 'drop')
+
+dirvec<- c()
+
+for (p in sort(unique(time$subpillar))){
+  
+  pillar<- dir%>%
+    filter(subpillar == p)
+  
+  r<- pillar%>%
+    filter(warning == "Red light")
+  rs<- sum(r$c)
+  
+  if (nrow(pillar)==1 & pillar$warning[[1]] == "Red light"){
+    d<- gsub(" .*", "", pillar$direction[[1]])
+    dirvec<- c(dirvec, paste0("Potential ", d,  " trend"))
+    
+  } else if (nrow(pillar)==1 & pillar$warning[[1]] == "Green light"){
+        dirvec<- c(dirvec, "No change")
+        
+     } else if (rs/sum(pillar$c)>=.75){
+            
+              if (nrow(r)== 1){
+                d<- gsub(" .*", "", pillar$direction[[1]])
+                dirvec<- c(dirvec, paste0("Potential ", d,  " trend"))
+                
+                  } else{
+                    dirvec<- c(dirvec, "Potential Mixed trends")
+                  }
+              
+              } else {
+                  dirvec<- c(dirvec, "No change")
+                  }
+  
+}
+
+
+```
+
 
 ```{r}
 warningssuboutput<- warningssub%>%
@@ -519,20 +430,20 @@ if (!("Red light" %in% colnames(warningssuboutput))){
 warningssuboutput[is.na(warningssuboutput)] <- 0
   
 warningssuboutput<- warningssuboutput%>%
-  mutate(sum = `Green light` + `Red light` + `Yellow light`)%>%
+  mutate(sum = `Green light` + `Red light`)%>%
   mutate(perc = paste0(round(`Red light`/sum*100, digits = 1), "%"))
 
-warningssuboutput$Label<- ifelse(warningssuboutput$`Red light` >= warningssuboutput$sum/2, "Significantly Different", ifelse(warningssuboutput$`Red light`+warningssuboutput$`Yellow light` >= 3*warningssuboutput$sum/4, "Significantly Different", ifelse(warningssuboutput$`Yellow light` >= 3*warningssuboutput$sum/4, "Significantly Different", "Not Significantly Different")))
+warningssuboutput$Label<- dirvec
 
 warningssuboutput<- warningssuboutput%>%
-  select(subpillar, `Green light`, `Yellow light`, `Red light`, perc, Label)
+  select(subpillar, `Green light`, `Red light`, perc, Label)
 
-colnames(warningssuboutput)<- c("Sub-Pillar", "Green Flags", "Yellow Flags", "Red Flags", "Percentage Red Flags", "Label")
+colnames(warningssuboutput)<- c("Sub-Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 ```
 
 
-Below are three tables summarizing each of the validation analyses to provide further details about the issues we have flagged. If you are interested in exploring which specific variables are flagged, please see the Appendix.
+Below are three tabs summarizing each of the validation analyses to provide further details about the issues we have flagged. If you are interested in exploring which specific variables are flagged, please see the Appendix.
   
 ```{r}
 prevyr<- as.numeric(time$prev_year[1])
@@ -561,15 +472,15 @@ Since the t-test analysis this year is comparing to the previous Global GPP, the
 knitr::kable(warningsoutput, caption = "T-Test Analysis Summary", escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))%>%
-  column_spec(6, background = ifelse(warningsoutput$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
-  column_spec(5, bold = TRUE)
+  column_spec(5, background = ifelse(warningsoutput$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
+  column_spec(4, bold = TRUE)
 
 knitr::kable(warningssuboutput, escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))%>%
-  column_spec(6, background = ifelse(warningssuboutput$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
-  column_spec(5, bold = TRUE)%>%
-  scroll_box(height = "500px", fixed_thead = T)
+  column_spec(5, background = ifelse(warningssuboutput$Label == "No change", "#B6F161", ifelse (warningssuboutput$Label == "Potential Mixed trends", "#FFFD69", "#FC7661")))%>%
+  column_spec(4, bold = TRUE)%>%
+  scroll_box(height = "520px", fixed_thead = T)
 ```
 
 
@@ -583,14 +494,14 @@ Given the nature of third party sources, there are a limited number of external 
 knitr::kable(flagsoutput, caption = "Threshold Analysis Summary", escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))%>%
-  column_spec(6, background = ifelse(flagsoutput$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
-  column_spec(5, bold = TRUE)
+  column_spec(5, background = ifelse(flagsoutput$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
+  column_spec(4, bold = TRUE)
 
 knitr::kable(flagsoutputsub, escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))%>%
-  column_spec(6, background = ifelse(flagsoutputsub$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
-  column_spec(5, bold = TRUE)%>%
+  column_spec(5, background = ifelse(flagsoutputsub$Label == "No change", "#B6F161", ifelse (flagsoutputsub$Label == "Potential Mixed trends", "#FFFD69", "#FC7661")))%>%
+  column_spec(4, bold = TRUE)%>%
   scroll_box(height = "500px", fixed_thead = T)
 
 ```
@@ -606,14 +517,14 @@ Given the nature of third party sources, there are a limited number of external 
 knitr::kable(flagsoutput2, caption = "Threshold Analysis Summary", escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))%>%
-  column_spec(6, background = ifelse(flagsoutput2$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
-  column_spec(5, bold = TRUE)
+  column_spec(5, background = ifelse(flagsoutput2$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
+  column_spec(4, bold = TRUE)
 
 knitr::kable(flagsoutput2sub, escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))%>%
-  column_spec(6, background = ifelse(flagsoutput2sub$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
-  column_spec(5, bold = TRUE)%>%
+  column_spec(5, background = ifelse(flagsoutput2sub$Label == "No change", "#B6F161", ifelse (flagsoutput2sub$Label == "Potential Mixed trends", "#FFFD69", "#FC7661")))%>%
+  column_spec(4, bold = TRUE)%>%
   scroll_box(height = "500px", fixed_thead = T)
 
 ```
@@ -621,7 +532,7 @@ knitr::kable(flagsoutput2sub, escape = F)%>%
 
 ## Appendix {.tabset}
 
-Each tab below holds the full information for each analysis for each pillar in order to facilitate the evaluation of the results. At the moment, we do not have any matches in Pillar 6, and therefore there are no analysis tables for Pillar 6. Furthermore, there are no previous index matches for Pillar 5, and thus the table for the T-Test in Pillar 5 is empty.
+Each tab below holds the full information for each analysis for each pillar in order to facilitate the evaluation of the results. At the moment, we do not have any matches in Pillar 6, and therefore there are no analysis tables for Pillar 6. 
 
 
 ```{r}
@@ -630,7 +541,7 @@ a<- threshold%>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, `Pretest Flag`,  Pillar )%>%
   arrange(Sub_Pillar)
 a$Direction<- ifelse(a$GPP_datapoint-a$TPS_datapoint>0, "Positive", ifelse(a$GPP_datapoint-a$TPS_datapoint<0, "Negative", "No Change"))
-a$Flag<- ifelse(a$Flag == "red", "Red", ifelse(a$Flag == "green", "Green", ifelse(a$Flag == "yellow", "Yellow", NA)))
+a$Flag<- ifelse(a$Flag == "red", "Red", ifelse(a$Flag == "green", "Green", NA))
 
 a<- a%>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Direction, `Pretest Flag`,  Pillar )
@@ -643,7 +554,7 @@ e<- experts%>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, `Pretest Flag`,  Pillar )%>%
   arrange(Sub_Pillar)
 e$Direction<- ifelse(e$GPP_datapoint-e$TPS_datapoint>0, "Positive", ifelse(e$GPP_datapoint-e$TPS_datapoint<0, "Negative", "No Change"))
-e$Flag<- ifelse(e$Flag == "red", "Red", ifelse(e$Flag == "green", "Green", ifelse(e$Flag == "yellow", "Yellow", NA)))
+e$Flag<- ifelse(e$Flag == "red", "Red", ifelse(e$Flag == "green", "Green", NA))
 
 e<- e%>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Direction, `Pretest Flag`,  Pillar )
@@ -657,14 +568,14 @@ b<- time%>%
 
 colnames(b)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question", "Comparison Year", "Current Score", "Previous Score", "P value",  "Direction", "Pretest Flag", "Pillar" )
 
-b$Flag<- ifelse(b$Flag == "Red light", "Red", ifelse(b$Flag == "Green light", "Green", ifelse(b$Flag == "Yellow light", "Yellow", NA)))
+b$Flag<- ifelse(b$Flag == "Red light", "Red", ifelse(b$Flag == "Green light", "Green", NA))
 
 
 tps<- threshold1%>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Type_Survey, `Pretest Flag`, Pillar )%>%
   arrange(Sub_Pillar)
 tps$Direction<- ifelse(tps$GPP_datapoint-tps$TPS_datapoint>0, "Positive", ifelse(tps$GPP_datapoint-tps$TPS_datapoint<0, "Negative", "No Change"))
-tps$Flag<- ifelse(tps$Flag == "red", "Red", ifelse(tps$Flag == "green", "Green", ifelse(tps$Flag == "yellow", "Yellow", NA)))
+tps$Flag<- ifelse(tps$Flag == "red", "Red", ifelse(tps$Flag == "green", "Green", NA))
 
 tps<- tps%>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Type_Survey, Direction, `Pretest Flag`, Pillar )
@@ -674,9 +585,9 @@ colnames(tps)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Q
 
 
 ```{r}
-ttestex<- "In the T-test, a red flag indicates statistical significance with a p-value of 0.01. A yellow flag indicates statistical significance with a p-value between 0.01 and 0.1. A green flag indicates statistical significance only with a p-value greater than 0.1, or no statistical significance."
+ttestex<- "In the T-test, a red flag indicates statistical significance with a p-value of 0.01. A green flag indicates statistical significance only with a p-value greater than 0.01, or no statistical significance."
 
-threshex<- "In the threshold difference, a red flag indicates a difference of 0.30 or more. A yellow flag indicates a difference between 0.15 and 0.30. A green flag indicates a difference of less than 0.10. DISCLAIMER: some large differences may be caused by low matches between the content of the GPP and TPS questions. Make sure to account for how similar (or dissimilar) each pair is when performing qualitative checks."
+threshex<- "In the threshold difference, a red flag indicates a difference of 0.35 or more. DISCLAIMER: some large differences may be caused by low matches between the content of the GPP and TPS questions. Make sure to account for how similar (or dissimilar) each pair is when performing qualitative checks."
 ```
 
 
@@ -1257,7 +1168,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9,10), bold= TRUE)%>%
+  column_spec(c(7,8,9,10,11), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 ```
@@ -1268,7 +1179,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, 
 
 ```{r}
 a2<- a%>%
-  select(-Pillar)
+  select(Pillar, everything())
 #a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
 
 knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
@@ -1278,7 +1189,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
+  column_spec(c(10, 11, 12, 13, 14), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 
@@ -1301,7 +1212,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, 
   row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
+  column_spec(c(10, 11, 12, 13, 14), bold= TRUE)%>%
   remove_column(3)%>%
   scroll_box(width = "1000px", height = "500px", fixed_thead = T)
 
