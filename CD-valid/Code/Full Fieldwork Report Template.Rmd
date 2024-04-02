@@ -21,6 +21,8 @@ suppressWarnings(suppressMessages(library(kableExtra)))
 suppressWarnings(suppressMessages(library(htmltools)))
 suppressWarnings(library(DT))
 suppressWarnings(library(crosstalk))
+suppressWarnings(library(stringr))
+suppressWarnings(library(DiagrammeR))
 knitr::opts_chunk$set(echo = F)
 
 if (Sys.info()["user"] == "ctoruno") {
@@ -187,13 +189,11 @@ In this context, we advice to be critical about the comparisons when you are mak
 - **GPP time change**: In many cases, the latest global GPP data we have is from as early as 2017, which will likely result in many flags. Comparisons with large year gaps should be weighted less in the overall validation.
 
 
-## Country Level Findings {.tabset}
+## Summary of Findings {.tabset}
 
 ```{r, results= 'asis'}
 par
 ```
-
-
 
 ```{r}
 flagsoutput<- flags%>%
@@ -463,6 +463,128 @@ colnames(warningssuboutput)<- c("Sub-Pillar", "Green Flags", "Red Flags", "Perce
 ```
 
 
+```{r}
+
+a<- threshold%>%
+  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, `Pretest Flag`,  Pillar )%>%
+  arrange(Sub_Pillar)
+a$Direction<- ifelse(a$GPP_datapoint-a$TPS_datapoint>0, "Positive", ifelse(a$GPP_datapoint-a$TPS_datapoint<0, "Negative", "No Change"))
+a$Flag<- ifelse(a$Flag == "red", "Red", ifelse(a$Flag == "green", "Green", NA))
+
+a<- a%>%
+  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Direction, `Pretest Flag`,  Pillar )
+
+colnames(a)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Direction", "Pretest Flag", "Pillar")
+
+
+
+e<- experts%>%
+  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, `Pretest Flag`,  Pillar )%>%
+  arrange(Sub_Pillar)
+e$Direction<- ifelse(e$GPP_datapoint-e$TPS_datapoint>0, "Positive", ifelse(e$GPP_datapoint-e$TPS_datapoint<0, "Negative", "No Change"))
+e$Flag<- ifelse(e$Flag == "red", "Red", ifelse(e$Flag == "green", "Green", NA))
+
+e<- e%>%
+  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Direction, `Pretest Flag`,  Pillar )
+
+colnames(e)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Direction", "Pretest Flag", "Pillar")
+
+
+b<- time%>%
+  select(subpillar, `2023  EU Questionnaire`, warning, Description, prev_year, current_score, previous_score, ttestResult,  direction,  `Pretest Flag`, pillar )%>%
+  arrange(subpillar)
+
+colnames(b)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question", "Comparison Year", "Current Score", "Previous Score", "P value",  "Direction", "Pretest Flag", "Pillar" )
+
+b$Flag<- ifelse(b$Flag == "Red light", "Red", ifelse(b$Flag == "Green light", "Green", NA))
+
+
+tps<- threshold1%>%
+  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Type_Survey, `Pretest Flag`, Pillar )%>%
+  arrange(Sub_Pillar)
+tps$Direction<- ifelse(tps$GPP_datapoint-tps$TPS_datapoint>0, "Positive", ifelse(tps$GPP_datapoint-tps$TPS_datapoint<0, "Negative", "No Change"))
+tps$Flag<- ifelse(tps$Flag == "red", "Red", ifelse(tps$Flag == "green", "Green", NA))
+
+tps<- tps%>%
+  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Type_Survey, Direction, `Pretest Flag`, Pillar )
+colnames(tps)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Survey Type", "Direction", "Pretest Flag", "Pillar")
+
+```
+
+
+```{r}
+spmatches <- str_extract_all(par, "[0-9]\\.[0-9]{1,2}:")
+spmatches <- unlist(spmatches)
+popsum <- a[grepl(paste(spmatches, collapse="|"), a$`Sub Pillar`), ]
+popsum <- popsum%>%
+  filter(Flag == "Red")%>%
+  select(-Pillar)
+ttsum  <- b[grepl(paste(spmatches, collapse="|"), b$`Sub Pillar`), ]
+ttsum  <- ttsum%>%
+  filter(Flag == "Red")%>%
+  select(-Pillar)
+expsum <- e[grepl(paste(spmatches, collapse="|"), e$`Sub Pillar`), ]
+expsum <- expsum%>%
+  filter(Flag == "Red")%>%
+  select(-Pillar)
+
+if (nrow(ttsum)>0){
+
+knitr::kable(ttsum, caption = "GPP Over Time", booktabs = F, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial")%>%
+  kable_styling(full_width = F)%>%
+  row_spec(0, bold= TRUE)%>%
+  row_spec(which(ttsum$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(ttsum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(ttsum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
+  column_spec(c(6,7,8,9,10), bold= TRUE)%>%
+  remove_column(3)
+    
+}
+
+if (nrow(popsum)>0 & nrow(expsum)>0){
+  
+  tpssum<- bind_rows(popsum, expsum)
+  
+knitr::kable(tpssum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial")%>%
+  kable_styling(full_width = F)%>%
+  row_spec(0, bold= TRUE)%>%
+  row_spec(which(tpssum$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(tpssum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(tpssum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
+  remove_column(3)
+
+} else if (nrow(popsum)>0){
+    
+knitr::kable(popsum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial")%>%
+  kable_styling(full_width = F)%>%
+  row_spec(0, bold= TRUE)%>%
+  row_spec(which(popsum$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(popsum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(popsum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
+  remove_column(3)
+  
+} else if (nrow(expsum)>0){
+  
+  knitr::kable(expsum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
+  kable_classic(html_font = "Arial")%>%
+  kable_styling(full_width = F)%>%
+  row_spec(0, bold= TRUE)%>%
+  row_spec(which(expsum$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(expsum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(expsum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
+  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
+  remove_column(3)
+  
+}
+```
+
+## Country Level Results {.tabset}
+
 Below are three tabs summarizing each of the validation analyses to provide further details about the issues we have flagged. If you are interested in exploring which specific variables are flagged, please see the Appendix.
   
 ```{r}
@@ -553,55 +675,6 @@ knitr::kable(flagsoutput2sub, escape = F)%>%
 ## Appendix {.tabset}
 
 Each tab below holds the full information for each analysis for each pillar in order to facilitate the evaluation of the results. At the moment, we do not have any matches in Pillar 6, and therefore there are no analysis tables for Pillar 6. 
-
-
-```{r}
-
-a<- threshold%>%
-  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, `Pretest Flag`,  Pillar )%>%
-  arrange(Sub_Pillar)
-a$Direction<- ifelse(a$GPP_datapoint-a$TPS_datapoint>0, "Positive", ifelse(a$GPP_datapoint-a$TPS_datapoint<0, "Negative", "No Change"))
-a$Flag<- ifelse(a$Flag == "red", "Red", ifelse(a$Flag == "green", "Green", NA))
-
-a<- a%>%
-  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Direction, `Pretest Flag`,  Pillar )
-
-colnames(a)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Direction", "Pretest Flag", "Pillar")
-
-
-
-e<- experts%>%
-  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, `Pretest Flag`,  Pillar )%>%
-  arrange(Sub_Pillar)
-e$Direction<- ifelse(e$GPP_datapoint-e$TPS_datapoint>0, "Positive", ifelse(e$GPP_datapoint-e$TPS_datapoint<0, "Negative", "No Change"))
-e$Flag<- ifelse(e$Flag == "red", "Red", ifelse(e$Flag == "green", "Green", NA))
-
-e<- e%>%
-  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Direction, `Pretest Flag`,  Pillar )
-
-colnames(e)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Direction", "Pretest Flag", "Pillar")
-
-
-b<- time%>%
-  select(subpillar, `2023  EU Questionnaire`, warning, Description, prev_year, current_score, previous_score, ttestResult,  direction,  `Pretest Flag`, pillar )%>%
-  arrange(subpillar)
-
-colnames(b)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question", "Comparison Year", "Current Score", "Previous Score", "P value",  "Direction", "Pretest Flag", "Pillar" )
-
-b$Flag<- ifelse(b$Flag == "Red light", "Red", ifelse(b$Flag == "Green light", "Green", NA))
-
-
-tps<- threshold1%>%
-  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Type_Survey, `Pretest Flag`, Pillar )%>%
-  arrange(Sub_Pillar)
-tps$Direction<- ifelse(tps$GPP_datapoint-tps$TPS_datapoint>0, "Positive", ifelse(tps$GPP_datapoint-tps$TPS_datapoint<0, "Negative", "No Change"))
-tps$Flag<- ifelse(tps$Flag == "red", "Red", ifelse(tps$Flag == "green", "Green", NA))
-
-tps<- tps%>%
-  select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Type_Survey, Direction, `Pretest Flag`, Pillar )
-colnames(tps)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Survey Type", "Direction", "Pretest Flag", "Pillar")
-
-```
 
 
 ```{r}
