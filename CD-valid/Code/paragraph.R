@@ -537,7 +537,7 @@ paragraph<- function(country, type){
           ")
     } else{
       p<- c("
-            <b>Overview</b>
+            <b>Insights summary</b>
             <br>
             We are seeing that across time, all of the pillars in the GPP are changing. For the most part, these changes indicate more negative opinions about the rule of law with some positive trends in select sub pillars. Nevertheless, the result of these trends in terms of our full fieldwork data are similar to what other sources are observing. Therefore, according to our data, people in Hungary have a decreased view of the rule of law, which is in accordance with the third party source data.
             <br>

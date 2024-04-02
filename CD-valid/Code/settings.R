@@ -34,7 +34,7 @@ p_load(char = c(
   "haven", "readxl", "writexl", "haven", "rio",
   
   # Utilities
-  "caret", "readr",
+  "caret", "readr", "DiagrammeR",
   
   # Good 'ol Tidyverse
   "tidyverse"

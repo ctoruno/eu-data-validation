@@ -30,7 +30,7 @@
 args = commandArgs(trailingOnly=TRUE)
 
 args[1] = "Hungary"
-args[2] = "Natalia Rodriguez"
+args[2] = "Santiago Pardo"
 # List of chosen analyses (add/remove as needed)
 # Options are "pretest" "html" or "full"
 args[3] <- "html"

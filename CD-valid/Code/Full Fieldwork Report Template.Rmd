@@ -6,7 +6,7 @@ output:
   html_document: default
 params:
   country: Hungary
-  author: 'Dalia Habiby'
+  author: "Dalia Habiby"
   date: '2023-11-08'
 
 ---
@@ -160,11 +160,31 @@ Overall, this platform is a tool to help accelerate the process of identifying p
 
 As a note, scores are re-oriented, normalized, and aggregated. The scores presented in the analyses are created by re-orienting indicators if necessary to ensure that higher numbers are better for the rule of law. Then, they are normalized to fit between 0 and 1 and finally, the individual scores are aggregated by mean.
 
-Be critical about the comparisons when you are making your notes. We will provide recommendations about which comparisons need more context, however keep in mind:
+We will offer guidelines regarding which sub-pillars require further context and research to elucidate inconsistencies identified during the quantitative data validation process. We employ a systematic analysis approach using the flagging system to achieve this. Initially, we review all sub-pillars exhibiting potential trends in both the GPP over time analysis and the TPS Public Opinion Polls.
 
-- Match level. The comparisons with third-party sources include a column indicating the match level between the GPP and TPS questions. Comparisons with high match level should be weighted more in the overall validation.
-- Time difference. Many relevant third party sources are from 2020 or earlier, which can cause discrepancies in the scores simply due to change over time. Comparisons with large year gaps should be weighted less in the overall validation.
-- GPP time change. In many cases, the latest global GPP data we have is from as early as 2017, which will likely result in many flags. Comparisons with large year gaps should be weighted less in the overall validation.
+If we determine an explanation for the trends observed in the GPP over time within the TPS Public Opinion Polls, we refrain from flagging the sub-pillars. However, in instances where we cannot find an explanation for the observed trends through the intersection of both analyses, we will flag the sub-pillars in the insights summary. A summary of this selection process is presented in the following flowchart.
+
+
+```{r}
+mermaid(
+"
+graph LR
+    A{Subpillars <br>flagged} --> B{Findings in GPP over time}
+    A{Subpillars <br>flagged} --> C{Findings in TPS analysis}
+    B{Findings in <br> GPP over time} -- Appendix --> D(Indicators flagged <br>in both analyses)
+    C{Findings in <br> TPS analysis} -- Appendix --> D(Indicators flagged <br>in both analyses)
+    D(Questions flagged <br>in both analyses) --> E(Match level)
+    D(Questions flagged <br>in both analyses) --> F(Time difference)
+    D(Questions flagged <br>in both analyses) --> G(GPP time change)
+
+")
+```
+
+In this context, we advice to be critical about the comparisons when you are making your notes. We will provide recommendations about which comparisons need more context, however keep in mind:
+
+- **Match level**: The comparisons with third-party sources include a column indicating the match level between the GPP and TPS questions. Comparisons with high match level should be weighted more in the overall validation.
+- **Time difference**: Many relevant third party sources are from 2020 or earlier, which can cause discrepancies in the scores simply due to change over time. Comparisons with large year gaps should be weighted less in the overall validation.
+- **GPP time change**: In many cases, the latest global GPP data we have is from as early as 2017, which will likely result in many flags. Comparisons with large year gaps should be weighted less in the overall validation.
 
 
 ## Country Level Findings {.tabset}
