@@ -551,7 +551,7 @@ paragraph<- function(country, type){
             <ul>
             <li> Negative trend in 4.4: Solidarity </li>
             <ul>
-            <li> When we asked if people thought that workers’ freedom to form labor unions and negotiate with employers is important, we found a score of 0.46 when our previous score was 0.61. Additionaly, when we asked if working conditions are favorable, we found a score of 0.36 while the European Social Survey found a score of 0.74 in 2021. These large discrepancies should be investigated through context about both unionization and wokring conditions. </li>
+            <li> When we asked if people thought that workers’ freedom to form labor unions and negotiate with employers is important, we found a score of 0.46 when our previous score was 0.61. Additionaly, when we asked if working conditions are favorable, we found a score of 0.36 while the European Social Survey found a score of 0.74 in 2021. These large discrepancies should be investigated through context about both unionization and working conditions. </li>
             </ul>
             </ul>
             </li>
