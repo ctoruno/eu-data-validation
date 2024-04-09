@@ -47,6 +47,8 @@ source("Code/representativeness.R")
 source("Code/difficulty_score.R")
 source("Code/outlier_analysis.R")
 source("Code/flagging_system.R")
+source("Code/TPS_nuts.R")
+source("Code/time_changes_nuts.R")
 
 
 
@@ -129,6 +131,18 @@ tps_comparisson.df <- TPS_function(country = args[1],
                                    type    = args[3]
                                    )
 }
+if (args[3] == "html"){
+  
+  time_nuts.df<- time_changes_nuts(data.df = master_data.df,
+                                   country = args[1],
+                                   type = args[3])
+  
+  tps_nuts.df <- TPS_function_nuts(country = args[1],
+                                   gpp     = master_data.df,
+                                   tps     = TPS.df,
+                                   mat     = metadata,
+                                   type    = args[3])
+}
 if (args[3] == "full"){
 
 TPS_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = fullmerge,
@@ -151,7 +165,7 @@ flagging_system.df<- flagging_system(gpp_data.df = fullmerge)
 }
 # List of analysis functions
 
-if(args[3] != "full") {
+if(args[3] == "pretest") {
   
   analysis_functions <- list(
     time_changes = time_changes.df,
@@ -159,7 +173,17 @@ if(args[3] != "full") {
     #sociodem_comparisson = sociodem_comparisson.df
     )
   
-} else {
+} else if (args[3] == "html"){
+  
+  analysis_functions <- list(
+    time_changes = time_changes.df,
+    tps_comparisson = tps_comparisson.df,
+    time_nuts = time_nuts.df,
+    tps_nuts = tps_nuts.df
+    
+  )
+  
+  }else {
   
   analysis_functions <- list(
     time_changes = time_changes.df,
