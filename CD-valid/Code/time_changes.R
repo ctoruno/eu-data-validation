@@ -40,6 +40,7 @@ time_changes <- function(data.df = master_data.df,
   
   if (type == "pretest"){
   GPP.df$BRB_health_B<- ifelse(GPP.df$BRB_health_B== 0, 2, GPP.df$BRB_health_B)
+  GPP.df$BRB_health_A<- ifelse(GPP.df$BRB_health_A== 0, 2, GPP.df$BRB_health_A)
   }
   
   if (type == "full" |type == "html"){
