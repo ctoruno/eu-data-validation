@@ -9,7 +9,7 @@ time_changes <- function(data.df = master_data.df,
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  gppvars<- variable_list.df$variable
+  gppvars<- c(variable_list.df$variable, "BRB_permit_B")
   
   list_var_t.test <- codebook.df %>%
     filter(Variable %in% gppvars) %>%
@@ -17,7 +17,7 @@ time_changes <- function(data.df = master_data.df,
                           if_else(Variable %in% c("CPA_protest", "PAB_misinfo",
                                                   "PAB_attackmedia","PAB_emergpower",
                                                   "PAB_manipulelect", "PAB_overcourts",
-                                                  "CJP_resprights", "BRB_permit_B", "CP_cso", 
+                                                  "CJP_resprights", "CP_cso", 
                                                   "CTZ_headgovteval_A", "CTZ_headgovteval_B"), 1, 0))) %>%
     filter(skip == 0) %>%
     select(Variable) %>%
@@ -37,17 +37,19 @@ time_changes <- function(data.df = master_data.df,
     select(country_name_ltn, year, all_of(list_var_t.test)) %>%
     filter(country_name_ltn %in% country) %>%
     select(country_name_ltn, year, all_of(list_var_t.test))
-  
-  if (type == "pretest"){
-  GPP.df$BRB_health_B<- ifelse(GPP.df$BRB_health_B== 0, 2, GPP.df$BRB_health_B)
+
+
+  GPP.df$BRB_permit_A<- ifelse(GPP.df$BRB_permit_A== 0, 2, GPP.df$BRB_permit_A)
+  GPP.df$BRB_permit_B<- ifelse(GPP.df$BRB_permit_B== 0, 2, GPP.df$BRB_permit_B)
+  GPP.df$BRB_benefits_A<- ifelse(GPP.df$BRB_benefits_A== 0, 2, GPP.df$BRB_benefits_A)
+  GPP.df$BRB_benefits_B<- ifelse(GPP.df$BRB_benefits_B== 0, 2, GPP.df$BRB_benefits_B)
+  GPP.df$BRB_id_A<- ifelse(GPP.df$BRB_id_A== 0, 2, GPP.df$BRB_id_A)
+  GPP.df$BRB_id_B<- ifelse(GPP.df$BRB_id_B== 0, 2, GPP.df$BRB_id_B)
+  GPP.df$BRB_school_A<- ifelse(GPP.df$BRB_school_A== 0, 2, GPP.df$BRB_school_A)
+  GPP.df$BRB_school_B<- ifelse(GPP.df$BRB_school_B== 0, 2, GPP.df$BRB_school_B)
   GPP.df$BRB_health_A<- ifelse(GPP.df$BRB_health_A== 0, 2, GPP.df$BRB_health_A)
-  }
-  
-  if (type == "full" |type == "html"){
-    GPP.df$BRB_health_A<- ifelse(GPP.df$BRB_health_A== 0, 2, GPP.df$BRB_health_A)
-    GPP.df$BRB_health_B<- ifelse(GPP.df$BRB_health_B== 0, 2, GPP.df$BRB_health_B)
-  }
-    
+  GPP.df$BRB_health_B<- ifelse(GPP.df$BRB_health_B== 0, 2, GPP.df$BRB_health_B)
+
   data_subset.df <- data.df %>%
     select(country_name_ltn, year, all_of(list_var_t.test))
   
