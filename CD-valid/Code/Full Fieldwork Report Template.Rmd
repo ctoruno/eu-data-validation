@@ -5,7 +5,7 @@ date: '`r params$date`'
 output:
   html_document: default
 params:
-  country: Hungary
+  country: Slovakia
   author: "Dalia Habiby"
   date: '2023-11-08'
 
@@ -205,6 +205,13 @@ flagsoutput<- flags%>%
   pivot_wider(names_from = Flag, values_from = n)
 
 flagsoutput[is.na(flagsoutput)] <- 0
+
+if (!("red" %in% colnames(flagsoutput))){
+
+  flagsoutput$red<- rep(0, nrow(flagsoutput))
+  
+} 
+  
   
 flagsoutput<- flagsoutput%>%
   mutate(sum = green + red)%>%
@@ -272,10 +279,15 @@ flagsoutputsub<- flagssub%>%
   pivot_wider(names_from = Flag, values_from = n)
 
 flagsoutputsub[is.na(flagsoutputsub)] <- 0
+
+if (!("red" %in% colnames(flagsoutputsub))){
+
+  flagsoutputsub$red<- rep(0, nrow(flagsoutputsub))
+} 
   
 flagsoutputsub<- flagsoutputsub%>%
   mutate(sum = green + red )%>%
-  mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))
+  mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))  
 
 flagsoutputsub$Label<- dirvec
 
@@ -523,15 +535,12 @@ spmatches <- str_extract_all(par, "[0-9]\\.[0-9]{1,2}:")
 spmatches <- unlist(spmatches)
 popsum <- a[grepl(paste(spmatches, collapse="|"), a$`Sub Pillar`), ]
 popsum <- popsum%>%
-  filter(Flag == "Red")%>%
   select(-Pillar)
 ttsum  <- b[grepl(paste(spmatches, collapse="|"), b$`Sub Pillar`), ]
 ttsum  <- ttsum%>%
-  filter(Flag == "Red")%>%
   select(-Pillar)
 expsum <- e[grepl(paste(spmatches, collapse="|"), e$`Sub Pillar`), ]
 expsum <- expsum%>%
-  filter(Flag == "Red")%>%
   select(-Pillar)
 
 if (nrow(ttsum)>0){
@@ -544,13 +553,15 @@ knitr::kable(ttsum, caption = "GPP Over Time", booktabs = F, escape = F, digits=
   row_spec(which(ttsum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(ttsum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
   column_spec(c(6,7,8,9,10), bold= TRUE)%>%
+  remove_column(1)%>%
   remove_column(3)
     
 }
 
 if (nrow(popsum)>0 & nrow(expsum)>0){
   
-  tpssum<- bind_rows(popsum, expsum)
+  tpssum<- bind_rows(popsum, expsum)%>%
+    arrange(`Sub Pillar`)
   
 knitr::kable(tpssum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
   kable_classic(html_font = "Arial")%>%
@@ -572,6 +583,7 @@ knitr::kable(popsum, caption = "TPS Analysis", booktabs = F, escape = F, digits=
   row_spec(which(popsum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(popsum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
   column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
+  remove_column(1)%>%
   remove_column(3)
   
 } else if (nrow(expsum)>0){
@@ -584,10 +596,12 @@ knitr::kable(popsum, caption = "TPS Analysis", booktabs = F, escape = F, digits=
   row_spec(which(expsum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
   row_spec(which(expsum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
   column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
+  remove_column(1)%>%
   remove_column(3)
   
 }
 ```
+
 
 ### NUTS Level
 
@@ -659,17 +673,14 @@ colnames(tpsnuts)<- c("Sub Pillar", "NUTS", "GPP Indicator", "Flag", "GPP Questi
 ```{r}
 popsum <- anuts[grepl(paste(spmatches, collapse="|"), anuts$`Sub Pillar`), ]
 popsum <- popsum%>%
-  filter(Flag == "Red")%>%
   select(-Pillar)%>%
   arrange(`Sub Pillar`, NUTS)
 ttsum  <- bnuts[grepl(paste(spmatches, collapse="|"), bnuts$`Sub Pillar`), ]
 ttsum  <- ttsum%>%
-  filter(Flag == "Red")%>%
   select(-Pillar)%>%
   arrange(`Sub Pillar`, NUTS)
 expsum <- enuts[grepl(paste(spmatches, collapse="|"), enuts$`Sub Pillar`), ]
 expsum <- expsum%>%
-  filter(Flag == "Red")%>%
   select(-Pillar)%>%
   arrange(`Sub Pillar`, NUTS)
 
@@ -690,7 +701,8 @@ knitr::kable(ttsum, caption = "GPP Over Time", booktabs = F, escape = F, digits=
 
 if (nrow(popsum)>0 & nrow(expsum)>0){
   
-  tpssum<- bind_rows(popsum, expsum)
+  tpssum<- bind_rows(popsum, expsum)%>%
+    arrange(`Sub Pillar`, NUTS)
   
 knitr::kable(tpssum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
   kable_classic(html_font = "Arial")%>%
@@ -1144,7 +1156,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, 
 
 ```{r}
 b2<- b%>%
-  filter(Pillar == "5: Order and Security")%>%
+  filter(Pillar == "5: Security")%>%
   select(-Pillar)
 
 #b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
@@ -1168,7 +1180,7 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, 
 
 ```{r}
 a2<- a%>%
-  filter(Pillar == "5: Order and Security")%>%
+  filter(Pillar == "5: Security")%>%
   select(-Pillar)
 
 #a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
@@ -1208,7 +1220,7 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, 
 
 ```{r}
 e2<- e%>%
-  filter(Pillar == "5: Order and Security")%>%
+  filter(Pillar == "5: Security")%>%
   select(-Pillar)
 
 #e2$Flag = cell_spec(e2$Flag, color = ifelse(e2$Flag == "Green", "green", ifelse(e2$Flag == "Red", "red", "gold")))
