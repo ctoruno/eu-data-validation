@@ -90,8 +90,8 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Bulgaria                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
-    p<- c("<b>In general, we found no significant issues.</b>
+    if (type == "pretest"){ 
+      p<- c("<b>In general, we found no significant issues.</b>
     <br>
     Some issues that we believe are worth noting are:
     <br>   
@@ -126,6 +126,35 @@ paragraph<- function(country, type){
     <br>
     <br>
  ")
+    } else {
+      p<- c("
+            <b>Insights summary</b>
+            <br>
+            We are seeing that across time, a few pillars are indicating changes. Most only have one or two indicators, however pillar 2 has 16 comparisons. Although many of these have red flags, some are positive changes while others are negative changes and overall encompass experience and opinion questions. In comparison to the TPS public opinion polls, we only have 2 red flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, there are a few pillars flagged, however we are conscious that we trust these scores less. 
+            <br>
+            <br>
+            Given that we expect to see large changes from our previous data in Bulgaria, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Bulgaria Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+            <br>
+            <b> Sub Pillars to Research </b>
+            <ul>
+            <li> Pillar 5. Security
+            <ul>
+            <li> Positive trend in 5.1: People feel safe</li>
+            <ul>
+            <li> When we asked how safe people feel walking in their neighborhood at night, we found a score of 0.664 when our previous score was 0.52. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more negatively than before. 
+            </li>
+            </ul>
+            <li> Negative trend in 5.2: Absence of crime and violence </li>
+            <ul>
+            <li> When we asked if people were aware of organized crime occuring in their neighborhoods, we found a score of 0.935, while the average criminality score in the Organized Crime Index was 0.483. Although the comparison is from a low match, the concepts are still related and therefore we should give context about organized crime rates. </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+            The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. 
+            ")
+    }
     
   }
 
@@ -176,7 +205,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Cyprus                                                                                       ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we did not find any significant issues during the data validation process.</b>
     <br>
@@ -212,6 +241,35 @@ paragraph<- function(country, type){
     <br>   
           
           ")
+    } else {
+      p<- c("
+            <b>Insights summary</b>
+            <br>
+            We are seeing that across time, a few pillars are indicating changes. Most only have a few indicators, however pillar 2 has 16 comparisons. Although many of these have red flags, some are positive changes while others are negative changes and overall encompass experience and opinion questions. In comparison to the TPS public opinion polls, we only have 3 red flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are mostly highlighting Pillar 8, however we are conscious that we trust these scores less. 
+            <br>
+            <br>
+            Given that we do not expect to see large changes from our previous data in Bulgaria, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Bulgaria Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+            <br>
+            <b> Sub Pillars to Research </b>
+            <ul>
+            <li> Pillar 8. Criminal Justice
+            <ul>
+            <li> Negative trend in 8.6: Due process of law </li>
+            <ul>
+            <li> When we asked how confident people are that the criminal justice system guarantees a fair trial of all accused people, we found a score of 0.434, while Freedom in the World found a score of 1 when they asked if due process prevails in civil and criminal matters. Furthermore, when we asked if people thought that the criminal justice system treats those accused as innocent until proven guilty, we found a score of 0.481 while Freedom in the World assigned a score of 1 for the question regarding if due process prevails in civil and criminal matters. Although these questions have low matches, they are still related and should be complemented with research about the rights of the accused and due process.</li>
+            </ul>
+            <li> Positive trend in 8.7: Prisons</li>
+            <ul>
+            <li> When we asked how confident people are that the criminal justice system guarantees the safety and human rights of people deprived of their liberty, we found a score of 0.45, while V-Dem found a score of 0.838 when they asked if there was freedom from torture. Although the questions have a low match, they are still related and should be complemented with research about safety and human rights in the criminal justice system. 
+            </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+            The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. 
+            ")
+    }
     
   }
   
@@ -787,34 +845,51 @@ paragraph<- function(country, type){
     <br>")
     } else{
       p<- c("
-          <b>In general, we found minimal issues with the TPS public opinion polls and overall discrepancies with the TPS expert sources.</b>
-    <br>
-    <br>
-    Some comparisons that we believe are worth noting are:
-    <br>  
-    <br>
-    <ul>    
-    <li><b>TPS Public Opinion Polls:</b>
-    <br>
-    <br>
-    <ul>            
-    <li>The most noteworthy differences were observed within subpillars associated with Access to Civil Justice (q44a_G2, q44d_G2, and q44e_G2). </li>    
-    <li>These are all negative differences, meaning that our full fieldwork data is lower than other public opinion polls concerning access to civil justice. However, these come from comparisons with our oldest TPS data sources. </li>
-    </ul>
-    </li>
-    <br>
-    <li><b>TPS Expert Data:</b>
-    <br>
-    <br>
-    <ul>            
-    <li> These comparisons indicate many significant differences between expert surveys and our full fieldwork data across every pillar, which are negative for the most part. </li>
-    </ul>
-    </li>
-    </ul>
-    <br> 
-    The designated point person for this analysis within the DAU is Carlos Toruño.
-    <br>  
-    <br>")
+            <b>Insights summary</b>
+            <br>
+            We are seeing that across time, most of the pillars are not changing drastically over time or indicate discrepancies with the TPS Public Opinion Polls. Pillar 1 is flagged in the GPP Over Time, however there is only one indicator level analysis and it is an opinion question. Pillar 8 is flagged in the TPS Expert Surveys, however the analyses have medium to low matches. Therefore, according to our data, people in Luxembourg have a similar view of the rule of law as they did in 2021, which is in accordance with the third party source data.
+            <br>
+            <br>
+            Given that we do not expect to see changes from our previous data in Luxembourg, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Luxembourg Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported in the TPS.
+            <br>
+            <br>
+            <b> Sub Pillars to Research </b>
+            <ul>
+            <li> Pillar 1. Constraints on Government Powers
+            <ul>
+            <li> Positive trend in 1.11: Government officials who abuse their power are sanctioned for misconduct (accountability and sanctions for misconduct) </li>
+            <ul>
+            <li> When we asked if people a hypothetical situation about a government official taking money for personal benefit, we found a score of 0.738 when our previous score was 0.653. This indicates that people think it is more likely that the official is punished appropriately. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more positively than before. </li>
+            </ul>
+            </ul>
+            </li>
+            <li> Pillar 4. Fundamental Rights
+            <ul>
+            <li> Negative trend in 4.6: Justice </li>
+            <ul>
+            <li> When we asked if people thought that the criminal justice system treats those accused as innocent until proven guilty, we found a score of 0.592 while Freedom in the World assigned a score of 1 for the question regarding if due process prevails in civil and criminal matters. The large discrepancy between these scores should be explained further. Since this source of comparison is includes a strict expert encoding, we recommend to give a context about the rights of the accused and due process. </li>
+            </ul>
+            </ul>
+            </li>
+            <li> Pillar 7. Civil Justice
+            <ul>
+            <li> Negative trend in 7.1: Legal Security </li>
+            <ul>
+            <li> When we asked if people are aware of their rights when they face a legal problem we found a score of 0.438, while the Fundamental Rights Survey shows a score of 0.825 when they asked about the views on authorities providing information for people in a simple way. The large discrepancy between these scores should be explained further. Since this source of comparison is a low match, we recommend to give a context about the knowledge of people about their rights when they faced a legal problem. </li>
+            </ul>
+            </ul>
+            </li>
+            <li> Pillar 8. Criminal Justice 
+            <ul>
+            <li> Negative trend in 8.6: Due process of law </li>
+            <ul>
+            <li> When we asked how confident people are that the criminal justice system guarantees a fair trial of all accused people, we found a score of 0.633, while Freedom in the World found a score of 1 when they asked if due process prevaisl in civil and criminal matters. In the same analysis identified in Sub Pillar 4.6, when we asked if people thought that the criminal justice system treats those accused as innocent until proven guilty, we found a score of 0.592 while Freedom in the World assigned a score of 1 for the question regarding if due process prevails in civil and criminal matters. Although these questions have low matches, they are still related and should be complemented with research about the rights of the accused and due process. </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+            The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. 
+            ")
     }
   }
   
@@ -989,7 +1064,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Slovakia                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
           <b>In general, we only found issues with the TPS comparisons.</b>
     <br>
@@ -1017,7 +1092,47 @@ paragraph<- function(country, type){
     The designated point person for this analysis within the DAU is Carlos Toruño.
     <br>  
     <br>  ")
-    
+    } else {
+      p<- c("
+            <b>Insights summary</b>
+            <br>
+            We are seeing that across time, a few pillars are indicating changes. Most only have one or two indicators, however pillar 3 has 25 comparisons. Although many of these have red flags, some are positive changes while others are negative changes and overall encompass opinion questions. In comparison to the TPS public opinion polls, we have 0 red flags! This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, there are a few pillars flagged, however we are conscious that we trust these scores less. 
+            <br>
+            <br>
+            Given that we do not expect to see large changes from our previous data in Slovakia, we are noting sub pillars that are flagged in either the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Slovakia Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+            <br>
+            <b> Sub Pillars to Research </b>
+            <ul>
+            <li> Pillar 1. Constraints on Government Powers
+            <ul>
+            <li> Negative trend in 1.06:  Respect for the legitimacy of the constitutional order, the law making process, and political opponents (absence of authoritarianism) </li>
+            <ul>
+            <li> When we asked if people agreed that emergency powers are utilized to circumvent institutional checks and balances, we found a score of 0.318 while Freedom in the World provided a score of 0.822 when asking if members of the executive respect the constitution. The large discrepancy between these scores should be explained further. Since this source of comparison is a low match with an expert TPS, we recommend to give context about respect for checks and balances. 
+            </li>
+            </ul>
+            </ul>
+            </li>
+            <li> Pillar 5. Security
+            <ul>
+            <li> Negative trend in 5.1: People feel safe </li>
+            <ul>
+            <li> When we asked how safe people feel walking in their neighborhood at night, we found a score of 0.52 when our previous score was 0.58. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more negatively than before. </li>
+            </ul>
+            </ul>
+            </li>
+            <li> Pillar 8. Criminal Justice 
+            <ul>
+            <li> Positive trend in 8.5: Victim's Rights </li>
+            <ul>
+            <li> When we asked how confident people are that the criminal justice system allows all victims of crime to seek justice regardless of who they are, we found a score of 0.618, when our previous score was 0.550. Furthermore, when we asked if people thought that the criminal justice system provides victims of crime with the service and support they need, we found a score of 0.618 when our previous score was .579. Although this subpillar has a green flag in the TPS public opinion poll analysis, we are still flagging it because that green flag is the result of a low matched comparison. </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+            The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. 
+            ")
+    }
   }
   
   if (country == "Slovenia"){
