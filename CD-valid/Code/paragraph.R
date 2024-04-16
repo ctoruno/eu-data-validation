@@ -152,6 +152,9 @@ paragraph<- function(country, type){
             </ul>
             </li>
             </ul>
+            All these discrepancies between the data are also consistent at the NUTS level; we observe that the significant differences persist across all NUTS regions for all sub-pillars flagged.
+            <br>
+            <br>
             The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. 
             ")
     }
@@ -245,7 +248,7 @@ paragraph<- function(country, type){
       p<- c("
             <b>Insights summary</b>
             <br>
-            We are seeing that across time, a few pillars are indicating changes. Most only have a few indicators, however pillar 2 has 16 comparisons. Although many of these have red flags, some are positive changes while others are negative changes and overall encompass experience and opinion questions. In comparison to the TPS public opinion polls, we only have 3 red flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are mostly highlighting Pillar 8, however we are conscious that we trust these scores less. 
+            We are seeing that across time, a few pillars are indicating changes. Most only have a few indicators, however pillar 2 has 16 comparisons. Although many of these have red flags, some are positive changes while others are negative changes and overall encompass experience and opinion questions. In comparison to the TPS public opinion polls, we only have 3 red flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are mostly highlighting Pillar 8, however we are conscious that we trust these scores less.  Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
             <br>
             <br>
             Given that we do not expect to see large changes from our previous data in Bulgaria, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Bulgaria Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
@@ -630,6 +633,9 @@ paragraph<- function(country, type){
             </ul>
             </li>
             </ul>
+            All these discrepancies between the data are also consistent at the NUTS level; we observe that the significant differences persist across all NUTS regions for all sub-pillars flagged.
+            <br>
+            <br>
             The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. 
             ")
     }
@@ -847,7 +853,7 @@ paragraph<- function(country, type){
       p<- c("
             <b>Insights summary</b>
             <br>
-            We are seeing that across time, most of the pillars are not changing drastically over time or indicate discrepancies with the TPS Public Opinion Polls. Pillar 1 is flagged in the GPP Over Time, however there is only one indicator level analysis and it is an opinion question. Pillar 8 is flagged in the TPS Expert Surveys, however the analyses have medium to low matches. Therefore, according to our data, people in Luxembourg have a similar view of the rule of law as they did in 2021, which is in accordance with the third party source data.
+            We are seeing that across time, most of the pillars are not changing drastically over time or indicate discrepancies with the TPS Public Opinion Polls. Pillar 1 is flagged in the GPP Over Time, however there is only one indicator level analysis and it is an opinion question. Pillar 8 is flagged in the TPS Expert Surveys, however the analyses have medium to low matches. Therefore, according to our data, people in Luxembourg have a similar view of the rule of law as they did in 2021, which is in accordance with the third party source data. Certainly, the primary source disparity is with Freedom in the World, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
             <br>
             <br>
             Given that we do not expect to see changes from our previous data in Luxembourg, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Luxembourg Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported in the TPS.
@@ -1117,7 +1123,7 @@ paragraph<- function(country, type){
             <ul>
             <li> Negative trend in 5.1: People feel safe </li>
             <ul>
-            <li> When we asked how safe people feel walking in their neighborhood at night, we found a score of 0.52 when our previous score was 0.58. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more negatively than before. </li>
+            <li> When we asked how safe people feel walking in their neighborhood at night, we found a score of 0.52 when our previous score was 0.58. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more negatively than before. This inconsistency is observed across all NUTS regions.</li>
             </ul>
             </ul>
             </li>
@@ -1125,7 +1131,8 @@ paragraph<- function(country, type){
             <ul>
             <li> Positive trend in 8.5: Victim's Rights </li>
             <ul>
-            <li> When we asked how confident people are that the criminal justice system allows all victims of crime to seek justice regardless of who they are, we found a score of 0.618, when our previous score was 0.550. Furthermore, when we asked if people thought that the criminal justice system provides victims of crime with the service and support they need, we found a score of 0.618 when our previous score was .579. Although this subpillar has a green flag in the TPS public opinion poll analysis, we are still flagging it because that green flag is the result of a low matched comparison. </li>
+            <li> When we asked how confident people are that the criminal justice system allows all victims of crime to seek justice regardless of who they are, we found a score of 0.618, when our previous score was 0.550. Furthermore, when we asked if people thought that the criminal justice system provides victims of crime with the service and support they need, we found a score of 0.618 when our previous score was .579. Although this subpillar has a green flag in the TPS public opinion poll analysis, we are still flagging it because that green flag is the result of a low matched comparison and the previous GPP data is most updated. </li>
+            <li> At the NUTS level, discrepancies are evident in the regions 'SK01: Bratislavský kraj' and 'SK03: Stredné Slovensko', where the scores are significantly higher than the rest of the country. Finding further explanations for the improvements in these regions' criminal justice systems would better clarify the overall explanation.</li>              
             </ul>
             </ul>
             </li>
