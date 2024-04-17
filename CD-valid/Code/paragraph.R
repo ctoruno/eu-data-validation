@@ -145,7 +145,7 @@ paragraph<- function(country, type){
             <li> When we asked how safe people feel walking in their neighborhood at night, we found a score of 0.664 when our previous score was 0.52. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more negatively than before. 
             </li>
             </ul>
-            <li> Negative trend in 5.2: Absence of crime and violence </li>
+            <li> Positive trend in 5.2: Absence of crime and violence </li>
             <ul>
             <li> When we asked if people were aware of organized crime occuring in their neighborhoods, we found a score of 0.935, while the average criminality score in the Organized Crime Index was 0.483. Although the comparison is from a low match, the concepts are still related and therefore we should give context about organized crime rates. </li>
             </ul>
@@ -251,7 +251,7 @@ paragraph<- function(country, type){
             We are seeing that across time, a few pillars are indicating changes. Most only have a few indicators, however pillar 2 has 16 comparisons. Although many of these have red flags, some are positive changes while others are negative changes and overall encompass experience and opinion questions. In comparison to the TPS public opinion polls, we only have 3 red flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are mostly highlighting Pillar 8, however we are conscious that we trust these scores less.  Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
             <br>
             <br>
-            Given that we do not expect to see large changes from our previous data in Bulgaria, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Bulgaria Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            Given that we do not expect to see large changes from our previous data in Cyprus, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Cyprus. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
             <br>
             <br>
             <b> Sub Pillars to Research </b>
@@ -262,7 +262,7 @@ paragraph<- function(country, type){
             <ul>
             <li> When we asked how confident people are that the criminal justice system guarantees a fair trial of all accused people, we found a score of 0.434, while Freedom in the World found a score of 1 when they asked if due process prevails in civil and criminal matters. Furthermore, when we asked if people thought that the criminal justice system treats those accused as innocent until proven guilty, we found a score of 0.481 while Freedom in the World assigned a score of 1 for the question regarding if due process prevails in civil and criminal matters. Although these questions have low matches, they are still related and should be complemented with research about the rights of the accused and due process.</li>
             </ul>
-            <li> Positive trend in 8.7: Prisons</li>
+            <li> Negative trend in 8.7: Prisons</li>
             <ul>
             <li> When we asked how confident people are that the criminal justice system guarantees the safety and human rights of people deprived of their liberty, we found a score of 0.45, while V-Dem found a score of 0.838 when they asked if there was freedom from torture. Although the questions have a low match, they are still related and should be complemented with research about safety and human rights in the criminal justice system. 
             </li>
