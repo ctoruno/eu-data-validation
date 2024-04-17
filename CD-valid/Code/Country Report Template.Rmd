@@ -5,7 +5,7 @@ date: '`r params$date`'
 output:
   html_document: default
 params:
-  country: Ireland
+  country: Austria
   author: 'Dalia Habiby'
   date: '2023-11-08'
 
@@ -22,6 +22,9 @@ suppressWarnings(suppressMessages(library(htmltools)))
 suppressWarnings(library(DT))
 suppressWarnings(library(crosstalk))
 knitr::opts_chunk$set(echo = F)
+
+source("paragraph.R")
+source("kable_function.R")
 
 if (Sys.info()["user"] == "ctoruno") {
   path2eu <- paste0("/Users/ctoruno/OneDrive - World Justice Project/EU Subnational")
@@ -45,7 +48,7 @@ df<- import_list(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcome
                         "/", 
                         params$country, 
                         ".xlsx"))
-source("paragraph.R")
+
 par<- paragraph(params$country)
 ```
 
@@ -559,562 +562,41 @@ ttestex<- "In the T-test, a red flag indicates statistical significance with a p
 threshex<- "In the threshold difference, a red flag indicates a difference of 0.30 or more. A yellow flag indicates a difference between 0.15 and 0.30. A green flag indicates a difference of less than 0.10. DISCLAIMER: some large differences may be caused by low matches between the content of the GPP and TPS questions. Make sure to account for how similar (or dissimilar) each pair is when performing qualitative checks."
 ```
 
-
-### Pillar 1 {.tabset}
-
-#### GPP Over Time
-
-`r ttestex`
-
-```{r}
-b2<- b%>%
-  filter(Pillar == "1: Constraints on Government Powers")%>%
-  select(-Pillar)
-#b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
-
-knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-```
-
-
-#### TPS Public Opinion Polls
-
-`r threshex`
-
-```{r}
-a2<- a%>%
-  filter(Pillar == "1: Constraints on Government Powers")%>%
-  select(-Pillar)
-
-#a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
-
-
-knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
+```{r, results ='asis'}
+for (i in c(1,2,3,4,5,7,8)){
   
-```
-
-#### TPS Expert Data
-
-`r threshex`
-
-```{r}
-e2<- e%>%
-  filter(Pillar == "1: Constraints on Government Powers")%>%
-  select(-Pillar)
-
-#e2$Flag = cell_spec(e2$Flag, color = ifelse(e2$Flag == "Green", "green", ifelse(e2$Flag == "Red", "red", "gold")))
-
-
-knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
+  cat("\n### Pillar", i, "{.tabset} \n")
+  cat("\n#### GPP Over Time \n")
   
-```
-
-
-### Pillar 2 {.tabset}
-
-#### GPP Over Time
-
-`r ttestex`
-
-```{r}
-b2<- b%>%
-  filter(Pillar == "2: Absence of Corruption")%>%
-  select(-Pillar)
-#b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
-
-knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-```
-
-
-#### TPS Public Opinion Polls
-
-`r threshex`
-
-```{r}
-a2<- a%>%
-  filter(Pillar == "2: Absence of Corruption")%>%
-  select(-Pillar)
-
-#a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
-
-
-knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
+  cat(ttestex)
   
-```
-
-#### TPS Expert Data
-
-`r threshex`
-
-```{r}
-e2<- e%>%
-  filter(Pillar == "2: Absence of Corruption")%>%
-  select(-Pillar)
-
-#e2$Flag = cell_spec(e2$Flag, color = ifelse(e2$Flag == "Green", "green", ifelse(e2$Flag == "Red", "red", "gold")))
-
-
-knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
+  b2<- b%>%
+    filter(grepl(as.character(i), Pillar))%>%
+    select(-Pillar)
   
-```
-
-### Pillar 3 {.tabset}
-
-#### GPP Over Time
-
-`r ttestex`
-
-```{r}
-b2<- b%>%
-  filter(Pillar == "3: Open Government")%>%
-  select(-Pillar)
-#b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
-
-knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-```
-
-
-#### TPS Public Opinion Polls
-
-`r threshex`
-
-```{r,}
-a2<- a%>%
-  filter(Pillar == "3: Open Government")%>%
-  select(-Pillar)
-
-#a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
-
-
-knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-
+  print(kable_function(b2, "gpp"))
   
-```
-
-#### TPS Expert Data
-
-`r threshex`
-
-```{r}
-e2<- e%>%
-  filter(Pillar == "3: Open Government")%>%
-  select(-Pillar)
-
-#e2$Flag = cell_spec(e2$Flag, color = ifelse(e2$Flag == "Green", "green", ifelse(e2$Flag == "Red", "red", "gold")))
-
-
-knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-```
-
-### Pillar 4 {.tabset}
-
-#### GPP Over Time
-
-`r ttestex`
-
-```{r}
-b2<- b%>%
-  filter(Pillar == "4: Fundamental Rights")%>%
-  select(-Pillar)
-#b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
-
-knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-```
-
-
-#### TPS Public Opinion Polls
-
-`r threshex`
-
-```{r}
-a2<- a%>%
-  filter(Pillar == "4: Fundamental Rights")%>%
-  select(-Pillar)
-
-#a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
-
-
-knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
+  cat("\n#### TPS Public Opinion Polls \n")
   
-```
-
-
-#### TPS Expert Data
-
-`r threshex`
-
-```{r}
-e2<- e%>%
-  filter(Pillar == "4: Fundamental Rights")%>%
-  select(-Pillar)
-
-#e2$Flag = cell_spec(e2$Flag, color = ifelse(e2$Flag == "Green", "green", ifelse(e2$Flag == "Red", "red", "gold")))
-
-
-knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
+  cat(threshex)
   
-```
-
-### Pillar 5 {.tabset}
-
-#### GPP Over Time
-
-`r ttestex`
-
-```{r}
-b2<- b%>%
-  filter(Pillar == "5: Order and Security")%>%
-  select(-Pillar)
-
-#b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
-
-knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-```
-
-
-#### TPS Public Opinion Polls
-
-`r threshex`
-
-```{r}
-a2<- a%>%
-  filter(Pillar == "5: Order and Security")%>%
-  select(-Pillar)
-
-#a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
-
-if (nrow(a2) >0){
+  a2<- a%>%
+    filter(grepl(as.character(i), Pillar))%>%
+    select(-Pillar)
   
-  knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
+  print(kable_function(a2, "tps"))
   
-} else{
-
-knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-
+  cat("\n#### TPS Expert Data \n")
+  cat(threshex)
+  
+  e2<- e%>%
+    filter(grepl(as.character(i), Pillar))%>%
+    select(-Pillar)
+  
+  print(kable_function(e2, "tps"))
+  
+  cat("\n")
 }
-  
-```
-
-
-#### TPS Expert Data
-
-`r threshex`
-
-```{r}
-e2<- e%>%
-  filter(Pillar == "5: Order and Security")%>%
-  select(-Pillar)
-
-#e2$Flag = cell_spec(e2$Flag, color = ifelse(e2$Flag == "Green", "green", ifelse(e2$Flag == "Red", "red", "gold")))
-
-if (nrow(e2)>0){
-  
-knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-  
-} else {
-  
-  e2<- e2%>%
-    select(-Flag)
-  
-  knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial", )%>%
-  kable_styling(bootstrap_options = c("striped"), full_width = T)%>%
-  row_spec(0, bold= TRUE)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-}
-  
-```
-
-### Pillar 7 {.tabset}
-
-#### GPP Over Time
-
-`r ttestex`
-
-```{r}
-b2<- b%>%
-  filter(Pillar == "7: Civil Justice")%>%
-  select(-Pillar)
-#b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
-
-knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-```
-
-
-#### TPS Public Opinion Polls
-
-`r threshex`
-
-```{r}
-a2<- a%>%
-  filter(Pillar == "7: Civil Justice")%>%
-  select(-Pillar)
-
-#a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
-
-
-knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-  
-```
-
-
-#### TPS Expert Data
-
-`r threshex`
-
-```{r}
-e2<- e%>%
-  filter(Pillar == "7: Civil Justice")%>%
-  select(-Pillar)
-
-#e2$Flag = cell_spec(e2$Flag, color = ifelse(e2$Flag == "Green", "green", ifelse(e2$Flag == "Red", "red", "gold")))
-
-
-knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-  
-```
-
-### Pillar 8 {.tabset}
-
-#### GPP Over Time
-
-`r ttestex`
-
-```{r}
-b2<- b%>%
-  filter(Pillar == "8: Criminal Justice")%>%
-  select(-Pillar)
-#b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
-
-knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-```
-
-
-#### TPS Public Opinion Polls
-
-`r threshex`
-
-```{r}
-a2<- a%>%
-  filter(Pillar == "8: Criminal Justice")%>%
-  select(-Pillar)
-
-#a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
-
-
-knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-  
-```
-
-#### TPS Expert Data
-
-`r threshex`
-
-```{r}
-e2<- e%>%
-  filter(Pillar == "8: Criminal Justice")%>%
-  select(-Pillar)
-
-#e2$Flag = cell_spec(e2$Flag, color = ifelse(e2$Flag == "Green", "green", ifelse(e2$Flag == "Red", "red", "gold")))
-
-
-knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-  
 ```
 
 
@@ -1128,18 +610,7 @@ knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, 
 b2<- b%>%
   select(Pillar, everything())
 
-#b2$Flag = cell_spec(b2$Flag, color = ifelse(b2$Flag == "Green", "green", ifelse(b2$Flag == "Red", "red", "gold")))
-
-knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(b2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(b2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(6,7,8,9), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
+kable_function(b2, "gpp")
 ```
 
 #### TPS Public Opinion Polls
@@ -1149,19 +620,8 @@ knitr::kable(b2, caption = "Variable List and Flags", booktabs = F, escape = F, 
 ```{r}
 a2<- a%>%
   select(-Pillar)
-#a2$Flag = cell_spec(a2$Flag, color = ifelse(a2$Flag == "Green", "green", ifelse(a2$Flag == "Red", "red", "gold")))
 
-knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(a2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(a2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-
+kable_function(a2, "tps")
 ```
 
 
@@ -1172,19 +632,8 @@ knitr::kable(a2, caption = "Variable List and Flags", booktabs = F, escape = F, 
 ```{r}
 e2<- e%>%
   select(Pillar, everything())
-#e2$Flag = cell_spec(e2$Flag, color = ifelse(e2$Flag == "Green", "green", ifelse(e2$Flag == "Red", "red", "gold")))
 
-knitr::kable(e2, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(e2$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(e2$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12), bold= TRUE)%>%
-  remove_column(3)%>%
-  scroll_box(width = "940px", height = "500px", fixed_thead = T)
-
+kable_function(e2, "tps")
 ```
 
 ## Search
@@ -1221,122 +670,5 @@ datatable(shared_tps, rownames= FALSE,
     formatRound(columns=c("GPP Score", "TPS Score", "Difference"), digits=3)
 
 ```
-
-
-```{r echo = FALSE}
-
-# varslist<- unique(c(a$`GPP Indicator`, e$`GPP Indicator`, b$`GPP Indicator`))
-# 
-# selectInput("var", label = "Variable",
-#               choices = c(varslist), selected = "q10")
-# 
-# reactive(b2<- b%>%
-#     filter(`GPP Indicator` == input$var))
-
-# clr<- b2$Flag[[1]]
-# 
-# if (clr == "Red"){
-#   
-#   bkg<- "#FC7661"
-# }
-# if (clr == "Yellow"){
-#   
-#   bkg<- "#FFFD69"
-# }
-# if (clr == "Green"){
-#   
-#   bkg<- "#B6F161"
-# }
-#   
-  
-```
-```{r echo = FALSE}
-
-
-# htmlOutput("tableset") 
-# 
-# # server component
-# output$tableset <- renderText({
-#   kable(b2%>%
-#     filter(`GPP Indicator` == input$var), caption = "GPP Over Time", booktabs = F, escape = F, digits=3)%>%
-#   kable_classic(html_font = "Arial")%>%
-#   kable_styling(full_width = F)
-# })
-# 
-# 
-
-# renderTable({
-#   b%>%
-#     filter(`GPP Indicator` == input$var)
-# })
-
-```
-
-
-```{r}
-# knitr::kable(appendix, caption = "Variable List and Flags")%>%
-#   kable_classic(html_font = "Arial")%>%
-#   kable_styling(bootstrap_options = c("striped"))
-```
-
-
-```{r, results = 'asis'}
-# 
-# flags2<- threshold%>%
-#   group_by(Sub_Pillar, Pillar)%>%
-#   count(Flag)%>%
-#   pivot_wider(names_from = Flag, values_from = n)
-# 
-# flags2[is.na(flags2)] <- 0
-# 
-# ex<- c()
-# 
-# for (i in unique(flags2$Pillar)){
-#   
-#   pill<- filter(flags2, Pillar == i)
-#   
-#     red<- pill%>%
-#       filter(red > 0)
-#     
-#     r<- ifelse(nrow(red)>2, paste0(", Sub-Pillars ", paste(red$Sub_Pillar[1:(nrow(red)-1)], sep="' '", collapse=", "), ", and ", red$Sub_Pillar[[nrow(red)]], " have "), ifelse(nrow(red) == 2, paste0(", Sub-Pillars ", red$Sub_Pillar[[1]], " and ", red$Sub_Pillar[[2]], " have "), ifelse(nrow(red) ==1, paste0(", Sub-Pillar ", red$Sub_Pillar[[1]], " has "), ifelse(nrow(red)== 0, ", no Sub-Pillars have "))))
-#     
-#     yellow<- pill%>%
-#       filter(yellow > 0)%>%
-#       filter(red == 0)
-#     
-#     y<- ifelse(nrow(yellow)>2, paste0(", Sub-Pillars ", paste(yellow$Sub_Pillar[1:(nrow(yellow)-1)], sep="' '", collapse=", "), ", and ", yellow$Sub_Pillar[[nrow(yellow)]], " have "), ifelse(nrow(yellow) == 2, paste0(", Sub-Pillars ", yellow$Sub_Pillar[[1]], " and ", yellow$Sub_Pillar[[2]], " have "), ifelse(nrow(yellow) ==1, paste0(", Sub-Pillar ", yellow$Sub_Pillar[[1]], " has "), ifelse(nrow(yellow)== 0, ", no Sub-Pillars have "))))
-#     
-#     green<- pill%>%
-#       filter(green > 0)%>%
-#       filter(red == 0)%>%
-#       filter(yellow == 0)
-#     
-#     g<- ifelse(nrow(green)>2, paste0(" Sub-Pillars ", paste(green$Sub_Pillar[1:(nrow(green)-1)], sep="' '", collapse=", "), ", and ", green$Sub_Pillar[[nrow(green)]], " have "), ifelse(nrow(green) == 2, paste0(" Sub-Pillars ", green$Sub_Pillar[[1]], " and ", green$Sub_Pillar[[2]], " have "), ifelse(nrow(green) ==1, paste0(" Sub-Pillar ", green$Sub_Pillar[[1]], " has "), ifelse(nrow(green)== 0, " no Sub-Pillars have "))))
-#     
-#     ex<- c(ex, paste0("In Pillar ", i, r,  "high concern", y,  "moderate concern, and", g, "little to no concern."))
-#     
-# }
-# 
-#  
-# text<- paste(ex, sep="", collapse="\n")
-#cat(gsub(pattern = "\n", replacement = "  \n", x = text))
-```
-
-```{r}
-# notes on T-test function
-
-#produce dataframes through runme, outside of rmd, and call them in the rmd
-#maybe make an excel with the GPP TPS matches so its not in the code
-
-# we only have 17 variables to compare in t-test
-# this is a problem because it is a small number
-
-# flag country as problematic when it is flagged in both tests
-# if only one, say "we only find it problematic in the threshold test/t-test"
-
-#missing values function: count the number of people who answered more than 10% DK/PNTS
-```
-
-
 
 

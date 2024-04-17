@@ -1,11 +1,10 @@
 kable_function<- function(data, type){
   if (nrow(data)>0){
-    
-    if (type == "gpp"){
-      colnums<- c(6,7,8,9,10)
-    } else if (type == "tps"){
-      colnums<- c(9, 10, 11, 12, 13)
-    }
+      if (type == "gpp"){
+        colnums<- c(6:ncol(data))
+      } else if (type == "tps"){
+        colnums<- c(9:ncol(data))
+      }
     
     knitr::kable(data, caption = "Variable List and Flags", booktabs = F, escape = F, digits=3)%>%
       kable_classic(html_font = "Arial")%>%
