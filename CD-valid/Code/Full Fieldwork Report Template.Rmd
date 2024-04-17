@@ -5,8 +5,8 @@ date: '`r params$date`'
 output:
   html_document: default
 params:
-  country: Slovakia
-  author: "Dalia Habiby"
+  country: Bulgaria
+  author: "Allison Bostrom"
   date: '2023-11-08'
 
 ---
@@ -23,6 +23,7 @@ suppressWarnings(library(DT))
 suppressWarnings(library(crosstalk))
 suppressWarnings(library(stringr))
 suppressWarnings(library(DiagrammeR))
+suppressWarnings(suppressMessages(library(parameters)))
 knitr::opts_chunk$set(echo = F)
 
 source("paragraph.R")
@@ -848,41 +849,80 @@ threshex<- "In the threshold difference, a red flag indicates a difference of 0.
 ```
 
 
+```{r, results='asis'}
+res <- lapply(c(1,2,3,4,5,7,8), function(i) {
+      knitr::knit_child( text=c(
+        '### Pillar `r i` {.tabset}',
+        '',
+        '#### GPP Over Time',
+        '`r ttestex`',
+        '```{r}',
+        'b2<- b%>%
+    filter(grepl(as.character(i), Pillar))%>%
+    select(-Pillar)
+  
+    kable_function(b2, "gpp")',
+        '```',
+        '',
+        '#### TPS Public Opinion Polls',
+        '`r threshex`',
+        '```{r}',
+        'a2<- a%>%
+    filter(grepl(as.character(i), Pillar))%>%
+    select(-Pillar)
+  
+    kable_function(a2, "tps")',
+        '```',
+        '',
+        '#### TPS Expert Data',
+        '`r threshex`',
+        '```{r}',
+        'e2<- e%>%
+    filter(grepl(as.character(i), Pillar))%>%
+    select(-Pillar)
+  
+    kable_function(e2, "tps")',
+        '```',
+        ''
+      ) , envir=environment() , quiet=TRUE )
+    })
+    cat( unlist(res) , sep='\n' )
+```
+
 ```{r, results ='asis'}
-for (i in c(1,2,3,4,5,7,8)){
-  
-  cat("\n### Pillar", i, "{.tabset} \n")
-  cat("\n#### GPP Over Time \n")
-  
-  cat(ttestex)
-  
-  b2<- b%>%
-    filter(grepl(as.character(i), Pillar))%>%
-    select(-Pillar)
-  
-  print(kable_function(b2, "gpp"))
-  
-  cat("\n#### TPS Public Opinion Polls \n")
-  
-  cat(threshex)
-  
-  a2<- a%>%
-    filter(grepl(as.character(i), Pillar))%>%
-    select(-Pillar)
-  
-  print(kable_function(a2, "tps"))
-  
-  cat("\n#### TPS Expert Data \n")
-  cat(threshex)
-  
-  e2<- e%>%
-    filter(grepl(as.character(i), Pillar))%>%
-    select(-Pillar)
-  
-  print(kable_function(e2, "tps"))
-  
-  cat("\n")
-}
+# for (i in c(1,2,3,4,5,7,8)){
+#   
+#   cat("\n### Pillar", i, "{.tabset} \n")
+#   cat("\n#### GPP Over Time \n")
+#   cat(ttestex)
+# 
+#   b2<- b%>%
+#     filter(grepl(as.character(i), Pillar))%>%
+#     select(-Pillar)
+#   
+#   print(kable_function(b2, "gpp"))
+#   
+#   cat("\n")
+#   cat("\n#### TPS Public Opinion Polls \n")
+#   cat(threshex, "\n")
+#  
+#   a2<- a%>%
+#     filter(grepl(as.character(i), Pillar))%>%
+#     select(-Pillar)
+#   
+#   print(kable_function(a2, "tps"))
+#   cat("\n")
+#   cat("\n#### TPS Expert Data \n")
+#   cat(threshex, "\n")
+# 
+#   e2<- e%>%
+#     filter(grepl(as.character(i), Pillar))%>%
+#     select(-Pillar)
+#   
+#   print(kable_function(e2, "tps"))
+#   
+#   cat("\n")
+# }
 ```
 
 ### Overall {.tabset}
