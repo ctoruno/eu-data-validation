@@ -142,7 +142,7 @@ paragraph<- function(country, type){
             <ul>
             <li> Positive trend in 5.1: People feel safe</li>
             <ul>
-            <li> When we asked how safe people feel walking in their neighborhood at night, we found a score of 0.664 when our previous score was 0.52. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more negatively than before. 
+            <li> When we asked how safe people feel walking in their neighborhood at night, we found a score of 0.664 when our previous score was 0.52. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more positively than before. 
             </li>
             </ul>
             <li> Positive trend in 5.2: Absence of crime and violence </li>
