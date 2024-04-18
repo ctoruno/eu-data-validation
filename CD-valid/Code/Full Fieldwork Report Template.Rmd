@@ -12,7 +12,7 @@ params:
 ---
 
 ```{r setup, echo = F}
-#add to gpp folder to make sure everyone has access
+#calling libraries and reading data
 suppressWarnings(suppressMessages(library(tidyverse)))
 suppressWarnings(suppressMessages(library(haven)))
 suppressWarnings(suppressMessages(library(caret)))
@@ -26,25 +26,9 @@ suppressWarnings(library(DiagrammeR))
 suppressWarnings(suppressMessages(library(parameters)))
 knitr::opts_chunk$set(echo = F)
 
+source("settings.R")
 source("paragraph.R")
 source("kable_function.R")
-
-if (Sys.info()["user"] == "ctoruno") {
-  path2eu <- paste0("/Users/ctoruno/OneDrive - World Justice Project/EU Subnational")
-  
-} else if (Sys.info()["user"] == "santiagopardo") {
-  path2eu <- paste0("/Users/santiagopardo/OneDrive - World Justice Project/EU Subnational")
-  
-} else if (Sys.info()["user"]=="Dhabiby"){
-  path2eu<- paste0("/Users/Dhabiby/World Justice Project/Research - EU Subnational")
-  
-} else if (Sys.info()["user"]=="apillai"){
-  path2eu<- paste0("/Users/apillai/OneDrive - World Justice Project/EU Subnational")
-  
-} else {
-  path2eu <- "PLEASE INSERT YOUR PERSONAL PATH TO THE  WJP - EU SUBNATIONAL DIRECTORY"
-  
-}
 
 pretest<- import_list(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Pretest/", 
                         params$country, 
@@ -62,7 +46,7 @@ par<- paragraph(params$country, type = "full")
 
 
 ```{r}
-
+#Joining pretest flag column and separating expert and population TPS
 pre_thr<- pretest$tps_comparisson%>%
   select(GPP_Variable_Name, TPS_Variable_Name, Flag)%>%
   rename("Pretest Flag" = "Flag")
@@ -83,33 +67,33 @@ time$`Pretest Flag`<- ifelse(is.na(time$`Pretest Flag`), "Not Evaluated", time$`
 experts<- threshold1%>%
   filter(Type_Survey == "expert")%>%
   drop_na()
-threshold<- threshold1%>%
+population<- threshold1%>%
   filter(Type_Survey == "population")%>%
   drop_na()
 ```
 
 ```{r}
 # Threshold Analysis for population polls
-flags<- threshold%>%
+popflags<- population%>%
   group_by(Pillar)%>%
   count(Flag)
-flagssub<- threshold%>%
+popflagssub<- population%>%
   group_by(Sub_Pillar)%>%
   count(Flag)
 
 #Threshold analysis for expert surveys
-flags2<- experts%>%
+expflags<- experts%>%
   group_by(Pillar)%>%
   count(Flag)
-flags2sub<- experts%>%
+expflagssub<- experts%>%
   group_by(Sub_Pillar)%>%
   count(Flag)
 
 # Time change analysis
-warnings<- time%>%
+timeflags<- time%>%
   group_by(pillar)%>%
   count(warning)
-warningssub<- time%>%
+timeflagssub<- time%>%
   group_by(subpillar)%>%
   count(warning)
 
@@ -205,28 +189,28 @@ Below are the analysis tables for only the sub-pillars noted in the summary abov
 \
 
 ```{r}
-flagsoutput<- flags%>%
+pop_output<- popflags%>%
   pivot_wider(names_from = Flag, values_from = n)
 
-flagsoutput[is.na(flagsoutput)] <- 0
+pop_output[is.na(pop_output)] <- 0
 
-if (!("red" %in% colnames(flagsoutput))){
+if (!("red" %in% colnames(pop_output))){
 
-  flagsoutput$red<- rep(0, nrow(flagsoutput))
+  pop_output$red<- rep(0, nrow(pop_output))
   
 } 
   
   
-flagsoutput<- flagsoutput%>%
+pop_output<- pop_output%>%
   mutate(sum = green + red)%>%
   mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))
 
-flagsoutput$Label<- ifelse(flagsoutput$red >= flagsoutput$sum/2, "Significantly Different", "Not Significantly Different")
+pop_output$Label<- ifelse(pop_output$red >= pop_output$sum/2, "Significantly Different", "Not Significantly Different")
 
-flagsoutput<- flagsoutput%>%
+pop_output<- pop_output%>%
   select(Pillar, green, red, perc, Label)
 
-colnames(flagsoutput)<- c("Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
+colnames(pop_output)<- c("Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 
 
@@ -234,7 +218,7 @@ colnames(flagsoutput)<- c("Pillar", "Green Flags", "Red Flags", "Percentage Red 
 
 ```{r}
 
-dir<- threshold
+dir<- population
 dir$Direction<- ifelse(dir$GPP_datapoint-dir$TPS_datapoint>0, "Positive", ifelse(dir$GPP_datapoint-dir$TPS_datapoint<0, "Negative", "No Change"))
 
 dir<- dir%>%
@@ -243,7 +227,7 @@ dir<- dir%>%
 
 dirvec<- c()
 
-for (p in sort(unique(threshold$Sub_Pillar))){
+for (p in sort(unique(population$Sub_Pillar))){
   
   pillar<- dir%>%
     filter(Sub_Pillar == p)
@@ -279,47 +263,47 @@ for (p in sort(unique(threshold$Sub_Pillar))){
 ```
 
 ```{r}
-flagsoutputsub<- flagssub%>%
+pop_output_sub<- popflagssub%>%
   pivot_wider(names_from = Flag, values_from = n)
 
-flagsoutputsub[is.na(flagsoutputsub)] <- 0
+pop_output_sub[is.na(pop_output_sub)] <- 0
 
-if (!("red" %in% colnames(flagsoutputsub))){
+if (!("red" %in% colnames(pop_output_sub))){
 
-  flagsoutputsub$red<- rep(0, nrow(flagsoutputsub))
+  pop_output_sub$red<- rep(0, nrow(pop_output_sub))
 } 
   
-flagsoutputsub<- flagsoutputsub%>%
+pop_output_sub<- pop_output_sub%>%
   mutate(sum = green + red )%>%
   mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))  
 
-flagsoutputsub$Label<- dirvec
+pop_output_sub$Label<- dirvec
 
-flagsoutputsub<- flagsoutputsub%>%
+pop_output_sub<- pop_output_sub%>%
   select(Sub_Pillar, green, red, perc, Label)
 
-colnames(flagsoutputsub)<- c("Sub-Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
+colnames(pop_output_sub)<- c("Sub-Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 
 
 ```
 
 ```{r}
-flagsoutput2<- flags2%>%
+exp_output<- expflags%>%
   pivot_wider(names_from = Flag, values_from = n)
 
-flagsoutput2[is.na(flagsoutput2)] <- 0
+exp_output[is.na(exp_output)] <- 0
   
-flagsoutput2<- flagsoutput2%>%
+exp_output<- exp_output%>%
   mutate(sum = green + red )%>%
   mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))
 
-flagsoutput2$Label<- ifelse(flagsoutput2$red >= flagsoutput2$sum/2, "Significantly Different", "Not Significantly Different")
+exp_output$Label<- ifelse(exp_output$red >= exp_output$sum/2, "Significantly Different", "Not Significantly Different")
 
-flagsoutput2<- flagsoutput2%>%
+exp_output<- exp_output%>%
   select(Pillar, green, red, perc, Label)
 
-colnames(flagsoutput2)<- c("Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
+colnames(exp_output)<- c("Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 ```
 
@@ -372,47 +356,47 @@ for (p in sort(unique(experts$Sub_Pillar))){
 
 
 ```{r}
-flagsoutput2sub<- flags2sub%>%
+exp_output_sub<- expflagssub%>%
   pivot_wider(names_from = Flag, values_from = n)
 
-flagsoutput2sub[is.na(flagsoutput2sub)] <- 0
+exp_output_sub[is.na(exp_output_sub)] <- 0
   
-flagsoutput2sub<- flagsoutput2sub%>%
+exp_output_sub<- exp_output_sub%>%
   mutate(sum = green + red )%>%
   mutate(perc = paste0(round(red/sum*100, digits = 1), "%"))
 
-flagsoutput2sub$Label<- dirvec
+exp_output_sub$Label<- dirvec
 
-flagsoutput2sub<- flagsoutput2sub%>%
+exp_output_sub<- exp_output_sub%>%
   select(Sub_Pillar, green, red, perc, Label)
 
-colnames(flagsoutput2sub)<- c("Sub-Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
+colnames(exp_output_sub)<- c("Sub-Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 ```
 
 
 
 ```{r}
-warningsoutput<- warnings%>%
+time_output<- timeflags%>%
   pivot_wider(names_from = warning, values_from = n)
 
-if (!("Red light" %in% colnames(warningsoutput))){
+if (!("Red light" %in% colnames(time_output))){
   
-  warningsoutput$`Red light`<- rep(0, nrow(warningsoutput))
+  time_output$`Red light`<- rep(0, nrow(time_output))
 }
 
-warningsoutput[is.na(warningsoutput)] <- 0
+time_output[is.na(time_output)] <- 0
   
-warningsoutput<- warningsoutput%>%
+time_output<- time_output%>%
   mutate(sum = `Green light` + `Red light`)%>%
   mutate(perc = paste0(round(`Red light`/sum*100, digits = 1), "%"))
 
-warningsoutput$Label<- ifelse(warningsoutput$`Red light` >= warningsoutput$sum/2, "Significantly Different", "Not Significantly Different")
+time_output$Label<- ifelse(time_output$`Red light` >= time_output$sum/2, "Significantly Different", "Not Significantly Different")
 
-warningsoutput<- warningsoutput%>%
+time_output<- time_output%>%
   select(pillar, `Green light`, `Red light`, perc, Label)
 
-colnames(warningsoutput)<- c("Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
+colnames(time_output)<- c("Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 ```
 
@@ -460,64 +444,64 @@ for (p in sort(unique(time$subpillar))){
 
 
 ```{r}
-warningssuboutput<- warningssub%>%
+time_output_sub<- timeflagssub%>%
   pivot_wider(names_from = warning, values_from = n)
 
-if (!("Red light" %in% colnames(warningssuboutput))){
+if (!("Red light" %in% colnames(time_output_sub))){
   
-  warningssuboutput$`Red light`<- rep(0, nrow(warningssuboutput))
+  time_output_sub$`Red light`<- rep(0, nrow(time_output_sub))
 }
 
-warningssuboutput[is.na(warningssuboutput)] <- 0
+time_output_sub[is.na(time_output_sub)] <- 0
   
-warningssuboutput<- warningssuboutput%>%
+time_output_sub<- time_output_sub%>%
   mutate(sum = `Green light` + `Red light`)%>%
   mutate(perc = paste0(round(`Red light`/sum*100, digits = 1), "%"))
 
-warningssuboutput$Label<- dirvec
+time_output_sub$Label<- dirvec
 
-warningssuboutput<- warningssuboutput%>%
+time_output_sub<- time_output_sub%>%
   select(subpillar, `Green light`, `Red light`, perc, Label)
 
-colnames(warningssuboutput)<- c("Sub-Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
+colnames(time_output_sub)<- c("Sub-Pillar", "Green Flags", "Red Flags", "Percentage Red Flags", "Label")
 
 ```
 
 
 ```{r}
 
-a<- threshold%>%
+pop<- population %>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, `Pretest Flag`,  Pillar )%>%
   arrange(Sub_Pillar)
-a$Direction<- ifelse(a$GPP_datapoint-a$TPS_datapoint>0, "Positive", ifelse(a$GPP_datapoint-a$TPS_datapoint<0, "Negative", "No Change"))
-a$Flag<- ifelse(a$Flag == "red", "Red", ifelse(a$Flag == "green", "Green", NA))
+pop$Direction<- ifelse(pop$GPP_datapoint-pop$TPS_datapoint>0, "Positive", ifelse(pop$GPP_datapoint-pop$TPS_datapoint<0, "Negative", "No Change"))
+pop$Flag<- ifelse(pop$Flag == "red", "Red", ifelse(pop$Flag == "green", "Green", NA))
 
-a<- a%>%
+pop<- pop%>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Direction, `Pretest Flag`,  Pillar )
 
-colnames(a)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Direction", "Pretest Flag", "Pillar")
+colnames(pop)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Direction", "Pretest Flag", "Pillar")
 
 
 
-e<- experts%>%
+expt<- experts%>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, `Pretest Flag`,  Pillar )%>%
   arrange(Sub_Pillar)
-e$Direction<- ifelse(e$GPP_datapoint-e$TPS_datapoint>0, "Positive", ifelse(e$GPP_datapoint-e$TPS_datapoint<0, "Negative", "No Change"))
-e$Flag<- ifelse(e$Flag == "red", "Red", ifelse(e$Flag == "green", "Green", NA))
+expt$Direction<- ifelse(expt$GPP_datapoint-expt$TPS_datapoint>0, "Positive", ifelse(expt$GPP_datapoint-expt$TPS_datapoint<0, "Negative", "No Change"))
+expt$Flag<- ifelse(expt$Flag == "red", "Red", ifelse(expt$Flag == "green", "Green", NA))
 
-e<- e%>%
+expt<- expt%>%
   select(Sub_Pillar, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Direction, `Pretest Flag`,  Pillar )
 
-colnames(e)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Direction", "Pretest Flag", "Pillar")
+colnames(expt)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Score", "Difference", "Direction", "Pretest Flag", "Pillar")
 
 
-b<- time%>%
+tm<- time%>%
   select(subpillar, `2023  EU Questionnaire`, warning, Description, prev_year, current_score, previous_score, ttestResult,  direction,  `Pretest Flag`, pillar )%>%
   arrange(subpillar)
 
-colnames(b)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question", "Comparison Year", "Current Score", "Previous Score", "P value",  "Direction", "Pretest Flag", "Pillar" )
+colnames(tm)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question", "Comparison Year", "Current Score", "Previous Score", "P value",  "Direction", "Pretest Flag", "Pillar" )
 
-b$Flag<- ifelse(b$Flag == "Red light", "Red", ifelse(b$Flag == "Green light", "Green", NA))
+tm$Flag<- ifelse(tm$Flag == "Red light", "Red", ifelse(tm$Flag == "Green light", "Green", NA))
 
 
 tps<- threshold1%>%
@@ -537,13 +521,13 @@ colnames(tps)<- c("Sub Pillar", "GPP Indicator", "Flag", "GPP Question",  "TPS Q
 ```{r}
 spmatches <- str_extract_all(par, "[0-9]\\.[0-9]{1,2}:")
 spmatches <- unlist(spmatches)
-popsum <- a[grepl(paste(spmatches, collapse="|"), a$`Sub Pillar`), ]
+popsum <- pop[grepl(paste(spmatches, collapse="|"), pop$`Sub Pillar`), ]
 popsum <- popsum%>%
   select(-Pillar)
-ttsum  <- b[grepl(paste(spmatches, collapse="|"), b$`Sub Pillar`), ]
+ttsum  <- tm[grepl(paste(spmatches, collapse="|"), tm$`Sub Pillar`), ]
 ttsum  <- ttsum%>%
   select(-Pillar)
-expsum <- e[grepl(paste(spmatches, collapse="|"), e$`Sub Pillar`), ]
+expsum <- expt[grepl(paste(spmatches, collapse="|"), expt$`Sub Pillar`), ]
 expsum <- expsum%>%
   select(-Pillar)
 
@@ -563,10 +547,18 @@ knitr::kable(ttsum, caption = "GPP Over Time", booktabs = F, escape = F, digits=
 }
 
 if (nrow(popsum)>0 & nrow(expsum)>0){
-  
   tpssum<- bind_rows(popsum, expsum)%>%
     arrange(`Sub Pillar`)
   
+} else if (nrow(popsum)>0){
+  tpssum <- popsum
+  
+} else if (nrow(expsum)>0 ){
+  tpssum <- expsum
+  
+}
+  
+if (exists("tpssum")){
 knitr::kable(tpssum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(full_width = F)%>%
@@ -577,32 +569,6 @@ knitr::kable(tpssum, caption = "TPS Analysis", booktabs = F, escape = F, digits=
   column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
   remove_column(3)
 
-} else if (nrow(popsum)>0){
-    
-knitr::kable(popsum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(popsum$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(popsum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(popsum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
-  remove_column(1)%>%
-  remove_column(3)
-  
-} else if (nrow(expsum)>0){
-  
-  knitr::kable(expsum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(expsum$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(expsum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(expsum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
-  remove_column(1)%>%
-  remove_column(3)
-  
 }
 ```
 
@@ -617,49 +583,49 @@ timenuts<- df$time_nuts%>% distinct()
 expertsnuts<- thresholdnuts1%>%
   filter(Type_Survey == "expert")%>%
   drop_na()
-thresholdnuts<- thresholdnuts1%>%
+populationnuts<- thresholdnuts1%>%
   filter(Type_Survey == "population")%>%
   drop_na()
 ```
 
 
 ```{r}
-anuts<- thresholdnuts%>%
+popnuts<- populationnuts%>%
   select(Sub_Pillar, NUTS, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Pillar )%>%
   arrange(Sub_Pillar)
-anuts$Direction<- ifelse(anuts$GPP_datapoint-anuts$TPS_datapoint>0, "Positive", ifelse(anuts$GPP_datapoint-anuts$TPS_datapoint<0, "Negative", "No Change"))
-anuts$Flag<- ifelse(anuts$Flag == "red", "Red", ifelse(anuts$Flag == "green", "Green", NA))
+popnuts$Direction<- ifelse(popnuts$GPP_datapoint-popnuts$TPS_datapoint>0, "Positive", ifelse(popnuts$GPP_datapoint-popnuts$TPS_datapoint<0, "Negative", "No Change"))
+popnuts$Flag<- ifelse(popnuts$Flag == "red", "Red", ifelse(popnuts$Flag == "green", "Green", NA))
 
-anuts<- anuts%>%
+popnuts<- popnuts%>%
   select(Sub_Pillar, NUTS, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Direction, Pillar )
 
-colnames(anuts)<- c("Sub Pillar", "NUTS", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Country Score", "Difference", "Direction", "Pillar")
+colnames(popnuts)<- c("Sub Pillar", "NUTS", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Country Score", "Difference", "Direction", "Pillar")
 
 
 
-enuts<- expertsnuts%>%
+exptnuts<- expertsnuts%>%
   select(Sub_Pillar, NUTS, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference,  Pillar )%>%
   arrange(Sub_Pillar)
-enuts$Direction<- ifelse(enuts$GPP_datapoint-enuts$TPS_datapoint>0, "Positive", ifelse(enuts$GPP_datapoint-enuts$TPS_datapoint<0, "Negative", "No Change"))
-enuts$Flag<- ifelse(enuts$Flag == "red", "Red", ifelse(enuts$Flag == "green", "Green", NA))
+exptnuts$Direction<- ifelse(exptnuts$GPP_datapoint-exptnuts$TPS_datapoint>0, "Positive", ifelse(exptnuts$GPP_datapoint-exptnuts$TPS_datapoint<0, "Negative", "No Change"))
+exptnuts$Flag<- ifelse(exptnuts$Flag == "red", "Red", ifelse(exptnuts$Flag == "green", "Green", NA))
 
-enuts<- enuts%>%
+exptnuts<- exptnuts%>%
   select(Sub_Pillar, NUTS, `2023  EU Questionnaire`, Flag, Description, TPS_Question, Match, TPS_Source, TPS_Year, GPP_datapoint, TPS_datapoint, Difference, Direction,  Pillar )
 
-colnames(enuts)<- c("Sub Pillar", "NUTS", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Country Score", "Difference", "Direction", "Pillar")
+colnames(exptnuts)<- c("Sub Pillar", "NUTS", "GPP Indicator", "Flag", "GPP Question",  "TPS Question", "Match Level", "TPS Source", "TPS Year", "GPP Score", "TPS Country Score", "Difference", "Direction", "Pillar")
 
 
-bnuts<- timenuts%>%
+tmnuts<- timenuts%>%
   select(subpillar, nuts, `2023  EU Questionnaire`, warning, Description, prev_year, current_score, previous_score, ttestResult,  direction, pillar )%>%
   arrange(subpillar)
-bnuts$Difference<- abs(bnuts$current_score- bnuts$previous_score)
+tmnuts$Difference<- abs(tmnuts$current_score- tmnuts$previous_score)
 
-bnuts<- bnuts%>%
+tmnuts<- tmnuts%>%
   select(subpillar, nuts, `2023  EU Questionnaire`, warning, Description, prev_year, current_score, previous_score, Difference,  direction, pillar )
 
-colnames(bnuts)<- c("Sub Pillar", "NUTS", "GPP Indicator", "Flag", "GPP Question", "Comparison Year", "Current Score", "Previous Country Score", "Difference",  "Direction", "Pillar" )
+colnames(tmnuts)<- c("Sub Pillar", "NUTS", "GPP Indicator", "Flag", "GPP Question", "Comparison Year", "Current Score", "Previous Country Score", "Difference",  "Direction", "Pillar" )
 
-bnuts$Flag<- ifelse(bnuts$Flag == "Red light", "Red", ifelse(bnuts$Flag == "Green light", "Green", NA))
+tmnuts$Flag<- ifelse(tmnuts$Flag == "Red light", "Red", ifelse(tmnuts$Flag == "Green light", "Green", NA))
 
 
 tpsnuts<- thresholdnuts1%>%
@@ -675,76 +641,57 @@ colnames(tpsnuts)<- c("Sub Pillar", "NUTS", "GPP Indicator", "Flag", "GPP Questi
 ```
 
 ```{r}
-popsum <- anuts[grepl(paste(spmatches, collapse="|"), anuts$`Sub Pillar`), ]
-popsum <- popsum%>%
+popnutssum <- popnuts[grepl(paste(spmatches, collapse="|"), popnuts$`Sub Pillar`), ]
+popnutssum <- popnutssum%>%
   select(-Pillar)%>%
   arrange(`Sub Pillar`, NUTS)
-ttsum  <- bnuts[grepl(paste(spmatches, collapse="|"), bnuts$`Sub Pillar`), ]
-ttsum  <- ttsum%>%
+tmnutssum  <- tmnuts[grepl(paste(spmatches, collapse="|"), tmnuts$`Sub Pillar`), ]
+tmnutssum  <- tmnutssum%>%
   select(-Pillar)%>%
   arrange(`Sub Pillar`, NUTS)
-expsum <- enuts[grepl(paste(spmatches, collapse="|"), enuts$`Sub Pillar`), ]
-expsum <- expsum%>%
+exptnutssum <- exptnuts[grepl(paste(spmatches, collapse="|"), exptnuts$`Sub Pillar`), ]
+exptnutssum <- exptnutssum%>%
   select(-Pillar)%>%
   arrange(`Sub Pillar`, NUTS)
 
-if (nrow(ttsum)>0){
+if (nrow(tmnutssum)>0){
 
-knitr::kable(ttsum, caption = "GPP Over Time", booktabs = F, escape = F, digits=3)%>%
+knitr::kable(tmnutssum, caption = "GPP Over Time", booktabs = F, escape = F, digits=3)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(full_width = F)%>%
   row_spec(0, bold= TRUE)%>%
-  row_spec(which(ttsum$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(ttsum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(ttsum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(tmnutssum$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(tmnutssum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(tmnutssum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
   column_spec(c(6,7,8,9,10), bold= TRUE)%>%
   remove_column(4)%>%
   scroll_box(height = "500px", fixed_thead = T)
     
 }
 
-if (nrow(popsum)>0 & nrow(expsum)>0){
+if (nrow(popnutssum)>0 & nrow(exptnutssum)>0){
+  tpsnutssum<- bind_rows(popnutssum, exptnutssum)%>%
+    arrange(`Sub Pillar`)
   
-  tpssum<- bind_rows(popsum, expsum)%>%
-    arrange(`Sub Pillar`, NUTS)
+} else if (nrow(popnutssum)>0){
+  tpsnutssum <- popnutssum
   
-knitr::kable(tpssum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
+} else if (nrow(exptnutssum)>0 ){
+  tpsnutssum <- exptnutssum
+  
+}
+  
+if (exists("tpsnutssum")){
+knitr::kable(tpsnutssum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(full_width = F)%>%
   row_spec(0, bold= TRUE)%>%
-  row_spec(which(tpssum$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(tpssum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(tpssum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(tpsnutssum$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(tpsnutssum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
+  row_spec(which(tpsnutssum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
   column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
-  remove_column(4)%>%
-  scroll_box(height = "500px", fixed_thead = T)
+  remove_column(3)
 
-} else if (nrow(popsum)>0){
-    
-knitr::kable(popsum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(popsum$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(popsum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(popsum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
-  remove_column(4)%>%
-  scroll_box(height = "500px", fixed_thead = T)
-  
-} else if (nrow(expsum)>0){
-  
-  knitr::kable(expsum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
-  kable_classic(html_font = "Arial")%>%
-  kable_styling(full_width = F)%>%
-  row_spec(0, bold= TRUE)%>%
-  row_spec(which(expsum$Flag == "Red"), background = "#FC7661", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(expsum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
-  row_spec(which(expsum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
-  column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
-  remove_column(4)%>%
-  scroll_box(height = "500px", fixed_thead = T)
-  
 }
 ```
 
@@ -777,16 +724,16 @@ Since the t-test analysis this year is comparing to the previous Global GPP, the
 
 ```{r}
 
-knitr::kable(warningsoutput, caption = "T-Test Analysis Summary", escape = F)%>%
+knitr::kable(time_output, caption = "T-Test Analysis Summary", escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))%>%
-  column_spec(5, background = ifelse(warningsoutput$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
+  column_spec(5, background = ifelse(time_output$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
   column_spec(4, bold = TRUE)
 
-knitr::kable(warningssuboutput, escape = F)%>%
+knitr::kable(time_output_sub, escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))%>%
-  column_spec(5, background = ifelse(warningssuboutput$Label == "No change", "#B6F161", ifelse (warningssuboutput$Label == "Potential Mixed trends", "#FFFD69", "#FC7661")))%>%
+  column_spec(5, background = ifelse(time_output_sub$Label == "No change", "#B6F161", ifelse (time_output_sub$Label == "Potential Mixed trends", "#FFFD69", "#FC7661")))%>%
   column_spec(4, bold = TRUE)%>%
   scroll_box(height = "520px", fixed_thead = T)
 ```
@@ -799,16 +746,16 @@ Given the nature of third party sources, there are a limited number of external 
 
 ```{r}
 
-knitr::kable(flagsoutput, caption = "Threshold Analysis Summary", escape = F)%>%
+knitr::kable(pop_output, caption = "Threshold Analysis Summary", escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))%>%
-  column_spec(5, background = ifelse(flagsoutput$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
+  column_spec(5, background = ifelse(pop_output$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
   column_spec(4, bold = TRUE)
 
-knitr::kable(flagsoutputsub, escape = F)%>%
+knitr::kable(pop_output_sub, escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))%>%
-  column_spec(5, background = ifelse(flagsoutputsub$Label == "No change", "#B6F161", ifelse (flagsoutputsub$Label == "Potential Mixed trends", "#FFFD69", "#FC7661")))%>%
+  column_spec(5, background = ifelse(pop_output_sub$Label == "No change", "#B6F161", ifelse (pop_output_sub$Label == "Potential Mixed trends", "#FFFD69", "#FC7661")))%>%
   column_spec(4, bold = TRUE)%>%
   scroll_box(height = "500px", fixed_thead = T)
 
@@ -821,16 +768,16 @@ Given the nature of third party sources, there are a limited number of external 
 
 ```{r}
 
-knitr::kable(flagsoutput2, caption = "Threshold Analysis Summary", escape = F)%>%
+knitr::kable(exp_output, caption = "Threshold Analysis Summary", escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))%>%
-  column_spec(5, background = ifelse(flagsoutput2$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
+  column_spec(5, background = ifelse(exp_output$Label == "Significantly Different", "#FC7661" , "#B6F161"))%>%
   column_spec(4, bold = TRUE)
 
-knitr::kable(flagsoutput2sub, escape = F)%>%
+knitr::kable(exp_output_sub, escape = F)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(bootstrap_options = c("striped"))%>%
-  column_spec(5, background = ifelse(flagsoutput2sub$Label == "No change", "#B6F161", ifelse (flagsoutput2sub$Label == "Potential Mixed trends", "#FFFD69", "#FC7661")))%>%
+  column_spec(5, background = ifelse(exp_output_sub$Label == "No change", "#B6F161", ifelse (exp_output_sub$Label == "Potential Mixed trends", "#FFFD69", "#FC7661")))%>%
   column_spec(4, bold = TRUE)%>%
   scroll_box(height = "500px", fixed_thead = T)
 
@@ -857,72 +804,36 @@ res <- lapply(c(1,2,3,4,5,7,8), function(i) {
         '#### GPP Over Time',
         '`r ttestex`',
         '```{r}',
-        'b2<- b%>%
+        'tm2<- tm%>%
     filter(grepl(as.character(i), Pillar))%>%
     select(-Pillar)
   
-    kable_function(b2, "gpp")',
+    kable_function(tm2, "gpp")',
         '```',
         '',
         '#### TPS Public Opinion Polls',
         '`r threshex`',
         '```{r}',
-        'a2<- a%>%
+        'pop2<- pop%>%
     filter(grepl(as.character(i), Pillar))%>%
     select(-Pillar)
   
-    kable_function(a2, "tps")',
+    kable_function(pop2, "tps")',
         '```',
         '',
         '#### TPS Expert Data',
         '`r threshex`',
         '```{r}',
-        'e2<- e%>%
+        'expt2<- expt%>%
     filter(grepl(as.character(i), Pillar))%>%
     select(-Pillar)
   
-    kable_function(e2, "tps")',
+    kable_function(expt2, "tps")',
         '```',
         ''
       ) , envir=environment() , quiet=TRUE )
     })
     cat( unlist(res) , sep='\n' )
-```
-
-```{r, results ='asis'}
-# for (i in c(1,2,3,4,5,7,8)){
-#   
-#   cat("\n### Pillar", i, "{.tabset} \n")
-#   cat("\n#### GPP Over Time \n")
-#   cat(ttestex)
-# 
-#   b2<- b%>%
-#     filter(grepl(as.character(i), Pillar))%>%
-#     select(-Pillar)
-#   
-#   print(kable_function(b2, "gpp"))
-#   
-#   cat("\n")
-#   cat("\n#### TPS Public Opinion Polls \n")
-#   cat(threshex, "\n")
-#  
-#   a2<- a%>%
-#     filter(grepl(as.character(i), Pillar))%>%
-#     select(-Pillar)
-#   
-#   print(kable_function(a2, "tps"))
-#   cat("\n")
-#   cat("\n#### TPS Expert Data \n")
-#   cat(threshex, "\n")
-# 
-#   e2<- e%>%
-#     filter(grepl(as.character(i), Pillar))%>%
-#     select(-Pillar)
-#   
-#   print(kable_function(e2, "tps"))
-#   
-#   cat("\n")
-# }
 ```
 
 ### Overall {.tabset}
@@ -932,10 +843,10 @@ res <- lapply(c(1,2,3,4,5,7,8), function(i) {
 `r ttestex`
 
 ```{r}
-b2<- b%>%
+tm2<- tm%>%
   select(Pillar, everything())
 
-kable_function(b2, "gpp")
+kable_function(tm2, "gpp")
 ```
 
 #### TPS Public Opinion Polls
@@ -943,9 +854,9 @@ kable_function(b2, "gpp")
 `r threshex`
 
 ```{r}
-a2<- a%>%
+pop2<- pop%>%
   select(Pillar, everything())
-kable_function(a2, "tps")
+kable_function(pop2, "tps")
 
 ```
 
@@ -955,10 +866,10 @@ kable_function(a2, "tps")
 `r threshex`
 
 ```{r}
-e2<- e%>%
+expt2<- expt%>%
   select(Pillar, everything())
 
-kable_function(e2, "tps")
+kable_function(expt2, "tps")
 
 ```
 
@@ -967,15 +878,15 @@ kable_function(e2, "tps")
 
 ```{r}
 # set up a group of SharedData objects
-varslist<- unique(c(a$`GPP Indicator`, e$`GPP Indicator`, b$`GPP Indicator`))
+varslist<- unique(c(pop$`GPP Indicator`, expt$`GPP Indicator`, tm$`GPP Indicator`))
 z<- tibble("GPP Indicator" = varslist)
 
-b2<- b%>%
+tm2<- tm%>%
   select(-Pillar)
 tps2<- tps%>%
   select(-Pillar)
 
-shared_gpp <- SharedData$new(b2, key = ~`GPP Indicator`, group = "shared_obj")
+shared_gpp <- SharedData$new(tm2, key = ~`GPP Indicator`, group = "shared_obj")
 shared_tps <- SharedData$new(tps2, key = ~`GPP Indicator`, group = "shared_obj")
 shared_comb <- SharedData$new(z, key = ~`GPP Indicator`, group = "shared_obj")
 
