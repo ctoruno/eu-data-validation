@@ -246,7 +246,7 @@ for (p in sort(unique(population$Sub_Pillar))){
      }else if (rs/sum(pillar$c)>=.75){
             
               if (nrow(r)== 1){
-                d<- pillar$direction[[1]]
+                d<- pillar$Direction[[1]]
                 dirvec<- c(dirvec, paste0("Potential ", d,  " trend"))
                 
                   } else{
@@ -337,7 +337,7 @@ for (p in sort(unique(experts$Sub_Pillar))){
      } else if (rs/sum(pillar$c)>=.75){
             
               if (nrow(r)== 1){
-                d<- pillar$direction[[1]]
+                d<- pillar$Direction[[1]]
                 dirvec<- c(dirvec, paste0("Potential ", d,  " trend"))
                 
                   } else{
