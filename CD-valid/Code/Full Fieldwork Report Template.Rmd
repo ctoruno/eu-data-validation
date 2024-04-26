@@ -559,7 +559,7 @@ if (nrow(popsum)>0 & nrow(expsum)>0){
 }
   
 if (exists("tpssum")){
-knitr::kable(tpssum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
+knitr::kable(tpssum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3, row.names = FALSE)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(full_width = F)%>%
   row_spec(0, bold= TRUE)%>%
@@ -682,7 +682,7 @@ if (nrow(popnutssum)>0 & nrow(exptnutssum)>0){
 }
   
 if (exists("tpsnutssum")){
-knitr::kable(tpsnutssum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3)%>%
+knitr::kable(tpsnutssum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3, row.names = FALSE)%>%
   kable_classic(html_font = "Arial")%>%
   kable_styling(full_width = F)%>%
   row_spec(0, bold= TRUE)%>%
