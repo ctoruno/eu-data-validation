@@ -325,7 +325,35 @@ paragraph<- function(country, type){
     <br>  
     <br>")
     } else {
-      p<- c("There is no paragraph")
+      p<- c("<b>Insights summary</b>
+            <br>
+            We are seeing that across time, only Pillars 2 and 3 are flagged. However, our previous data is from 2017, and thus we do not expect nothing to have changed. Furthermore, in comparison to the TPS public opinion polls, we only have one indicator level red flag, and none of the Pillars or Sub-pillars are flagged. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging Sub-pillar 4.6 and all of the Sub-pillars in Pillars 7 and 8, however we are conscious that we trust these scores less. Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
+            <br>
+            <br>
+            Given that we expect to see large changes from our previous data in Czechia, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Czechia, and all Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+            <br>
+            <b> Sub Pillars to Research </b>
+            <ul>
+            <li> Pillar 7. Civil Justice
+            <ul>
+            <li> Negative trend in 7.2: People can access quality legal assistance and representation</li>
+            <ul>
+            <li> When we asked if individuals have access to reasonably priced legal assistance and representation when dealing with legal matters, we found a score of 0.445, while V-Dem found a score of 0.888 when they asked if women enjoy equal, secure, and effective access to justice and a score of 0.918 when they asked if men enjoy equal, secure, and effective access to justice. Although the questions have a low match, they are still related and should be complemented with research about effective access to justice. 
+            </li>
+            </ul>
+            </ul>
+            <li> Pillar 8. Criminal Justice
+            <ul>
+            <li> Negative trend in 8.7: Prisons</li>
+            <ul>
+            <li> When we asked how confident people are that the criminal justice system guarantees the safety and human rights of people deprived of their liberty, we found a score of 0.515, while V-Dem found a score of 0.942 when they asked if there was freedom from torture. Although the questions have a low match, they are still related and should be complemented with research about safety and human rights in the criminal justice system. 
+            </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+            The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly.")
     }
     
   }
