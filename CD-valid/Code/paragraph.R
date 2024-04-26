@@ -434,7 +434,35 @@ paragraph<- function(country, type){
     <br>  
     <br>")
     } else {
-      p<- c("There is no paragraph")
+      p<- c("<b>Insights summary</b>
+            <br>
+            We are seeing that across time, only Pillars 5 and 7 are flagged. However, our previous data is from 2017, and thus we expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, have zero red flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging Sub-pillars 4.5, 4.6, 7.2. 7.4, 8.3, and 8.6, however we are conscious that we trust these scores less and that all of these besides 7.2 have green flags in other analyses. Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
+            <br>
+            <br>
+            Given that we expect to see large changes from our previous data in Estonia, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Estonia, and all Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+            <br>
+            <b> Sub Pillars to Research </b>
+            <ul>
+            <li> Pillar 5. Security
+            <ul>
+            <li> Positive trend in 5.1: People can access quality legal assistance and representation</li>
+            <ul>
+            <li> When we asked how safe people feel walking in their neighborhood at night, we found a score of 0.685 when our previous score was 0.579. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more positively than before. 
+            </li>
+            </ul>
+            </ul>
+            <li> Pillar 7. Civil Justice
+            <ul>
+            <li> Negative trend in 7.2: Prisons</li>
+            <ul>
+            <li> When we asked if individuals have access to reasonably priced legal assistance and representation when dealing with legal matters, we found a score of 0.362, while V-Dem found a score of 0.729 when they asked if women enjoy equal, secure, and effective access to justice and a score of 0.740 when they asked if men enjoy equal, secure, and effective access to justice. Although the questions have a low match, they are still related and should be complemented with research about effective access to justice. 
+            </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+            The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly.")
     }
     
   }
