@@ -11,7 +11,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Austria                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we found some issues in all of the analyses.</b>
     <br>
@@ -43,6 +43,10 @@ paragraph<- function(country, type){
     The DAU point person for this report is Natalia Rodriguez.
     <br>
     <br>")
+    } else {
+      
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -51,7 +55,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Belgium                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we found some issues in all of the analyses.</b>
     <br>
@@ -82,6 +86,9 @@ paragraph<- function(country, type){
     The DAU point person for this report is Natalia Rodriguez.
     <br>
     <br>")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -166,7 +173,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Croatia                                                                                       ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we found significant differences from the TPS Expert Data.</b>
     <br>
@@ -200,6 +207,9 @@ paragraph<- function(country, type){
    
           "
       )
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -281,7 +291,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Czechia                                                                                       ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we only found issues with comparisons regarding Civic Participation and Justice.</b>
     <br>
@@ -314,6 +324,9 @@ paragraph<- function(country, type){
     The designated point person for this analysis within the DAU is Carlos Toruño.
     <br>  
     <br>")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -322,7 +335,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Denmark                                                                                      ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we found some issues in all of the analyses.</b>
     <br>
@@ -354,6 +367,9 @@ paragraph<- function(country, type){
     The DAU point person for this report is Natalia Rodriguez.
     <br>
     <br>")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -362,7 +378,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Estonia                                                                                     ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we only found issues with the TPS comparisons.</b>
     <br>
@@ -389,6 +405,9 @@ paragraph<- function(country, type){
     The designated point person for this analysis within the DAU is Carlos Toruño.
     <br>  
     <br>")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -397,7 +416,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Finland                                                                                      ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("<b>In general, we only found issues with the TPS Expert Data</b>
     <br>
     Some issues we would like to note are:
@@ -417,7 +436,9 @@ paragraph<- function(country, type){
     The designated point person for this analysis within the DAU is Carlos Toruño.
     <br>  
     <br>")
-    
+    } else {
+      p<- c("There is no paragraph")
+    }
   }
   
   if (country == "France"){
@@ -425,7 +446,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## France                                                                                       ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we only found issues with the TPS comparisons.</b>
     <br>
@@ -452,7 +473,9 @@ paragraph<- function(country, type){
     The designated point person for this analysis within the DAU is Carlos Toruño.
     <br>  
     <br>")
-    
+    } else {
+      p<- c("There is no paragraph")
+    }
   }
   
   if (country == "Germany"){
@@ -460,7 +483,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Germany                                                                                       ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we found some issues in all of the analyses.</b>
     <br>
@@ -492,6 +515,9 @@ paragraph<- function(country, type){
     The DAU point person for this report is Natalia Rodriguez.
     <br>
     <br>")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -501,7 +527,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Greece                                                                                ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c( 
     " <b>In general, we have found significant differences in Pillars 4, 5, 7, and 8.  Overall, almost all of the comparisons with expert sources are significant and negative.</b>
     <br>
@@ -548,6 +574,9 @@ paragraph<- function(country, type){
     <br>  
     <br>"
     )
+    } else {
+      p<- c("There is no paragraph")
+    }
 
     
   }
@@ -647,7 +676,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Ireland                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we only found significant issues with the TPS expert sources during the data validation process.</b>
     <br>
@@ -690,6 +719,9 @@ paragraph<- function(country, type){
     <br>  
     <br> 
           ")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -698,7 +730,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Italy                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we only found issues with the TPS comparisons.</b>
     <br>
@@ -725,6 +757,9 @@ paragraph<- function(country, type){
     The designated point person for this analysis within the DAU is Natalia Rodriguez.
     <br>  
     <br>")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -733,7 +768,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Latvia                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we did not find any significant inconsistency with other Public Opinion Polls or our own 2021 data.</b>
     <br>  
@@ -762,6 +797,9 @@ paragraph<- function(country, type){
     <br>  
     <br>          
           ")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -770,7 +808,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Lithuania                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we did not find any significant issues during the data validation process.</b>
     <br>
@@ -802,6 +840,9 @@ paragraph<- function(country, type){
     <br>  
     <br>          
           ")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -904,7 +945,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Malta                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("<b>In general, we did not find any significant issues during the data validation process.</b>
     <br>
     There are some minor issues that are worth noting:
@@ -941,6 +982,10 @@ paragraph<- function(country, type){
     <br>
    
           ")
+    } else {
+      
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -949,7 +994,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Netherlands                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we only found issues with the TPS comparisons.</b>
     <br>
@@ -976,6 +1021,9 @@ paragraph<- function(country, type){
     The designated point person for this analysis within the DAU is Natalia Rodriguez.
     <br>  
     <br>")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -984,8 +1032,11 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Poland                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("There is no paragraph")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -994,7 +1045,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Portugal                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     
     <b>In general, we did not find any significant issues during the data validation process.</b>
@@ -1030,6 +1081,9 @@ paragraph<- function(country, type){
     <br>   
           
     ")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -1038,7 +1092,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Romania                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c(" 
     <b>In general, we did not find any significant issues during the data validation process.</b>
     <br>
@@ -1062,6 +1116,9 @@ paragraph<- function(country, type){
     <br>  
     <br>
     ")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -1147,7 +1204,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Slovenia                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we found significant issues in all of the analyses.</b>
     <br>
@@ -1180,6 +1237,9 @@ paragraph<- function(country, type){
     The designated point person for this analysis within the DAU is Carlos Toruño.
     <br>  
     <br>")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
   
@@ -1188,7 +1248,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Spain                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we only found issues with the TPS comparisons.</b>
     <br>
@@ -1216,7 +1276,9 @@ paragraph<- function(country, type){
     The designated point person for this analysis within the DAU is Carlos Toruño.
     <br>  
     <br>")
-    
+    } else {
+      p<- c("There is no paragraph")
+    }
   }
   
   if (country == "Sweden"){
@@ -1224,7 +1286,7 @@ paragraph<- function(country, type){
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## Sweden                                                                                        ----
     ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
+    if (type == "pretest"){
     p<- c("
     <b>In general, we only found issues with the TPS Expert Data</b>
     <br>
@@ -1245,6 +1307,9 @@ paragraph<- function(country, type){
     The designated point person for this analysis within the DAU is Carlos Toruño.
     <br>  
     <br>")
+    } else {
+      p<- c("There is no paragraph")
+    }
     
   }
 
