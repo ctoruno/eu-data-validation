@@ -85,21 +85,21 @@ for (i in 1:length(reports2update)){
   
   GPP_previous.df <- haven::read_dta(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/eu_merge.dta")) 
   
-  TPS.df <- read_csv("Input/TPS_data.csv")
+  TPS.df <- read_csv(paste0(path2eu,"/EU-S Data/eu-data-validation/CD-valid/Input/TPS_data.csv"))
   
-  data_map.df <- read_excel("Input/EU2 GPP 2023 Full Datamap.xlsx", sheet = "Data Map")
-  codebook.df <- read_excel("Input/EU2 GPP 2023 Codebook.xlsx") %>%
+  data_map.df <- read_excel(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/EU2 GPP 2023 Full Datamap.xlsx"), sheet = "Data Map")
+  codebook.df <- read_excel(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/EU2 GPP 2023 Codebook.xlsx")) %>%
     left_join(data_map.df %>% select(Variable, Scale), by = c("2023  EU Questionnaire" = "Variable"))
   framework <- read_excel(paste0(path2eu,"/EU-S Research/Design/EU Subnational_Questions_Map.xlsx"), sheet = "GPP and CF Map")
   
-  matched_tps <- suppressMessages(import_list("Input/Selected GPP&TPS for QCC.xlsx"))
+  matched_tps <- suppressMessages(import_list(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/Selected GPP&TPS for QCC.xlsx")))
   matched_tps <- matched_tps$`Selection and matching`
-  variable_list.df <- read_excel("Input/Metadatatt.xlsx")
+  variable_list.df <- read_excel("/EU-S Data/eu-data-validation/CD-valid/Input/Metadatatt.xlsx")
   
-  metadata<- read_excel("Input/Metadatatps.xlsx")
-  metareport<- read_excel("Input/metareport.xlsx")
+  metadata<- read_excel(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/Metadatatps.xlsx"))
+  metareport<- read_excel(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/metareport.xlsx"))
   
-  sampling_plans.df <- read_excel("Input/Sampling_plan_integrated.xlsx")
+  sampling_plans.df <- read_excel(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/Sampling_plan_integrated.xlsx"))
   
   reportvars<- codebook.df %>%
     filter(Report == 1)
