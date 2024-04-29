@@ -83,7 +83,7 @@ for (i in 1:length(reports2update)){
     fullmerge <- read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/3. Merge/EU_GPP_2024.dta"))
   }
   
-  GPP_previous.df <- haven::read_dta(paste0(path2eu, "Input/eu_merge.dta")) 
+  GPP_previous.df <- haven::read_dta(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/eu_merge.dta")) 
   
   TPS.df <- read_csv("Input/TPS_data.csv")
   
