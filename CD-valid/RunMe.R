@@ -29,7 +29,7 @@
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
 
-args[1] = "Cyprus"
+args[1] = "Spain"
 args[2] = "Carlos Toruño"
 # List of chosen analyses (add/remove as needed)
 # Mode options are "pretest" "html" "full" "update"
@@ -83,7 +83,7 @@ for (i in 1:length(reports2update)){
     fullmerge <- read_dta(paste0(path2eu, "/EU-S Data/eu-gpp/1. Data/3. Merge/EU_GPP_2024.dta"))
   }
   
-  GPP_previous.df <- haven::read_dta(paste0("Input/eu_merge.dta")) 
+  GPP_previous.df <- haven::read_dta(paste0(path2eu, "Input/eu_merge.dta")) 
   
   TPS.df <- read_csv("Input/TPS_data.csv")
   
