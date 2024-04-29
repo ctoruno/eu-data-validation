@@ -495,10 +495,10 @@ paragraph<- function(country, type){
     } else {
       p<- c("<b>Insights summary</b>
             <br>
-            We are seeing that across time, only Pillars 5 and 7 are flagged. However, our previous data is from 2017, and thus we expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, have zero red flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging Sub-pillars 4.6, 7.4, 8.3, and 8.6, however we are conscious that we trust these scores less and that all of these have green flags in other analyses. Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
+            We are seeing that across time, only Pillars 5 and 7 are flagged. However, our previous data is from 2017, and thus we expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, we have zero red flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging Sub-pillars 4.6, 7.4, 8.3, and 8.6, however we are conscious that we trust these scores less and that all of these have green flags in other analyses. Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
             <br>
             <br>
-            Given that we expect to see large changes from our previous data in Finland, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Finland, and all Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            Given that we expect to see large changes from our previous data in Finland, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Finland. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
             <br>
             <br>
             <b> Sub Pillars to Research </b>
@@ -550,7 +550,38 @@ paragraph<- function(country, type){
     <br>  
     <br>")
     } else {
-      p<- c("There is no paragraph")
+      p<- c("<b>Insights summary</b>
+            <br>
+            We are seeing that across time, a few pillars and subpillars are flagged. However, our previous data is from 2018, and thus we expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, we only have two red flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging a few subpillars, however we are conscious that we trust these scores less and that all of these have green flags in other analyses.
+            <br>
+            <br>
+            Given that we expect to see large changes from our previous data in France, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of France. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+            <br>
+            <b> Sub Pillars to Research </b>
+            <ul>
+            <li> Pillar 5. Security
+            <ul>
+            <li> Positive trend in 5.2: Absence of crime and violence</li>
+            <ul>
+            <li> When we asked if people know or have heard if organized crime happens in their community or neighborhood, we found a score of 0.863 while the Organized Crime Index gave a Criminality Average Score of 0.464. Although these questions are not matched very well, it is still imporant to supplement the comparison with research on organized crime in France.
+            </li>
+            </ul>
+            </ul>
+            </li>
+            <li> Pillar 7. Civil Justice
+            <ul>
+            <li> Positive trend in 7.1: Legal security</li>
+            <ul>
+            <li> When we asked if people are informed about their legal rights when dealing with legal issues, we found a score of 0.332 while the Fundamental Rights Survey found a score of 0.683 regarding views on authorities providing information for people in a simple way. Although these questions are not matched very well, it is still imporant to supplement the comparison with research on access to legal information in France.</li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+            These discrepancies between the data are <b>NOT</b> consistent at the NUTS level; we observe that the significant differences occuring in some NUTS regions are causing the indicators to be flagged at the national level.
+            <br>
+            <br>
+            The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly.")
     }
   }
   
@@ -1314,7 +1345,49 @@ paragraph<- function(country, type){
     <br>  
     <br>")
     } else {
-      p<- c("There is no paragraph")
+      p<- c("<b>Insights summary</b>
+            <br>
+            We are seeing that across time, most of the pillars in the GPP are changing. For the most part, these changes indicate a mix of trends across and within sub pillars. Furthermore, since our previous data from Slovenia is from 2017, these changes are expected. Nevertheless, the result of these trends in terms of our full fieldwork data are similar to what other sources are observing. In comparison to the TPS public opinion polls, we only have one red flag. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. A few sub-pillars are flagged in the TPS expert comparisons, which is also to be expected.
+            <br>
+            <br>
+            Given that we expect to see changes from our previous data in Slovenia, we are noting sub pillars that are flagged in the TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Slovenia. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported in the TPS.
+            <br>
+            <br>
+            <b> Sub Pillars to Research </b>
+            <ul>
+            <li> Pillar 5. Security
+            <ul>
+            <li> Negative trend in 5.1: People feel safe </li>
+            <ul>
+            <li> When we asked how safe people feel walking in their neighborhood at night, we found a score of 0.667 when our previous score was 0.722. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more negatively than before. </li>
+            </ul>
+            </ul>
+            </li>
+            </li>
+            <li> Pillar 8. Criminal Justice 
+            <ul>
+            <li> Mixed trends in 8.5: Victim’s Rights </li> 
+            <ul>
+            <li> The GPP Over Time analysis indicates a positive trend. When we asked how confident people are that the criminal justice system allows all victims of crime to seek justice regardless of who they are, we found a score of 0.580, when our previous score was 0.486 Furthermore, when we asked if people thought that the criminal justice system provides victims of crime with the service and support they need, we found a score of 0.613 when our previous score was 0.504. </li>
+            <li> The TPS Public Opinion Poll comparison indicates a negative trend. When we asked how confident people are that the criminal justice system as a whole respects the rights of victims, we found a score of 0.404 while the Fundamental Rights Survey found a score of 0.793 when they measured the perception of the way the police generally treats people. Although these questions have a low match, it is still important to highlight the disparity. </li>
+            <li> Given the different trends indicated in each analysis, we can surmise that overall, our data on victim's rights is trending in a positive direction, yet is still lower than other third party sources.
+            </ul>
+            <li> Negative trend in 8.6: Due process of law </li>
+            <ul>
+            <li> The TPS Public Opinion Poll comparison indicates a negative trend. When we asked how confident people are that the criminal justice system guarantees a fair trial of all accused people, we found a score of 0.371, while our previous score was 0.456 and Freedom in the World found a score of 1 when they asked if due process prevails in civil and criminal matters. Furthermore, when we asked if people thought that the criminal justice system treats those accused as innocent until proven guilty, we found a score of 0.472 while our previous score was 0.586 and Freedom in the World assigned a score of 1 for the question regarding if due process prevails in civil and criminal matters.</li>
+            </ul>
+            <li> Negative trend in 8.7: Prisons </li>
+            <ul>
+            <li> When we asked how confident people are that the criminal justice system guarantees the safety and human rights of people deprived of their liberty, we found a score of 0.467, while Varieties of Democracy found a score of 0.859 when they asked if there was freedom from torture. Although the questions have a low match, they are still related and should be complemented with research about safety and human rights in the criminal justice system. </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+            All these discrepancies between the data are also consistent at the NUTS level; we observe that the significant differences persist across all NUTS regions for all sub-pillars flagged.
+            <br>
+            <br>
+            The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. 
+            ")
     }
     
   }
