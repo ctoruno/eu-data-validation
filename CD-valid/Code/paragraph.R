@@ -578,7 +578,7 @@ paragraph<- function(country, type){
             </ul>
             </li>
             </ul>
-            These discrepancies between the data are <b>NOT</b> consistent at the NUTS level; we observe that the significant differences occuring in some NUTS regions are causing the indicators to be flagged at the national level.
+            These discrepancies between the data are <b>NOT</b> consistent at the NUTS level; we observe that the significant differences occuring in some NUTS regions are causing the indicators to be flagged at the national level. There is a lot of heterogeneity between regions, and in subpillar 5.2, FRM/Corse is exceptionally low compared to the others. In 7.1 however, the difference between the regions with red flags and the regions with green flags is very small, each sitting very close to the 0.35 score difference threshold we implemented.
             <br>
             <br>
             The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly.")
@@ -1368,7 +1368,7 @@ paragraph<- function(country, type){
             <ul>
             <li> Mixed trends in 8.5: Victim’s Rights </li> 
             <ul>
-            <li> The GPP Over Time analysis indicates a positive trend. When we asked how confident people are that the criminal justice system allows all victims of crime to seek justice regardless of who they are, we found a score of 0.580, when our previous score was 0.486 Furthermore, when we asked if people thought that the criminal justice system provides victims of crime with the service and support they need, we found a score of 0.613 when our previous score was 0.504. </li>
+            <li> The GPP Over Time analysis indicates a positive trend. When we asked how confident people are that the criminal justice system allows all victims of crime to seek justice regardless of who they are, we found a score of 0.580, when our previous score was 0.486. Furthermore, when we asked if people thought that the criminal justice system provides victims of crime with the service and support they need, we found a score of 0.613 when our previous score was 0.504. </li>
             <li> The TPS Public Opinion Poll comparison indicates a negative trend. When we asked how confident people are that the criminal justice system as a whole respects the rights of victims, we found a score of 0.404 while the Fundamental Rights Survey found a score of 0.793 when they measured the perception of the way the police generally treats people. Although these questions have a low match, it is still important to highlight the disparity. </li>
             <li> Given the different trends indicated in each analysis, we can surmise that overall, our data on victim's rights is trending in a positive direction, yet is still lower than other third party sources.
             </ul>
