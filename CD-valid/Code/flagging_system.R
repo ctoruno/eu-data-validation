@@ -168,21 +168,18 @@ flagging_system<- function(gpp_data.df = fullmerge){
   add<- left_join(gppaggregate, info%>%select(Variable, `2023  EU Questionnaire`, Description))%>%
     rename("EU_Name" = `2023  EU Questionnaire`)
   
-  subp<- index%>%
-    filter(ID %in% metareport$ID)%>%
-    select(ID, `Name 1`, `Name 2`, `Name 3`)%>%
-    pivot_longer(cols = c(`Name 1`, `Name 2`, `Name 3`), names_to = "level", values_to = "Subpillar" )%>%
-    drop_na()%>%
-    select(-level)
+  subp<- metadata%>%
+    select(GPP_Variable_Name, Sub_Pillar, Pillar)%>%
+    rbind(variable_list.df%>%
+            select(variable, subpillar, pillar)%>%
+            rename("GPP_Variable_Name" = "variable", 
+                   "Sub_Pillar" = "subpillar",
+                   "Pillar" = "pillar"))%>%
+    distinct()
   
-  submat<- left_join(subp, metareport)%>%
-    select(reportvarslist, Subpillar)%>%
-    rename("Variable" = "reportvarslist")
+  add2<- left_join(add, subp, by = join_by("Variable"== "GPP_Variable_Name"), relationship = "many-to-many")
   
-  add2<- left_join(add, submat)
-  
-  full<- left_join(flagging_system.df, add2, by = join_by("Country" == "country_name_ltn", "Question" == "Variable"))%>%
-    mutate(Pillar = substring(Subpillar, 1, 1))
+  full<- left_join(final_flags, add2, by = join_by("Country" == "country_name_ltn", "Question" == "Variable"), relationship = "many-to-many")
   
   return(full)
 

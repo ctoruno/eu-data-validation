@@ -94,7 +94,7 @@ for (i in 1:length(reports2update)){
   
   matched_tps <- suppressMessages(import_list(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/Selected GPP&TPS for QCC.xlsx")))
   matched_tps <- matched_tps$`Selection and matching`
-  variable_list.df <- read_excel("/EU-S Data/eu-data-validation/CD-valid/Input/Metadatatt.xlsx")
+  variable_list.df <- read_excel(paste0(path2eu,"/EU-S Data/eu-data-validation/CD-valid/Input/Metadatatt.xlsx"))
   
   metadata<- read_excel(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/Metadatatps.xlsx"))
   metareport<- read_excel(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/metareport.xlsx"))
