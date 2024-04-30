@@ -29,7 +29,7 @@
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
 
-args[1] = "Spain"
+args[1] = "Sweden"
 args[2] = "Carlos Toruño"
 # List of chosen analyses (add/remove as needed)
 # Mode options are "pretest" "html" "full" "update"
@@ -271,3 +271,4 @@ for (i in 1:length(reports2update)){
     
   } 
 }
+
