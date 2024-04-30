@@ -1474,13 +1474,8 @@ paragraph<- function(country, type){
             <br>
             <li>Negative trend in 8.5: Victim's Rights</li>
             <ul>
-<<<<<<< Updated upstream
             <br>
             <li>When we asked how confident people are that the criminal justice system allows all victims of crime to seek justice regardless of who they are, we found a score of 0.527, when our previous score was 0.503. Furthermore, when we asked if people thought that the criminal justice system provides victims of crime with the service and support they need, we found a score of 0.561 when our previous score was .542. This consistency indicates a green flag in our GPP over time analysis, however when our TPS source, the Fundamental Rights Survey, asked the public whether police generally treat people positively, they found an agreement rate of 0.910. The primary cause of disparity likely stems from the phrasing of the two questions: the GPP pointing to the perception of the criminal justice system as a whole and the TPS polling asking about police specifically.</li>
-=======
-            <li>When we asked how confident people are that the criminal justice system allows all victims of crime to seek justice regardless of who they are, we found a score of 0.527, when our previous score was 0.503. Furthermore, when we asked if people thought that the criminal justice system provides victims of crime with the service and support they need, we found a score of 0.561 when our previous score was 0.542. This consistency indicates a green flag in our GPP over time analysis, however when our TPS source, the Fundamental Rights Survey, asked the public whether police generally treat people positively, they found an agreement rate of 0.910. The primary cause of disparity likely stems from the phrasing of the two questions: the GPP pointing to the perception of the criminal justice system as a whole and the TPS polling asking about police specifically.</li>
-            </ul>
->>>>>>> Stashed changes
             </ul>
             </ul>
             </li>
