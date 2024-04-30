@@ -865,7 +865,29 @@ paragraph<- function(country, type){
     <br>  
     <br>")
     } else {
-      p<- c("There is no paragraph")
+      p<- c("
+            <b>Insights summary</b>
+            <br>
+            We see that, across time, sub-pillars 1.11, 4.4, and 8.5 are flagged. Given that the previous GPP data from Italy is from 2017, we expect there to be significant difference. However, when observing the TPS public opinion polls, we only find one flagged subpillar, 8.5. This indicates that our data are relatively consistent with other population surveys, which is a key objective. In terms of TPS expert surveys, we find flags in sub-pillars 1.03, 1.06, 1.10, 4.5, 7.2, 7.4, and 8.3, however we are conscious that we trust these scores less and these sub-pillars have green flags in other analyses. TPS expert surveys did not address sub-pillar 8.5, which signaled red flags in the two other analyses. Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
+            <br>
+            <br>
+            Given that we expect to see large changes from our previous data in Italy, we are noting sub-pillars that are flagged in both TPS Public Opinion Polls and the GPP cross-analysis. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Italy. Therefore, what we are highlighting are the areas of concern as identified by the GPP analysis which are supported by external TPS public opinion data.
+            <br>
+            <br>
+            <b>Sub Pillars to Research</b>
+            <ul>
+            <br>
+            <li>Pillar 8. Criminal Justice
+            <ul>
+            <br>
+            <li>Negative trend in 8.5: Victim's Rights</li>
+            <ul>
+            <br>
+            <li>When we asked how confident people are that the criminal justice system allows all victims of crime to seek justice regardless of who they are, we found a score of 0.498, when our previous score was 0.647. Furthermore, when we asked if people thought that the criminal justice system provides victims of crime with the service and support they need, we found a score of 0.566 when our previous score was .0.643. This inconsistency indicates a red flag in our GPP over time analysis. Furthermore, when our TPS source, the Fundamental Rights Survey, asked the public whether police generally treat people positively, they found an agreement rate of 0.830. Despite the disparity in the phrasing of the two surveys (the GPP pointing to the perception of the criminal justice system as a whole and the TPS polling asking about police specifically), we find a potential negative trend in the area of victim's rights.</li>
+            </ul>
+            </ul>
+            </li>
+            </ul>")
     }
     
   }
@@ -1460,7 +1482,7 @@ paragraph<- function(country, type){
       p<- c("
             <b>Insights summary</b>
             <br>
-            We see that, across time, sub-pillars 1.11 and 5.1 are flagged. Given that the previous GPP data from Sweden is from 2018, we expect there to be significant difference. However, when observing the TPS public opinion polls, we only find one flagged subpillar, 8.1. This indicates that our data are relatively consistent with other population surveys, which is a key objective. In terms of TPS expert surveys, we find flags in sub-pillars 1.03, 4.5, 4.6, 7.4, 8.3, 8.6, and 8.7, however we are conscious that we trust these scores less and these sub-pillars have green flags in other analyses. Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
+            We see that, across time, sub-pillars 1.11 and 5.1 are flagged. Given that the previous GPP data from Sweden is from 2018, we expect there to be significant difference. However, when observing the TPS public opinion polls, we only find one flagged subpillar, 8.5. This indicates that our data are relatively consistent with other population surveys, which is a key objective. In terms of TPS expert surveys, we find flags in sub-pillars 1.03, 4.5, 4.6, 7.4, 8.3, 8.6, and 8.7, however we are conscious that we trust these scores less and these sub-pillars have green flags in other analyses. Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
             <br>
             <br>
             Given that we expect to see large changes from our previous data in Sweden, we are noting sub-pillars that are flagged in TPS Public Opinion Polls. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Sweden. Therefore, what we are highlighting are the discrepancies found in the TPS polls, which serve as our most salient indicator, but do not trigger red flags in our own GPP analysis.
