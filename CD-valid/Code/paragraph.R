@@ -967,20 +967,16 @@ paragraph<- function(country, type){
             <br>
             <li>Pillar 7. Civil Justice
             <ul>
-            <br>
             <li>Negative trend in 7.2: People can access quality legal assistance and representation</li>
             <ul>
-            <br>
             <li>When we asked respondents whether individuals have access to reasonably priced legal assistance and representation when dealing with legal matters, we received a score of 0.389. However, in the TPS Expert polls, our source Varieties of Democracies asked whether men and women each enjoy secure and effective access to justice, they returned a score of 0.865 for men and 0.837 for women. It is worth noting that our question specifies affordability as an issue, whereas the TPS Expert polling does not.</li>
             </ul>
             </ul>
             </li>
             <li>Pillar 8. Criminal Justice
             <ul>
-            <br>
             <li>Negative trend in 8.5: Victim's Rights</li>
             <ul>
-            <br>
             <li>When we asked how confident people are that the criminal justice system allows all victims of crime to seek justice regardless of who they are, we found a score of 0.498, when our previous score was 0.647. Furthermore, when we asked if people thought that the criminal justice system provides victims of crime with the service and support they need, we found a score of 0.566 when our previous score was .0.643. This inconsistency indicates a red flag in our GPP over time analysis. Furthermore, when our TPS source, the Fundamental Rights Survey, asked the public whether police generally treat people positively, they found an agreement rate of 0.830. Despite the disparity in the phrasing of the two surveys (the GPP pointing to the perception of the criminal justice system as a whole and the TPS polling asking about police specifically), we find a potential negative trend in the area of victim's rights.</li>
             </ul>
             </ul>
@@ -1663,13 +1659,10 @@ paragraph<- function(country, type){
             <br>
             <b>Sub Pillars to Research</b>
             <ul>
-            <br>
             <li>Pillar 8. Criminal Justice
             <ul>
-            <br>
             <li>Negative trend in 8.5: Victim's Rights</li>
             <ul>
-            <br>
             <li>When we asked how confident people are that the criminal justice system allows all victims of crime to seek justice regardless of who they are, we found a score of 0.527, when our previous score was 0.503. Furthermore, when we asked if people thought that the criminal justice system provides victims of crime with the service and support they need, we found a score of 0.561 when our previous score was .542. This consistency indicates a green flag in our GPP over time analysis, however when our TPS source, the Fundamental Rights Survey, asked the public whether police generally treat people positively, they found an agreement rate of 0.910. The primary cause of disparity likely stems from the phrasing of the two questions: the GPP pointing to the perception of the criminal justice system as a whole and the TPS polling asking about police specifically.</li>
             </ul>
             </ul>
