@@ -718,9 +718,9 @@ paragraph<- function(country, type){
     <br>
     <br>")
     } else {
-      p<- c("<b>Insights Summary<b>
+      p<- c("<b>Insights Summary</b>
       <br>
-       We see that, across time, sub-pillars 3.1, 3.2, 4.2, 4.4, and 8.6 are flagged. Given that the previous GPP data from Germany is from 2018, we expect there to be significant difference. However, when observing the TPS public opinion polls, we find no flagged sub-pillars. This indicates that our data are consistent with other population surveys, which is a key objective. In terms of TPS expert surveys, we find flags in sub-pillars 1.03, 1.06, 4.6, 7.2, 7.4, and 8.3, however we are conscious that we trust these scores less and several of these sub-pillars have green flags in other analyses. Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
+       We see that, across time, sub-pillars 3.1, 3.2, 4.2, and 4.4 are flagged. Given that the previous GPP data from Germany is from 2018, we expect there to be significant difference. However, when observing the TPS public opinion polls, we find no flagged sub-pillars. This indicates that our data are consistent with other population surveys, which is a key objective. In terms of TPS expert surveys, we find flags in sub-pillars 1.03, 1.06, 4.6, 7.2, 7.4, 8.3, and 8.6, however we are conscious that we trust these scores less and several of these sub-pillars have green flags in other analyses. Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
       <br>
       <br>
       Given that we expect to see large changes from our previous data in Germany, we are noting sub-pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Germany. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
@@ -732,8 +732,23 @@ paragraph<- function(country, type){
       <ul>
       <li>Negative trend in 1.06: Respect for the legitimacy of the constitutional order, the law making process, and political opponents (absence of authoritarianism)</li>
       <ul>
-      <li>
-            ")
+      <li>When we asked respondents whether emergency powers are utilized to circumvent institutional checks and balances, we received an agreement rate of 0.552. When our TPS Extert polling source, Varieties of Democracy, asked whether members of the executive (the head of state, the head of government, and cabinet ministers) respect the constitution, they found an agreement rate of 0.969. These questions are a low match, and this sub-pillar was not tested in any other analysis, so while it is flagged, it is not an especially clear discrepancy.</li>
+      </ul>
+      </ul>
+      </li>
+      <li>Pillar 7. Civil Justice
+      <ul>
+      <li>Negative trend in 7.2: People can access quality legal assistance and representation</li>
+      <ul>
+      <li>When we asked respondents whether individuals have access to reasonably priced legal assistance and representation when dealing with legal matters, we received a score of 0.523. However, in the TPS Expert polls, our source Varieties of Democracies asked whether men and women each enjoy secure and effective access to justice, they returned a score of 0.970 for men and 0.926 for women. It is worth noting that our question specifies affordability as an issue, whereas the TPS Expert polling does not. Because of the low question match, this is not an especially clear discrepancy. This sub-pillar was not tested in any other analysis.</li>
+      </ul>
+      <li>Negative trend in 7.4: Civil justice is impartial and free from corruption and undue influence</li>
+      <ul>
+      <li>When we asked whether judges make independent decisions and are not influenced by external pressures, we received an agreement score of 0.551. However, in the TPS Expert polls, our source Freedom in the World asked whether there is an independent judiciary, they returned a response of 1.00. This is a medium level match between questions, and it is worth noting the objective nature of the TPS Expert question, whereas ours elicited subjective responses. Furthermore, when we asked respondents if they agree that local courts are not subject to political influence in their actions, we found an agreement rate of 0.519. However, when our TPS Expert polling source, Varieties of Democracy, asked to what extent does the executive respect the constitution and comply with court rulings, and to what extent is the judiciary able to act in an independent fashion, they retunred a score of 0.925. These questions are a low match, and this sub-pillar was not tested in any other analysis.</li>
+      </ul>
+      </ul>
+      </li>
+      </ul>")
     }
     
   }
