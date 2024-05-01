@@ -1201,7 +1201,7 @@ paragraph<- function(country, type){
           ")
     } else {
       
-      p<- c("There is no paragraph")
+      p<- c()
     }
     
   }
@@ -1239,7 +1239,37 @@ paragraph<- function(country, type){
     <br>  
     <br>")
     } else {
-      p<- c("There is no paragraph")
+      p<- c(" 
+            <b>Insights summary</b>
+              <br>
+              We are seeing that across time, a lot pillars and subpillars are flagged. However, our previous data is from 2018, and thus we expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, we have only two flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging a few subpillars, however we are conscious that we trust these scores less and that all of these have green flags in other analyses. 
+            <br>
+              <br>
+              Given that we expect to see large changes from our previous data in Netherlands, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Netherlands. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+              <br>
+              <b> Sub Pillars to Research </b>
+              <br>
+              <ul>
+              <li> Pillar 8. Criminal Justice
+            <ul>
+            <li> Negative trend in 8.6: Due process of law</li>
+              <ul>
+            <li> When we asked how confident people are that the criminal justice system guarantees a fair trial of all accused people, we found a score of 0.591, while Freedom in the World found a score of 1 when they asked if due process prevails in civil and criminal matters. In the same analysis identified in Sub Pillar 4.6, when we asked if people thought that the criminal justice system treats those accused as innocent until proven guilty, we found a score of 0.592 while Freedom in the World assigned a score of 1 for the question regarding if due process prevails in civil and criminal matters. In this regard, the score of this question has decreased significantly since 2018, so we recommend researching the explanation of this change. </li>            </li>
+            </ul>
+              <li> Negative trend in 8.7: Prisons</li>
+              <ul>
+            <li> When we asked how confident people are that the criminal justice system guarantees the safety and human rights of people deprived of their liberty, we found a score of 0.567, while Varieties of Democracy found a score of 0.909 when they asked if there was freedom from torture. Although the questions have a low match, they are still related and should be complemented with research about safety and human rights in the criminal justice system. </li>
+            </li>
+              </ul>
+              </ul>
+              </ul>
+              <br>
+              These discrepancies between the data are <b>NOT</b> consistent at the NUTS level; we observe that the significant differences occuring in some NUTS regions are causing the indicators to be flagged at the national level. There is a lot of heterogeneity between regions, and in subpillar 8.6. NL1:Noord-Nederland and NL3:West-Nederland are especially lower compared to the others.
+            <br>
+            <br>
+              The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly.
+            ")
     }
     
   }
