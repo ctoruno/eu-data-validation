@@ -465,10 +465,17 @@ paragraph<- function(country, type){
               <br>
               Given that we expect to see large changes from our previous data in Denmark, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Denmark. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
             <br>
-              <br>
-              <b> Sub Pillars to Research </b>
-              <br>
-
+            <br>
+            <b> Sub Pillars to Research </b>
+            <br>
+            <li> Pillar 5. Security
+            <ul>
+            <li> Positive trend in 5.1: People feel safe</li>
+              <ul>
+              <li> When we asked if people feel safe walking in their neighborhood at night, we found an score of 0.754 which is higher than the previous score of 0.713. In this case the difference is not very big, so we propose to give some context about the security in Denmark.
+            </li>
+            </ul>
+            </ul>
               <li> Pillar 7. Civil justice
               <ul>
               <li>
@@ -1261,7 +1268,7 @@ paragraph<- function(country, type){
             <ul>
             <li> Negative trend in 8.6: Due process of law</li>
               <ul>
-            <li> When we asked how confident people are that the criminal justice system guarantees a fair trial of all accused people, we found a score of 0.591, while Freedom in the World found a score of 1 when they asked if due process prevails in civil and criminal matters. In the same analysis identified in Sub Pillar 4.6, when we asked if people thought that the criminal justice system treats those accused as innocent until proven guilty, we found a score of 0.592 while Freedom in the World assigned a score of 1 for the question regarding if due process prevails in civil and criminal matters. In this regard, the score of this question has decreased significantly since 2018, so we recommend researching the explanation of this change. </li>            </li>
+            <li> When we asked how confident people are that the criminal justice system guarantees a fair trial of all accused people, we found a score of 0.591, while Freedom in the World found a score of 1 when they asked if due process prevails in civil and criminal matters. Furthermore, when we asked if people thought that the criminal justice system treats those accused as innocent until proven guilty, we found a score of 0.592 while Freedom in the World assigned a score of 1 for the question regarding if due process prevails in civil and criminal matters. In this regard, the score of this question has decreased significantly since 2018, so we recommend researching the explanation of this change. </li>            </li>
             </ul>
               <li> Negative trend in 8.7: Prisons</li>
               <ul>
@@ -1588,7 +1595,7 @@ paragraph<- function(country, type){
             <ul>
             <li> Negative trend in 5.1: People feel safe</li>
               <ul>
-              <li> When we asked if people feel safe walking in their neighborhood at night, we found an score of 0.61 which is significantly lower than the previous score which is 0.653. In this case the difference is not very big, so we propose to give some context about the security in Spain.
+              <li> When we asked if people feel safe walking in their neighborhood at night, we found an score of 0.61 which is lower than the previous score of 0.653. In this case the difference is not very big, so we propose to give some context about the security in Spain.
             </li>
             </ul>
               <li> Positive trend in 5.2: Absence of crime and violence</li>
