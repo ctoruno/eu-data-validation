@@ -965,6 +965,16 @@ paragraph<- function(country, type){
             <b>Sub Pillars to Research</b>
             <ul>
             <br>
+            <li>Pillar 7. Civil Justice
+            <ul>
+            <br>
+            <li>Negative trend in 7.2: People can access quality legal assistance and representation</li>
+            <ul>
+            <br>
+            <li>When we asked respondents whether individuals have access to reasonably priced legal assistance and representation when dealing with legal matters, we received a score of 0.389. However, in the TPS Expert polls, our source Varieties of Democracies asked whether men and women each enjoy secure and effective access to justice, they returned a score of 0.865 for men and 0.837 for women. It is worth noting that our question specifies affordability as an issue, whereas the TPS Expert polling does not.</li>
+            </ul>
+            </ul>
+            </li>
             <li>Pillar 8. Criminal Justice
             <ul>
             <br>
