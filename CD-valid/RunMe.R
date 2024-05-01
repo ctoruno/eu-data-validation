@@ -11,7 +11,7 @@
 ##
 ## Creation date:     October 25th, 2023
 ##
-## This version:      April 17th, 2024
+## This version:      April 30th, 2024
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -30,7 +30,7 @@
 args = commandArgs(trailingOnly=TRUE)
 
 args[1] = "Netherlands"
-args[2] = "Carlos Toruño"
+args[2] = "Natalia Rodriguez"
 # List of chosen analyses (add/remove as needed)
 # Mode options are "pretest" "html" "full" "update"
 # "pretest" creates the analyses and HTML report for the pretest data, "html" creates the analyses and full fieldwork HTML report, "full" runs the ranking and outliers analysis and full fieldwork flagging system, and "update" runs all of the full fieldwork HTML reports to update them.
@@ -50,7 +50,7 @@ source("Code/outlier_analysis.R")
 source("Code/flagging_system.R")
 source("Code/TPS_nuts.R")
 source("Code/time_changes_nuts.R")
-
+source("Code/html_flags.R")
 
 if (args[3] == "update"){
   
@@ -154,6 +154,8 @@ for (i in 1:length(reports2update)){
   }
   if (args[3] == "full"){
     
+    html_flags.df<- html_flags()
+    
     TPS_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = fullmerge,
                                                        tps_data.df = TPS.df,
                                                        metadata.df = metadata)
@@ -244,8 +246,12 @@ for (i in 1:length(reports2update)){
                                 "flagging_system.xlsx"))
     
     openxlsx::write.xlsx(TPS_ranking_analysis.df,
-                         paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/Luxembourg/",
+                         paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/",
                                 "ranking.xlsx"))
+    
+    openxlsx::write.xlsx(html_flags.df,
+                         paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/",
+                                "html_flags.xlsx"))
     
   }
   
