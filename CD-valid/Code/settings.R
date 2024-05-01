@@ -176,4 +176,4 @@ gpp_vars<-c("JSE_indjudges", "ROL_courtrulings_imp", "ORC_govtefforts", "ORC_imp
            "CPB_freeassoc", "CPA_law_langaval", "CPB_unions", "CPB_freexp", "CPA_cleanelec_local", "CPB_community", "CPB_freemedia",
            "CPB_freexp_cso", "CPA_partdem_congress", "CPB_freexp_pp", "CPA_partdem_localgvt", "LEP_rightsresp", "LEP_accountability"
            )
-
+countrylist<- c("Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden")
