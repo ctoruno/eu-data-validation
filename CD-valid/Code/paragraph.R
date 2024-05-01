@@ -718,7 +718,22 @@ paragraph<- function(country, type){
     <br>
     <br>")
     } else {
-      p<- c("There is no paragraph")
+      p<- c("<b>Insights Summary<b>
+      <br>
+       We see that, across time, sub-pillars 3.1, 3.2, 4.2, 4.4, and 8.6 are flagged. Given that the previous GPP data from Germany is from 2018, we expect there to be significant difference. However, when observing the TPS public opinion polls, we find no flagged sub-pillars. This indicates that our data are consistent with other population surveys, which is a key objective. In terms of TPS expert surveys, we find flags in sub-pillars 1.03, 1.06, 4.6, 7.2, 7.4, and 8.3, however we are conscious that we trust these scores less and several of these sub-pillars have green flags in other analyses. Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
+      <br>
+      <br>
+      Given that we expect to see large changes from our previous data in Germany, we are noting sub-pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Germany. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+      <br>
+      <br>
+      <b>Sub Pillars to Research</b>
+      <ul>
+      <li>Pillar 1. Constraints on Government Powers
+      <ul>
+      <li>Negative trend in 1.06: Respect for the legitimacy of the constitutional order, the law making process, and political opponents (absence of authoritarianism)</li>
+      <ul>
+      <li>
+            ")
     }
     
   }
