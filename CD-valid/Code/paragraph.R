@@ -45,7 +45,21 @@ paragraph<- function(country, type){
     <br>")
     } else {
       
-      p<- c("There is no paragraph")
+      p<- c(" 
+            <b>Insights summary</b>
+              <br>
+              We are seeing that across time, a lot pillars and subpillars are flagged. However, our previous data is from 2017, and thus we expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, we don't have any red flag. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging a few subpillars, however we are conscious that we trust these scores less and that all of these have green flags in other analyses. 
+            <br>
+              <br>
+              Given that we expect to see large changes from our previous data in Austria, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Austria. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis. In the case of Austria, all the changes over the time are supported by the TPS.
+            <br>
+              <br>
+              <b> Sub Pillars to Research </b>
+              <br>
+
+              <li> We don't find any subpillar that needs extra research.
+              </li>
+            ")
     }
     
   }
@@ -87,7 +101,54 @@ paragraph<- function(country, type){
     <br>
     <br>")
     } else {
-      p<- c("There is no paragraph")
+      p<- c(" 
+            <b>Insights summary</b>
+              <br>
+              We are seeing that across time, a few pillars and subpillars are flagged. However, our previous data is from 2019, and thus we expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, we only have one red flag. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging a few subpillars, however we are conscious that we trust these scores less and that all of these have green flags in other analyses.
+            <br>
+              <br>
+              Given that we expect to see large changes from our previous data in Belgium, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Belgium. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+              <br>
+              <b> Sub Pillars to Research </b>
+              <br>
+              <ul>
+              <li> Pillar 7. Civil Justice
+            <ul>
+            <li> Negative trend in 7.1: Legal Security</li>
+              <ul>
+              <li> When we asked if people know their rights when facing a legal problem, we found a score of 0.364, while the Fundamental Rights Survey gave a score of 0.737. Although these questions are not matched very well, it is still important to supplement the comparison with research on the accessibility to justice and legal information in Belgium. This differences are consistent across all the NUTS.           
+              </li>
+            </ul>
+              </ul>
+              </li>
+              </li>
+              <ul>
+              <li>
+              Negative trend in 7.2: People can acces quality legal assistance and representation
+              </li>
+              <ul>
+              <li>
+              When we asked if people  have access to affordable legal assistance and representation when they face a legal problem, we found a score of 0.473, while VDEM gave a score of 0.858. Although these questions are not matched very well, and VDEM is an expert survey, it is still important to supplement the comparison with research on the accessibility to justice and legal assistance in Belgium. This differences are consistent across all the NUTS.           
+              </li>
+              </ul>
+              </ul>
+              </ul>
+              <ul>
+              <li> Pillar 8. Criminal Justice
+             <ul>
+              <li> Negative trend in 8.7: Prisons </li>
+            <ul>
+            <li> When we asked how confident people are that the criminal justice system guarantees the safety and human rights of people deprived of their liberty, we found a score of 0.547, while Varieties of Democracy found a score of 0.909 when they asked if there was freedom from torture. Although the questions have a low match, they are still related and should be complemented with research about safety and human rights in the criminal justice system. </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+              </li>
+              </ul>
+            <br>
+              The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly.
+            ")
     }
     
   }
@@ -396,7 +457,34 @@ paragraph<- function(country, type){
     <br>
     <br>")
     } else {
-      p<- c("There is no paragraph")
+      p<- c(" 
+            <b>Insights summary</b>
+              <br>
+              We are seeing that across time, a lot pillars and subpillars are flagged. However, our previous data is from 2017, and thus we expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, we only have on red flag. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging a few subpillars, however we are conscious that we trust these scores less and that all of these have green flags in other analyses. 
+            <br>
+              <br>
+              Given that we expect to see large changes from our previous data in Denmark, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Denmark. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+              <br>
+              <b> Sub Pillars to Research </b>
+              <br>
+
+              <li> Pillar 7. Civil justice
+              <ul>
+              <li>
+              Negative trend in 7.2: People can acces quality legal assistance and representation
+              </li>
+              <ul>
+              <li>
+              When we asked if people  have access to affordable legal assistance and representation when they face a legal problem, we found a score of 0.554, while VDEM gave a score of 1. Although these questions are not matched very well, and VDEM is an expert survey, it is still important to supplement the comparison with research on the accessibility to justice and legal assistance in Denmark. This differences are consistent across all the NUTS.           
+              </li>
+              </ul>
+              </ul>
+              </li>
+              </ul>
+            <br>
+              The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly.
+            ")
     }
     
   }
@@ -1448,7 +1536,52 @@ paragraph<- function(country, type){
     <br>  
     <br>")
     } else {
-      p<- c("There is no paragraph")
+      p<- c(" 
+            <b>Insights summary</b>
+              <br>
+              We are seeing that across time, a few pillars and subpillars are flagged. However, our previous data is from 2018, and thus we expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, we only have two red flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging a few subpillars, however we are conscious that we trust these scores less and that all of these have green flags in other analyses. Given the subpillars we are highlighting, we recommend providing information about the current status of security in Spain and the changes across time given that we are finding mixed trends in this regard.
+            <br>
+              <br>
+              Given that we expect to see large changes from our previous data in Spain, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Spain. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+              <br>
+              <b> Sub Pillars to Research </b>
+              <br>
+              <ul>
+              <li> Pillar 5. Security
+            <ul>
+            <li> Negative trend in 5.1: People feel safe</li>
+              <ul>
+              <li> When we asked if people feel safe walking in their neighborhood at night, we found an score of 0.61 which is significantly lower than the previous score which is 0.653. In this case the difference is not very big, so we propose to give some context about the security in Spain.
+            </li>
+            </ul>
+              <li> Positive trend in 5.2: Absence of crime and violence</li>
+              <ul>
+              <li> When we asked if people know or have heard if organized crime happens in their community or neighborhood, we found a score of 0.873 while the Organized Crime Index gave a Criminality Average Score of 0.464. Although these questions are not matched very well, it is still imporant to supplement the comparison with research on organized crime in Spain.
+            </li>
+              </ul>
+              </ul>
+              </ul>
+              <ul>
+              <li> Pillar 7. Civil justice
+              <ul>
+              <li>
+              Negative trend in 7.2: People can acces quality legal assistance and representation
+              </li>
+              <ul>
+              <li>
+              When we asked if people  have access to affordable legal assistance and representation when they face a legal problem, we found a score of 0.473, while VDEM gave a score of 0.858. Although these questions are not matched very well, and VDEM is an expert survey, it is still important to supplement the comparison with research on the accessibility to justice and legal assistance in Spain. This differences are consistent across all the NUTS.           
+              </li>
+              </ul>
+              </ul>
+              </li>
+              </ul>
+              <br>
+              These discrepancies between the data are <b>NOT</b> consistent at the NUTS level; we observe that the significant differences occuring in some NUTS regions are causing the indicators to be flagged at the national level. There is a lot of heterogeneity between regions, and in subpillars 5.1 and 5.2, ES5:Este and ES6: Sur are especially lower compared to the others.
+            <br>
+            <br>
+              The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly.
+            ")
     }
   }
   
