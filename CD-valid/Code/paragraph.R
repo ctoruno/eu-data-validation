@@ -748,7 +748,8 @@ paragraph<- function(country, type){
       </ul>
       </ul>
       </li>
-      </ul>")
+      </ul>
+            ")
     }
     
   }
