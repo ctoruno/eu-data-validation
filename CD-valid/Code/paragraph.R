@@ -1369,7 +1369,44 @@ paragraph<- function(country, type){
           
     ")
     } else {
-      p<- c("There is no paragraph")
+      p<- c(" 
+            <b>Insights summary</b>
+              <br>
+              We are seeing that across time, a lot pillars and subpillars are flagged. However, our previous data is from 2017, and thus we expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, we only have two red flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging a few subpillars, however we are conscious that we trust these scores less and that all of these have green flags in other analyses. 
+            <br>
+              <br>
+              Given that we expect to see large changes from our previous data in Portugal, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Portugal. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+              <br>
+              <b> Sub Pillars to Research </b>
+              <br>
+              <ul>
+              <li> Pillar 5. Security
+            <ul>
+              <li> Positive trend in 5.2: Absence of crime and violence</li>
+              <ul>
+              <li> When we asked if people know or have heard if organized crime happens in their community or neighborhood, we found a score of 0.939 while the Organized Crime Index gave a Criminality Average Score of 0.57. Although these questions are not matched very well, it is still imporant to supplement the comparison with research on organized crime in Portugal.
+            </li>
+              </ul>
+              </ul>
+              </ul>
+              <ul>
+              <li> Pillar 8. Criminal justice
+              <ul>
+              <li>
+              Positive trend in 8.2: Prosecution and pre-trial process
+              </li>
+              <ul>
+              <li>
+              When we asked if prosecutors prosecute crimes commited in an independent manner and are not subject to any pressure, we found a score of 0.568, while Special Eurobarometer 489 gave a score of 0.124. These questions matched very well, so it is important to supplement the comparison with research about prosecution and pre-trial process in Portugal. This differences are consistent across all the NUTS.           
+              </li>
+              </ul>
+              </ul>
+              </li>
+              </ul>
+            <br>
+              The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly.
+            ")
     }
     
   }
