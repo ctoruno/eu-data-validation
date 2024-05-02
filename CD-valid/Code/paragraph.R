@@ -1382,7 +1382,12 @@ paragraph<- function(country, type){
               <br>
               <ul>
               <li> Pillar 5. Security
-            <ul>
+              <ul>
+              <li> Positive trend in 5.1: People feel safe</li>
+              <ul>
+              <li> When we asked how safe people feel walking in their neighborhood at night, we found a score of 0.663 when our previous score was 0.628. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more positively than before. 
+            </li>
+              </ul>
               <li> Positive trend in 5.2: Absence of crime and violence</li>
               <ul>
               <li> When we asked if people know or have heard if organized crime happens in their community or neighborhood, we found a score of 0.939 while the Organized Crime Index gave a Criminality Average Score of 0.57. Although these questions are not matched very well, it is still imporant to supplement the comparison with research on organized crime in Portugal.
@@ -1398,7 +1403,7 @@ paragraph<- function(country, type){
               </li>
               <ul>
               <li>
-              When we asked if prosecutors prosecute crimes commited in an independent manner and are not subject to any pressure, we found a score of 0.568, while Special Eurobarometer 489 gave a score of 0.124. These questions matched very well, so it is important to supplement the comparison with research about prosecution and pre-trial process in Portugal. This differences are consistent across all the NUTS.           
+              When we asked if prosecutors prosecute crimes commited in an independent manner and are not subject to any pressure, we found a score of 0.568, while Special Eurobarometer 489 gave a score of 0.124. These questions matched very well, so it is important to supplement the comparison with research about the way Portugal’s judicial system prosecutes crimes. This differences are consistent across all the NUTS.           
               </li>
               </ul>
               </ul>
