@@ -742,10 +742,6 @@ paragraph<- function(country, type){
       <ul>
       <li>When we asked respondents whether individuals have access to reasonably priced legal assistance and representation when dealing with legal matters, we received a score of 0.523. However, in the TPS Expert polls, our source Varieties of Democracies asked whether men and women each enjoy secure and effective access to justice, they returned a score of 0.970 for men and 0.926 for women. It is worth noting that our question specifies affordability as an issue, whereas the TPS Expert polling does not. Because of the low question match, this is not an especially clear discrepancy. This sub-pillar was not tested in any other analysis.</li>
       </ul>
-      <li>Negative trend in 7.4: Civil justice is impartial and free from corruption and undue influence</li>
-      <ul>
-      <li>When we asked whether judges make independent decisions and are not influenced by external pressures, we received an agreement score of 0.551. However, in the TPS Expert polls, our source Freedom in the World asked whether there is an independent judiciary, they returned a response of 1.00. This is a medium level match between questions, and it is worth noting the objective nature of the TPS Expert question, whereas ours elicited subjective responses. Furthermore, when we asked respondents if they agree that local courts are not subject to political influence in their actions, we found an agreement rate of 0.519. However, when our TPS Expert polling source, Varieties of Democracy, asked to what extent does the executive respect the constitution and comply with court rulings, and to what extent is the judiciary able to act in an independent fashion, they retunred a score of 0.925. These questions are a low match, and this sub-pillar was not tested in any other analysis.</li>
-      </ul>
       </ul>
       </li>
       </ul>
