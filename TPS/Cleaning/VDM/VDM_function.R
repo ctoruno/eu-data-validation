@@ -42,7 +42,7 @@ VDM_clean<- function(df){
   
   p7<- c("v2clacjstm", "v2clacjstw")
   
-  val<- c("v2caassemb", "v2jupoatck", "v2exbribe", "v2lgcrrpt", "v2exembez", "v2elffelr")
+  val<- c("v2caassemb", "v2jupoatck", "v2exbribe", "v2lgcrrpt", "v2exembez", "v2elffelr", "v2clrspct")
   
   targetvars <- c(p1, p4, p7, val)
 
@@ -70,7 +70,7 @@ VDM_clean<- function(df){
                   "v2csreprss", "v2cltort", "v2clkill", "v2clslavem", "v2clslavef", "v2clprptym", "v2clprptyw", 
                   "v2clrelig", "v2csgender", "v2clacjust", "v2clsocgrp", "v2pepwrgen", "v2pepwrses", "v2pepwrsoc", 
                   "v2clfmove", "v2cldmovem","v2cldmovew", "v2clacjstm", "v2clacjstw", "v2caassemb", "v2jupoatck", 
-                  "v2exbribe", "v2lgcrrpt", "v2exembez", "v2elffelr")
+                  "v2exbribe", "v2lgcrrpt", "v2exembez", "v2elffelr", "v2clrspct")
   
   nochange<- setdiff(targetvars, changescale)
   
