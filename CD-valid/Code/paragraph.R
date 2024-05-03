@@ -666,7 +666,7 @@ paragraph<- function(country, type){
             </li>
             <li> Pillar 7. Civil Justice
             <ul>
-            <li> Positive trend in 7.1: Legal security</li>
+            <li> Negative trend in 7.1: Legal security</li>
             <ul>
             <li> When we asked if people are informed about their legal rights when dealing with legal issues, we found a score of 0.332 while the Fundamental Rights Survey found a score of 0.683 regarding views on authorities providing information for people in a simple way. Although these questions are not matched very well, it is still imporant to supplement the comparison with research on access to legal information in France.</li>
             </ul>
