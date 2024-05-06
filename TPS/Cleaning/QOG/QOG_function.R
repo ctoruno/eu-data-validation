@@ -6,18 +6,15 @@
 ##
 ## Dependencies:      World Justice Project
 ##
-## Creation date:     October 5th, 2023
+## Creation date:     May 3rd, 2024
 ##
-## This version:      October 5th, 2023
+## This version:      May 6th, 2024
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## Outline:                                                                                                 ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-df <- read_dta(file.path(path2SP, 
-                         "8. Data/TPS/Quality of Government/QOG_raw.dta",
-                         fsep = "/")) 
 
 QOG_clean <- function(df){
  

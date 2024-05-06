@@ -29,7 +29,7 @@
 # Please fill the sources to be updated
 data2update <- c(
   "FIW", "VDM", "ESS", "EWC", "WVS", "FRS", 
-  "GCB","GTI", "PII", "OCI", "JSB",
+  "GCB","GTI", "PII", "OCI", "JSB", "QOG",
   "FLE_507", "FLE_519", "FLE_520", "FLE_524",
   "SPE_043", "SPE_489", "SPE_502",
   "SPE_507", "SPE_523", "SPE_534"
@@ -137,7 +137,7 @@ readMe <- function(acronym){
   # EU Justice Scoreboard
   if (acronym == "JSB") {
     rdata <- suppressMessages(import_list(file.path(path2SP, 
-                                                    "8. Data/TPS/EU Justice Scoreboard/JSB_raw - Copy.xlsx",
+                                                    "8. Data/TPS/EU Justice Scoreboard/JSB_raw.xlsx",
                                                     fsep = "/"))) 
   }
   
@@ -153,6 +153,13 @@ readMe <- function(acronym){
     rdata <- suppressMessages(import_list(file.path(path2SP, 
                                    "8. Data/TPS/Public Integrity/PII_raw.xlsx",
                                    fsep = "/"))) 
+  }
+  
+  if (acronym == "QOG"){
+    rdata <- read_dta(file.path(path2SP, 
+                             "8. Data/TPS/Quality of Government/QOG_raw.dta",
+                             fsep = "/")) 
+    
   }
   
   # Special Eurobarometer 043
