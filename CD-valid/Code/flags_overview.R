@@ -70,6 +70,56 @@ flags_overview<- function(){
   
   df6<- left_join(df5, subp)
   
+  df6$Final_flag<- rep(NA_character_, nrow(df6))
+  
+  for (i in 1:nrow(df6)){
+    
+    if (df6$HTML_flag[[i]] == "Red"){
+      
+      if (df6$Outliers_flag[[i]] == "Green"){
+        
+        if (is.na(df6$Population_ranking_flag[[i]])| df6$Population_ranking_flag[[i]] == "Green"){
+          
+          if (is.na(df6$Expert_ranking_flag[[i]]) | df6$Expert_ranking_flag[[i]] == "Green"){
+            
+            df6$Final_flag[[i]]<- "Green"
+            
+          } else {df6$Final_flag[[i]]<- "Red"}
+          
+        } else {df6$Final_flag[[i]]<- "Red"}
+        
+      } else {df6$Final_flag[[i]]<- "Red"}
+      
+    } else if (df6$Outliers_flag[[i]] == "Red"){
+      
+      if (is.na(df6$Population_ranking_flag[[i]])| df6$Population_ranking_flag[[i]] == "Green"){
+        
+        if (is.na(df6$Expert_ranking_flag[[i]]) | df6$Expert_ranking_flag[[i]] == "Green"){
+          
+          df6$Final_flag[[i]]<- "Green"
+          
+        }
+      }
+    } else if (is.na(df6$Population_ranking_flag[[i]]) & is.na(df6$Expert_ranking_flag[[i]])){
+      
+      df6$Final_flag[[i]]<- "Green"
+      
+    } else if (is.na(df6$Population_ranking_flag[[i]]) & df6$Expert_ranking_flag[[i]] == "Red"){
+      
+      df6$Final_flag[[i]]<- "Red"
+      
+    } else if (is.na(df6$Expert_ranking_flag[[i]]) & df6$Population_ranking_flag[[i]] == "Red") {
+      
+      df6$Final_flag[[i]]<- "Red"
+      
+    } else {
+      
+      df6$Final_flag[[i]]<- "Green"
+      
+    }
+  }
+  
+  
   return(df6)
   
 }
