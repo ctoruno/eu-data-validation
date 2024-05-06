@@ -279,7 +279,7 @@ lapply(data2update,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-general_info <- read_csv("../../GPP/0. Metadata/EU_general_information.csv")
+general_info <- read_csv(paste0(path2eu, "/EU-S Data/eu-gpp/0. Metadata/EU_general_information.csv"))
 
 tps_data <- general_info %>%
   left_join(
