@@ -34,10 +34,9 @@ source("Code/difficulty_score.R")
 
 #Validation
 source("../CD-valid/Code/paragraph.R")
-source("Code/time_changes.R")
 source("Code/ranking.R")
 source("Code/outlier_analysis.R")
-source("Code/flagging_system.R")
+source("Code/flags_overview.R")
 source("Code/html_flags.R")
 
 # Read Data Merge ======================================================================================================
@@ -76,11 +75,6 @@ TPS.df <- read_csv(paste0(path2eu,
 metadata <- read_excel(paste0(path2eu, 
                              "/EU-S Data/eu-data-validation/CD-valid/Input/Metadatatps.xlsx"))
 
-# This data file contain previous GPP scores
-
-GPP_previous.df <- haven::read_dta(paste0(path2eu, 
-                                          "/EU-S Data/eu-data-validation/CD-valid/Input/eu_merge.dta")) 
-
 # This  file contains the variables to be tested over time
 
 variable_list.df <- read_excel(paste0(path2eu,
@@ -116,5 +110,5 @@ outlier_analysis.df <- outlier_analysis(gpp_data.df = master_data.df)
 
 # Implementing the flagging system that allow us to pick the most problematic variables ===========================
 
-flagging_system.df <- flagging_system(gpp_data.df = master_data.df)
+flagging_system.df <- flags_overview()
 

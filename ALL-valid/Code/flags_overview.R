@@ -41,7 +41,7 @@ flags_overview<- function(){
   
   df4$Expert_ranking_flag<- gsub(" .*", "", df4$Expert_ranking_flag)
   
-  gpp<- fullmerge %>% 
+  gpp<- master_data.df %>% 
     select(country_name_ltn, all_of(reportvarslist)) 
   
   ## 1.3 Re-orient indicators ==================================================================================
