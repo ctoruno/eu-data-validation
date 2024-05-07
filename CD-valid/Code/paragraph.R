@@ -1749,6 +1749,6 @@ paragraph<- function(country, type){
   }
 
   
-  return(HTML(p))
+  return(p)
 }
 
