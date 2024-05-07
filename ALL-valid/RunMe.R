@@ -108,6 +108,12 @@ TPS_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = master_data.df,
 
 outlier_analysis.df <- outlier_analysis(gpp_data.df = master_data.df)
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 2.  Implementing flagging system                                                                          ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 # Implementing the flagging system that allow us to pick the most problematic variables ===========================
 
 flagging_system.df <- flagging_system(gpp_data.df = master_data.df)
