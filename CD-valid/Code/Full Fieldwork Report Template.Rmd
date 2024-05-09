@@ -181,8 +181,8 @@ In this context, we advice to be critical about the comparisons when you are mak
 
 ## Summary of Findings {.tabset}
 
-```{r, results= 'asis'}
-par
+```{r}
+HTML(par)
 ```
 \
 Below are the analysis tables for only the sub-pillars noted in the summary above. You may view the scores and results at both the aggregated national level or the NUTS level to further understand if there is one NUTS region skewing the results.\

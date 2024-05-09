@@ -834,10 +834,12 @@ paragraph<- function(country, type){
             <li>Negative trend in 7.2: People can access quality legal assistance and representation</li>
             <ul>
             <li>When we asked respondents whether individuals have access to reasonably priced legal assistance and representation when dealing with legal matters, we received a score of 0.349. However, in the TPS Expert polls, our source Varieties of Democracies asked whether men and women each enjoy secure and effective access to justice, they returned a score of 0.827 for men and 0.708 for women. It is worth noting that our question specifies affordability as an issue, whereas the TPS Expert polling does not. Because of the low question match, this is not an especially clear discrepancy. This sub-pillar was not tested in any other analysis.</li>
-            </li>
+            </ul>
             </li>
             </ul>
-            </li>")
+            </ul>
+            <br>
+            The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. ")
     }
 
     
@@ -1274,7 +1276,30 @@ paragraph<- function(country, type){
           ")
     } else {
       
-      p<- c()
+      p<- c(" 
+            <b>Insights summary</b>
+              <br>
+              We are seeing that across time, only one pillar and subpillar are flagged. Our previous data is from 2021, and thus we may not expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, we only have one red flag. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging a few subpillars, however we are conscious that we trust these scores less and that all of these have green flags in other analyses.
+            <br>
+              <br>
+              Given that we do not expect to see large changes from our previous data in Malta, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Malta Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+              <br>
+              <b> Sub Pillars to Research </b>
+              <br>
+              <ul>
+              <li> Pillar 7. Civil Justice
+            <ul>
+            <li> Negative trend in 7.1: Legal Security</li>
+              <ul>
+              <li> When we asked if people know their rights when facing a legal problem, we found a score of 0.473, while the Fundamental Rights Survey gave a score of 0.840. Although these questions are not matched very well, it is still important to supplement the comparison with research on the accessibility to justice and legal information in Malta.          
+              </li>
+            </ul>
+              </ul>
+              </ul>
+            <br>
+              The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly.
+            ")
     }
     
   }
