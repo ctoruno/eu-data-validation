@@ -1,12 +1,12 @@
 ---
 title: '`r params$country` Full Fieldwork Validation Report'
-author: '`r params$author`, Dalia Habiby'
+author: '`r params$author`'
 date: '`r params$date`'
 output:
   html_document: default
 params:
   country: Bulgaria
-  author: "Allison Bostrom"
+  author: "Allison Bostrom, Dalia Habiby"
   date: '2023-11-08'
 
 ---
