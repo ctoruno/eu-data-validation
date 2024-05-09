@@ -762,7 +762,6 @@ paragraph<- function(country, type){
     <br>
     <br>   
     <ul> 
-    
     <ul>    
     <li>Pillar 4:         
     <ul>            
@@ -799,12 +798,46 @@ paragraph<- function(country, type){
     Finally, we suggest that the qualitative research should focus on the aforementioned aspects of the Rule of Law. We believe that other red flags found during the validation did not show a consistent pattern or the comparison points were not recent enough or sufficiently comparable to concern us.
     <br>  
     <br>   
-    The designated point person for this analysis within the DAU is Santiago Pardo.
+    The designated point person for this analysis within the DAU is Allison Bostrom.
     <br>  
     <br>"
     )
     } else {
-      p<- c("There is no paragraph")
+      p<- c("<b>Insights summary</b>
+            <br> 
+            We see that, across time, sub-pillars 1.11, 3.1, 4.4, 8.1, and 8.5 are flagged. Given that the previous GPP data from Greece is from 2017, we expect there to be significant difference. However, when observing the TPS public opinion polls, we only find flags in sub-pillars 5.2 and 8.2. This indicates that our data are relatively consistent with other population surveys, which is a key objective. In terms of TPS expert surveys, we find flags in sub-pillars 1.06, 4.5, and 7.2, however we are conscious that we trust these scores less and prefer to rely on population polling as a comparative metric. Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where certain variables yield significantly high scores. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
+            <br>
+            <br>
+            Given that we expect to see large changes from our previous data in Greece, we are noting sub-pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Greece. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis. For Greece, all sub-pillars highlighted are ones which are flagged in the TPS polling, but not addressed in our GPP over time analysis.
+            <br>
+            <br>
+            <b>Sub Pillars to Research </b>
+            <ul>
+            <li>Pillar 1. Constraints on Government Powers
+            <ul>
+            <li>Negative trend in 1.06: Respect for the legitimacy of the constitutional order, the law making process, and political opponents (absence of authoritarianism)</li>
+            <ul>
+            <li>When we asked respondents whether emergency powers are utilized to circumvent institutional checks and balances, we received an agreement rate of 0.371. When our TPS Extert polling source, Varieties of Democracy, asked whether members of the executive (the head of state, the head of government, and cabinet ministers) respect the constitution, they found an agreement rate of 0.9878. These questions are a low match, and this sub-pillar was not tested in any other analysis, so while it is flagged, it is not an especially clear discrepancy.</li>
+            </ul>
+            </ul>
+            </li>
+            <li>Pillar 5. Security
+            <ul>
+            <li>Positive trend in 5.2: Absence of crime and violence</li>
+            <ul>
+            <li>When we asked if people know or have heard if organized crime happens in their community or neighborhood, we found a score of 0.896 while the Organized Crime Index gave a Criminality Average Score of 0.517. Although these questions are not matched very well, it is still imporant to supplement the comparison with research on organized crime in Greece.</li>
+            </ul>
+            </ul>
+            </li>
+            <li>Pillar 7. Civil Justice
+            <ul>
+            <li>Negative trend in 7.2: People can access quality legal assistance and representation</li>
+            <ul>
+            <li>When we asked respondents whether individuals have access to reasonably priced legal assistance and representation when dealing with legal matters, we received a score of 0.349. However, in the TPS Expert polls, our source Varieties of Democracies asked whether men and women each enjoy secure and effective access to justice, they returned a score of 0.827 for men and 0.708 for women. It is worth noting that our question specifies affordability as an issue, whereas the TPS Expert polling does not. Because of the low question match, this is not an especially clear discrepancy. This sub-pillar was not tested in any other analysis.</li>
+            </li>
+            </li>
+            </ul>
+            </li>")
     }
 
     
