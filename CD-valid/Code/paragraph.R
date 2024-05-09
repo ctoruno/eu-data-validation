@@ -818,6 +818,9 @@ paragraph<- function(country, type){
             <li>Negative trend in 1.06: Respect for the legitimacy of the constitutional order, the law making process, and political opponents (absence of authoritarianism)</li>
             <ul>
             <li>When we asked respondents whether emergency powers are utilized to circumvent institutional checks and balances, we received an agreement rate of 0.371. When our TPS Extert polling source, Varieties of Democracy, asked whether members of the executive (the head of state, the head of government, and cabinet ministers) respect the constitution, they found an agreement rate of 0.9878. These questions are a low match, and this sub-pillar was not tested in any other analysis, so while it is flagged, it is not an especially clear discrepancy.</li>
+            <ul>
+            <li>At the NUTS level, we found red flags in sub-pillar 1.06 for EL3: Attiki (0.363), EL4: Nisian Aigaiou, Kriti (0.365), EL5: Voreia Ellada (0.358), and EL6: Kentriki Ellada (0.401)</li>
+            </ul>
             </ul>
             </ul>
             </li>
@@ -826,6 +829,9 @@ paragraph<- function(country, type){
             <li>Positive trend in 5.2: Absence of crime and violence</li>
             <ul>
             <li>When we asked if people know or have heard if organized crime happens in their community or neighborhood, we found a score of 0.896 while the Organized Crime Index gave a Criminality Average Score of 0.517. Although these questions are not matched very well, it is still imporant to supplement the comparison with research on organized crime in Greece.</li>
+            <ul>
+            <li>At the NUTS level, we found red flags in sub-pillar 5.2 for EL3: Attiki (0.881), EL5: Voreia Ellada (0.998), and EL 6: Kentriki Ellada (0.930). One NUTS region returned a green flag, EL4: Nisia Aigaiou, Kriti, with a score of 0.778.</li>
+            </ul>
             </ul>
             </ul>
             </li>
@@ -834,6 +840,9 @@ paragraph<- function(country, type){
             <li>Negative trend in 7.2: People can access quality legal assistance and representation</li>
             <ul>
             <li>When we asked respondents whether individuals have access to reasonably priced legal assistance and representation when dealing with legal matters, we received a score of 0.349. However, in the TPS Expert polls, our source Varieties of Democracies asked whether men and women each enjoy secure and effective access to justice, they returned a score of 0.827 for men and 0.708 for women. It is worth noting that our question specifies affordability as an issue, whereas the TPS Expert polling does not. Because of the low question match, this is not an especially clear discrepancy. This sub-pillar was not tested in any other analysis.</li>
+            <ul>
+            <li>In this sub-pillar, our TPS analysis relies on Varieties of Democracy's polling on whether men and women enjoy secure and effective access to justice. These questions were asked separately, so different scores are generated for men's and women's access. At the NUTS level, we found red flags for men's access in EL3, EL4, EL5, and EL6. We found red flags for women's access in EL4 and EL6, whereas EL3 and EL5 returned green flags.</li>
+            </ul>
             </ul>
             </li>
             </ul>
