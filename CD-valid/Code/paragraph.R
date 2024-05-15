@@ -1009,7 +1009,7 @@ paragraph<- function(country, type){
             <ul>
             <li> When we asked if people agreed that emergency powers are utilized to circumvent institutional checks and balances, we found a score of 0.495 while Varieties of Democracy provided a score of 0.906 when asking if members of the executive respect the constitution in expert polling. The large discrepancy between these scores should be explained further. Since this source of comparison is a low match with an expert TPS, we recommend to give context about respect for checks and balances.</li>
             </ul>
-            </li>
+            </ul>
             </li>
             <li>Pillar 5. Security
             <ul>
@@ -1017,7 +1017,7 @@ paragraph<- function(country, type){
             <ul>
             <li>When we asked respondeds how safe they feel walking int heir neighborhood at night, we found a score of 0.577. When we asked the same question in the 2021 polling, we found a score of 0.629. This is a key area for investigation, and we recommend further review of the contexts of crime and personal safety in Ireland, especially given the recency of our comparison score.</li>
             </ul>
-            </li>
+            </ul>
             </li>
             <li>Pillar 7. Civil Justice
             <ul>
@@ -1025,7 +1025,7 @@ paragraph<- function(country, type){
             <ul>
             <li>When we asked respondents whether individuals have access to reasonably priced legal assistance and representation when dealing with legal matters, we received a score of 0.468. However, in the TPS Expert polls, our source Varieties of Democracies asked whether men and women each enjoy secure and effective access to justice, they returned a score of 0.852 for men and 0.835 for women. It is worth noting that our question specifies affordability as an issue, whereas the TPS Expert polling does not.</li>
             </ul>
-            </li>
+            </ul>
             </li>
             <li>Pillar 8. Criminal Justice
             <ul>
@@ -1033,7 +1033,7 @@ paragraph<- function(country, type){
             <ul>
             <li>When we asked respondents how confident they are that the criminal justice system as a whole guarantees the safety and human rights of people deprived of their liberty, we found a score of 0.548. However, in Varieties of Democracy's expert polling, when they asked whether there is freedom from torture, they found a score of 0.899. This is a lowest match question, which may account for the disparity in score. </li>
             </ul>
-            </li>
+            </ul>
             </li>
             </ul>")
     }
