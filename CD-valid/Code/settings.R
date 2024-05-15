@@ -127,7 +127,7 @@ normalizingvars<- function(gppctry, gppvars){
     }
 
 ## 1.4 Normalize indicators ==================================================================================
-cols_oriented <- names(select_if(oriented, is.numeric))
+cols_oriented <- names(select_if(oriented, negate(is.character)))
 max_values <- lapply(cols_oriented, function(col_name){
   
   codebook.df %>% 
@@ -143,7 +143,7 @@ max_values <- lapply(cols_oriented, function(col_name){
 })
 
 oriented[nrow(oriented) + 1,] <- c(rep("maxs", ncol(select_if(oriented, is.character))), max_values)
-oriented[nrow(oriented) + 1,] <- c(rep("mins", ncol(select_if(oriented, is.character))), rep(list(1), ncol(select_if(oriented, is.numeric))))
+oriented[nrow(oriented) + 1,] <- c(rep("mins", ncol(select_if(oriented, is.character))), rep(list(1), ncol(select_if(oriented, negate(is.character)))))
 
 
 process    <- preProcess(oriented, method = c("range"))
