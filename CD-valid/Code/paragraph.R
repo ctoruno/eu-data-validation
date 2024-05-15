@@ -993,7 +993,49 @@ paragraph<- function(country, type){
     <br> 
           ")
     } else {
-      p<- c("There is no paragraph")
+      p<- c("<b>Insights summary</b>
+            <br>
+            We see that, across time, sub-pillars 1.11 and 5.1 are flagged. Given that the previous GPP data from Ireland is from 2021, we may or may not expect there to be significant difference. However, when observing the TPS public opinion polls, we find no flagged sub-pillars. This indicates that our data are relatively consistent with other population surveys, which is a key objective. In terms of TPS expert surveys, we find flags in sub-pillars 1.03, 1.06, 4.5, 4.6, 7.2, 7.4, 8.3, 8.6, and 8.7 however we are conscious that we trust these scores less and several of these sub-pillars have green flags in other analyses. Certainly, the primary source disparity is with Experts sources like Freedom in the World and V-Dem, where low matches in questions lead certain variables to yield significantly high differences. In such instances, we advise prioritizing a discussion on the validity of our scores rather than clarifying disparities between the sources.
+            <br>
+            <br>
+            Understanding that we do not necessarily expect large changes in data from Ireland, we are noting sub-pillars which trigger red flags in our comparative polling but are not examined in the TPS polling data. Additionally, we note sub-pillars which receive red flags in the expert polling but are not addressed in other analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Ireland. Therefore, what we are highlighting are the areas of concern as identified by the GPP analysis which are supported by external TPS public opinion data, as well as red flags raised by TPS data which are not reviewed in any other analysis.
+            <br>
+            <br>
+            <b>Sub pillars to research</b>
+            <ul>
+            <li>Pillar 1. Constraints on Government Powers
+            <ul>
+            <li>Negative trend in 1.06: Respect for the legitimacy of the constitutional order, the law making process, and political opponents (absence of authoritarianism)</li>
+            <ul>
+            <li> When we asked if people agreed that emergency powers are utilized to circumvent institutional checks and balances, we found a score of 0.495 while Varieties of Democracy provided a score of 0.906 when asking if members of the executive respect the constitution in expert polling. The large discrepancy between these scores should be explained further. Since this source of comparison is a low match with an expert TPS, we recommend to give context about respect for checks and balances.</li>
+            </ul>
+            </li>
+            </li>
+            <li>Pillar 5. Security
+            <ul>
+            <li>Negative trend in 5.1: People feel safe</li>
+            <ul>
+            <li>When we asked respondeds how safe they feel walking int heir neighborhood at night, we found a score of 0.577. When we asked the same question in the 2021 polling, we found a score of 0.629. This is a key area for investigation, and we recommend further review of the contexts of crime and personal safety in Ireland, especially given the recency of our comparison score.</li>
+            </ul>
+            </li>
+            </li>
+            <li>Pillar 7. Civil Justice
+            <ul>
+            <li>Negative trend in 7.2: People can access quality legal assistance and representation</li>
+            <ul>
+            <li>When we asked respondents whether individuals have access to reasonably priced legal assistance and representation when dealing with legal matters, we received a score of 0.468. However, in the TPS Expert polls, our source Varieties of Democracies asked whether men and women each enjoy secure and effective access to justice, they returned a score of 0.852 for men and 0.835 for women. It is worth noting that our question specifies affordability as an issue, whereas the TPS Expert polling does not.</li>
+            </ul>
+            </li>
+            </li>
+            <li>Pillar 8. Criminal Justice
+            <ul>
+            <li>Negative trend in 8.7: Prisons</li>
+            <ul>
+            <li>When we asked respondents how confident they are that the criminal justice system as a whole guarantees the safety and human rights of people deprived of their liberty, we found a score of 0.548. However, in Varieties of Democracy's expert polling, when they asked whether there is freedom from torture, they found a score of 0.899. This is a lowest match question, which may account for the disparity in score. </li>
+            </ul>
+            </li>
+            </li>
+            </ul>")
     }
     
   }
