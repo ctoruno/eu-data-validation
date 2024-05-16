@@ -1184,7 +1184,44 @@ paragraph<- function(country, type){
     <br>          
           ")
     } else {
-      p<- c("There is no paragraph")
+      p<- c("<b>Insights summary</b>
+            <br>
+            We are seeing that across time, most pillars are indicating changes. Although, this seems to be a result of a few sub-pillars, and some of them have mixed trends. In comparison to the TPS public opinion polls, we only have 1 red flag. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, there are a few pillars flagged, however we are conscious that we trust these scores less. 
+            <br>
+            <br>
+            Given that we do not expect to see large changes from our previous data in Lithuania, we are noting sub pillars that are flagged in either the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Lithuania Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+            <br>
+            <b> Sub Pillars to Research </b>
+            <ul>
+            <li> Pillar 1. Constraints on Government Powers
+            <ul>
+            <li> Negative trend in 1.06:  Respect for the legitimacy of the constitutional order, the law making process, and political opponents (absence of authoritarianism) </li>
+            <ul>
+            <li> When we asked if people agreed that emergency powers are utilized to circumvent institutional checks and balances, we found a score of 0.448 while Freedom in the World provided a score of 0.944 when asking if members of the executive respect the constitution. The large discrepancy between these scores should be explained further. Since this source of comparison is a low match with an expert TPS, we recommend to give context about respect for checks and balances. 
+            </li>
+            </ul>
+            </ul>
+            </li>
+            <li> Pillar 5. Security
+            <ul>
+            <li> Positive trend in 5.1: People feel safe </li>
+            <ul>
+            <li> When we asked how safe people feel walking in their neighborhood at night, we found a score of 0.593 when our previous score was 0.546. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more positively than before. </li>
+            </ul>
+            </ul>
+            </li>
+            <li> Pillar 8. Criminal Justice 
+            <ul>
+            <li> Positive trend in 8.6: Due process of law </li>
+            <ul>
+            <li> When we asked how confident people are that the criminal justice system guarantees a fair trial of all accused people, we found a score of 0.569, while our previous score was 0.400. Furthermore, when we asked if people thought that the criminal justice system treats those accused as innocent until proven guilty, we found a score of 0.579 while our previous score was 0.473. In this regard, the score of this question has increased significantly since 2021, so we recommend researching the explanation of this change. </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+            The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. These inconsistencies are observed across all NUTS regions. 
+            ")
     }
     
   }

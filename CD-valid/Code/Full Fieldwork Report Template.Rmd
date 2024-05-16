@@ -680,8 +680,9 @@ if (length(spmatches) >0){
     tpsnutssum <- exptnutssum
     
   }
+}
   
-  if (exists("ttnutsout")){
+if (exists("ttnutsout")){
     knitr::kable(tmnutssum, caption = "GPP Over Time", booktabs = F, escape = F, digits=3)%>%
       kable_classic(html_font = "Arial")%>%
       kable_styling(full_width = F)%>%
@@ -690,13 +691,12 @@ if (length(spmatches) >0){
       row_spec(which(tmnutssum$Flag == "Green"), background = "#B6F161", extra_css = "border-bottom: 1px solid;")%>%
       row_spec(which(tmnutssum$Flag == "Yellow"), background = "#FFFD69", extra_css = "border-bottom: 1px solid;")%>%
       column_spec(c(6,7,8,9,10), bold= TRUE)%>%
-      remove_column(4)%>%
-      scroll_box(height = "500px", fixed_thead = T)
+      remove_column(4)
     
-  }
+}
   
   
-  if (exists("tpsnutssum")){
+if (exists("tpsnutssum")){
     knitr::kable(tpsnutssum, caption = "TPS Analysis", booktabs = F, escape = F, digits=3, row.names = FALSE)%>%
       kable_classic(html_font = "Arial")%>%
       kable_styling(full_width = F)%>%
@@ -707,8 +707,8 @@ if (length(spmatches) >0){
       column_spec(c(9, 10, 11, 12, 13), bold= TRUE)%>%
       remove_column(3)
     
-  }
 }
+
 ```
 
 
