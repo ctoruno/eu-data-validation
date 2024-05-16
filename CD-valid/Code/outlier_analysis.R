@@ -27,8 +27,8 @@ outlier_analysis<- function(gpp_data.df = fullmerge){
   
   oriented<- gpp_data.df
   
-  results<- data.frame(matrix(nrow = 0, ncol = 3))
-  colnames(results)<- c("Country", "Question", "Flag")
+  results<- data.frame(matrix(nrow = 0, ncol = 7))
+  colnames(results)<- c("Country", "Question", "Score", "Mean", "Standard Deviation", "Difference", "Flag")
   
   for (i in reportvarslist){
     
@@ -50,18 +50,18 @@ outlier_analysis<- function(gpp_data.df = fullmerge){
           
           if (abs(mean_agg-mean_cy)> bound){
             
-            results[nrow(results)+1]<- c(j, i, "Red Flag")
+            results[nrow(results)+1]<- c(j, i, mean_cy, mean_agg, sd_agg, abs(mean_agg-mean_cy), "Red Flag")
           } else {
-            results[nrow(results)+1,]<- c(j, i, "Green Flag")
+            results[nrow(results)+1,]<- c(j, i, mean_cy, mean_agg, sd_agg, abs(mean_agg-mean_cy), "Green Flag")
           }
           
         }else{
-          results[nrow(results)+1,]<- c(j, i, "Not Enough Info")
+          results[nrow(results)+1,]<- c(j, i, NA_real_, NA_real_ , NA_real_, NA_real_, "Not Enough Info")
         }
         
       }
     } else{
-      results[nrow(results)+1,]<- c(j, i, "Not Enough Info")
+      results[nrow(results)+1,]<- c(j, i, NA_real_, NA_real_ , NA_real_, NA_real_, "Not Enough Info")
     }
   }
   
