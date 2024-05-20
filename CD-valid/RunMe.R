@@ -29,8 +29,8 @@
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
 
-args[1] = "France"
-args[2] = "Carlos Toruño"
+args[1] = "Ireland"
+args[2] = "Carlos Toruño, Noah Clapacs"
 # List of chosen analyses (add/remove as needed)
 # Mode options are "pretest" "html" "full" "update"
 # "pretest" creates the analyses and HTML report for the pretest data, "html" creates the analyses and full fieldwork HTML report, "full" runs the ranking and outliers analysis and full fieldwork flagging system, and "update" runs all of the full fieldwork HTML reports to update them.
