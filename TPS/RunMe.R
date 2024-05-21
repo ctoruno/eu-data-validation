@@ -287,8 +287,7 @@ tps_data <- general_info %>%
       clean_data,
       left_join,
       by = "Country"
-    )%>% 
-      mutate(Country=recode(Country, 'BU'='BG')),
+    ),
     by = c("country_code_nuts" = "Country")
   )
 

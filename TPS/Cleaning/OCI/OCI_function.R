@@ -88,10 +88,6 @@ OCI_clean <- function(df){
 
   normalized2$country<- rep(NA, nrow(normalized2))
   
-  nuts <- c("AT", "BE", "BU", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", 
-            "FR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", 
-            "RO", "SE", "SI", "SK")
-  
   clean <- normalized2%>%
     mutate(country = case_when(is.na(country) ~ 
                                  deframe(tibble(cntry, nuts))[Country], 
