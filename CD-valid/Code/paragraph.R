@@ -269,7 +269,36 @@ paragraph<- function(country, type){
           "
       )
     } else {
-      p<- c("There is no paragraph")
+      p<- c("
+            <b>Insights summary</b>
+            <br>
+            <br>
+            <br>
+            Given that we do not expect to see large changes from our previous data in Croatia, we are noting sub pillars that are flagged in either the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Croatia Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+            <br>
+            <b> Sub Pillars to Research </b>
+            <ul>
+            <li> Pillar 1. Constraints on Government Powers
+            <ul>
+            <li> Negative trend in 1.06:  Respect for the legitimacy of the constitutional order, the law making process, and political opponents (absence of authoritarianism) </li>
+            <ul>
+            <li> When we asked if people agreed that emergency powers are utilized to circumvent institutional checks and balances, we found a score of 0.365 while Freedom in the World provided a score of 1 when asking if members of the executive respect the constitution. The large discrepancy between these scores should be explained further. Since this source of comparison is a low match with an expert TPS, we recommend to give context about respect for checks and balances. 
+            </li>
+            </ul>
+            </ul>
+            </li>
+            <li> Pillar 5. Security
+            <ul>
+            <li> Negative trend in 5.1: People feel safe </li>
+            <ul>
+            <li> When we asked how safe people feel walking in their neighborhood at night, we found a score of 0.699 when our previous score was 0.734. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more negatively than before. This inconsistency is especially high in HR05:Grad Zagreb, so it would be ideal to proportionate some additional information about this region regarding security.</li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+            The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. 
+            ")
     }
     
   }
