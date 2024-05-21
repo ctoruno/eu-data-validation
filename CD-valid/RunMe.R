@@ -29,8 +29,9 @@
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
 
-args[1] = "Ireland"
-args[2] = "Carlos Toruño, Noah Clapacs"
+args[1] = "Croatia"
+args[2] = "Allison Bostrom, Santiago Pardo"
+
 # List of chosen analyses (add/remove as needed)
 # Mode options are "pretest" "html" "full" "update"
 # "pretest" creates the analyses and HTML report for the pretest data, "html" creates the analyses and full fieldwork HTML report, "full" runs the ranking and outliers analysis and full fieldwork flagging system, and "update" runs all of the full fieldwork HTML reports to update them.
@@ -252,6 +253,10 @@ for (i in 1:length(reports2update)){
     openxlsx::write.xlsx(html_flags.df,
                          paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/",
                                 "html_flags.xlsx"))
+    
+    openxlsx::write.xlsx(outlier_analysis.df,
+                         paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/",
+                                "outliers.xlsx"))
     
   }
   
