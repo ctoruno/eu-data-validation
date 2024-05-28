@@ -111,10 +111,14 @@ flags_overview <- function() {
         case_when(
           # If 'HTML_flag', 'Population_ranking_flag', and 'Expert_ranking_flag' are all NA, set 'Final_flag' to "Red"
           is.na(HTML_flag) & is.na(Population_ranking_flag) & is.na(Expert_ranking_flag) ~ "Red",
-          # If either 'Population_ranking_flag' or 'Expert_ranking_flag' is "Red", set 'Final_flag' to "Red"
-          Population_ranking_flag == "Red" | Expert_ranking_flag == "Red" ~ "Red",
-          # If either 'Population_ranking_flag' or 'Expert_ranking_flag' is "Green", set 'Final_flag' to "Green"
-          Population_ranking_flag == "Green" | Expert_ranking_flag == "Green" ~ "Green",
+          # If 'Population_ranking_flag' is "Red", set 'Final_flag' to "Red"
+          Population_ranking_flag == "Red" ~ "Red", 
+          # If 'Population_ranking_flag' is "Green" set 'Final_flag' to "Green"
+          Population_ranking_flag == "Green" ~ "Green", 
+          # If 'Expert_ranking_flag' is "Red", set 'Final_flag' to "Red"
+          Expert_ranking_flag == "Red" ~ "Red",
+          # If Expert_ranking_flag' is "Green", set 'Final_flag' to "Green"
+          Expert_ranking_flag == "Green" ~ "Green",
           # If 'HTML_flag' is "Red", set 'Final_flag' to "Red"
           HTML_flag == "Red" ~ "Red",
           # For all other cases, set 'Final_flag' to "Green"
@@ -126,3 +130,17 @@ flags_overview <- function() {
   
   return(df6)
 }
+
+df1 <- EU_QRQ_country
+
+"%!in%" <- compose("!", "%in%")
+
+df2 <- EU_QRQ_country %>%
+  left_join(TPS_validation %>%
+              select(country_name_ltn, indicator, TPS_flagged_questions),
+            by = c("country_name_ltn", "indicator")
+  ) %>%
+  filter(indicator %!in% c("p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "p_7", "p_8"))
+
+
+            
