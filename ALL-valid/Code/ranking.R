@@ -18,7 +18,7 @@
 
 TPS_ranking_analysis.fn <- function(gpp_data.df = fullmerge,
                                     tps_data.df = TPS.df,
-                                    metadata.df = metadata) {
+                                    metadata.df = metadataTPS) {
 
   mat <- metadata.df
   
@@ -68,36 +68,9 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = fullmerge,
     group_by(question, tps_question, country_name_ltn) %>%
     mutate(
       Diff_Rank         = max(abs(Rank_GPP - Rank_TPS)),
-      flagged_questions = if_else(Diff_Rank > 5 & Diff_Rank < 10, "Yellow Flag",
-                                  if_else(Diff_Rank >= 10, "Red Flag", 
-                                          "Green Flag", NA_character_))
-    ) %>%
-    ungroup() %>%
-    group_by(Pillar, country_name_ltn, Type_Survey) %>%
-    mutate(
-      questions_n = n_distinct(question),
-      counter = 1
-    ) %>%
-    group_by(flagged_questions, Pillar, Type_Survey, country_name_ltn) %>%
-    mutate(flagged_pillars = sum(counter)/questions_n) %>%
-    distinct() %>%
-    mutate(
-      flagged_pillars_cat = if_else(
-        flagged_pillars > 0.25 & flagged_pillars < 0.5, "Yellow Flag",
-        if_else(
-          flagged_pillars >= 0.5, "Red Flag", "Green Flag"
-        )
-      ),
-      diff_score = if_else(Type_Survey == "population",
-                           abs(value - tps_value),
-                           NA_real_),
-      flagged_score = if_else(
-        diff_score > 0.15 & flagged_pillars < 0.3, "Yellow Flag",
-        if_else(
-          diff_score >= 0.3, "Red Flag", "Green Flag"
-        )
+      flagged_questions = if_else(Diff_Rank >= 7, "Red Flag",
+                                  "Green Flag", NA_character_)
       )
-    )
   
   return(flagged_data.df)
   

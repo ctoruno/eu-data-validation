@@ -84,10 +84,43 @@ reportvarslist <- reportvars.df$Variable # The final list of variables from the 
 TPS.df <- read_csv(paste0(path2eu,
                           "/EU-S Data/eu-data-validation/CD-valid/Input/TPS_data.csv")) 
 
-# This file contains the match between the TPS and our data
+# This file contains the match among the GPP and the thematical framework
 
 metadata <- read_excel(paste0(path2eu, 
-                             "/EU-S Data/eu-data-validation/CD-valid/Input/Metadatatps.xlsx"))
+                             "/EU-S Data/eu-data-validation/CD-valid/Input/Master Map File_EU GPP.xlsx"), 
+                       sheet = "Question Coding") %>%
+  select(!`Horacio Question ID`, 
+         EU_GPP = `EU GPP Full Question`,
+         DAU_GPP = `DAU Code`, 
+         Question = QUESTION_PART2) %>%
+  select(!c(QUESTION_PART1, TOTAL_MATCHES, Infographics, Control, A2J)) %>%
+  pivot_longer(cols = !c(EU_GPP, DAU_GPP, Question),
+               names_to = "sub_pillar", values_to = "value2filter") %>%
+  mutate(
+    sub_pillar = 
+      case_when(
+        sub_pillar == "1.0900000000000001" ~ "1.09",
+        sub_pillar == "1.1100000000000001" ~ "1.11",
+        sub_pillar == "1.1200000000000001" ~ "1.12",
+        sub_pillar == "2.2000000000000002" ~ "2.2",
+        sub_pillar == "2.2999999999999998" ~ "2.3",
+        sub_pillar == "4.0999999999999996" ~ "4.1",
+        sub_pillar == "4.4000000000000004" ~ "4.4",
+        sub_pillar == "4.5999999999999996" ~ "4.6",
+        sub_pillar == "5.0999999999999996" ~ "5.1",
+        sub_pillar == "8.1999999999999993" ~ "8.2",
+        sub_pillar == "8.3000000000000007" ~ "8.3",
+        sub_pillar == "8.6999999999999993" ~ "8.7",
+        T ~ sub_pillar
+      )
+  ) %>%
+  filter(value2filter == 1) %>%
+  select(!value2filter)
+
+# This file contains the match between the TPS and our data
+
+metadataTPS <- read_excel(paste0(path2eu,
+                                 "/EU-S Data/eu-data-validation/CD-valid/Input/Metadatatps.xlsx"))
 
 # This  file contains the variables to be tested over time
 
@@ -98,7 +131,9 @@ variable_list.df <- read_excel(paste0(path2eu,
 
 #### QRQ scores data ======================================================================================================
 
-eu_qrq_final <- read_dta("Inputs/eu_qrq_final.dta") %>%
+eu_qrq_final <- read_dta(paste0(path2eu,
+                                "/EU-S Data/eu-data-validation/ALL-valid/",
+                                "Inputs/eu_qrq_final.dta")) %>%
   pivot_longer(cols = !c(nuts, country), 
                names_to = "indicator", values_to = "QRQ_value")
 
@@ -111,14 +146,18 @@ EU_QRQ_country <- eu_qrq_final %>%
 
 # These are the TPS scores that we will compare with the QRQ scores
 
-QRQ_TPS <- read_excel("Inputs/QRQ_TPS.xlsx") %>%
+QRQ_TPS <- read_excel(paste0(path2eu,
+                             "/EU-S Data/eu-data-validation/ALL-valid/",
+                             "Inputs/QRQ_TPS.xlsx")) %>%
   pivot_longer(cols = !c(country_name_ltn, country_code_nuts), 
                names_to = "Variable", 
                values_to = "value")
 
 # These are the matches between the TPS and the QRQ scores
 
-QRQ_Matches_TPS <- read_excel("Inputs/QRQ Matches TPS.xlsx") %>%
+QRQ_Matches_TPS <- read_excel(paste0(path2eu,
+                                     "/EU-S Data/eu-data-validation/ALL-valid/",
+                                     "Inputs/QRQ Matches TPS.xlsx")) %>%
   drop_na(Variable)
 
 # We merge both databases to know which score belong to each QRQ score
@@ -129,7 +168,9 @@ QRQ_TPS_MATCH.df <- QRQ_TPS %>%
          TPS_value = value)
 # These data describe each indicator, to get a more complete data base we will merge this database with the QRQ_TPS
 
-QRQ_description <- read_excel("Inputs/QRQ_description.xlsx")
+QRQ_description <- read_excel(paste0(path2eu,
+                                     "/EU-S Data/eu-data-validation/ALL-valid/",
+                                     "Inputs/QRQ_description.xlsx"))
 
 QRQ_final_TPS <- QRQ_TPS_MATCH.df %>%
   left_join(QRQ_description, by = "indicator")
@@ -140,7 +181,9 @@ QRQ_TPS_final <- QRQ_final_TPS %>%
 
 #### QRQ longidutinal scores ======================================================================================================
 
-eu_qrq_final_LONG <- read_dta("Inputs/eu_qrq_final_LONG.dta") %>%
+eu_qrq_final_LONG <- read_dta(paste0(path2eu,
+                                     "/EU-S Data/eu-data-validation/ALL-valid/",
+                                     "Inputs/eu_qrq_final_LONG.dta")) %>%
   pivot_longer(cols = !c(nuts, country), 
                names_to = "indicator", values_to = "long_QRQ_value") 
 
@@ -151,7 +194,9 @@ QRQ_LONG_final <- eu_qrq_final_LONG %>%
   
 #### QRQ ROLI scores ======================================================================================================
 
-eu_qrq_roli <- read_dta("Inputs/eu_qrq_final_country.dta") %>%
+eu_qrq_roli <- read_dta(paste0(path2eu,
+                               "/EU-S Data/eu-data-validation/ALL-valid/",
+                               "Inputs/eu_qrq_final_country.dta")) %>%
   pivot_longer(cols = !country, 
                names_to = "indicator", values_to = "ROLI_QRQ_value") %>%
   rename(country_name_ltn = country)
@@ -177,7 +222,7 @@ html_flags.df <- html_flags()
 
 TPS_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = master_data.df,
                                                    tps_data.df = TPS.df,
-                                                   metadata.df = metadata)
+                                                   metadata.df = metadataTPS)
 
 # Outliers analysis
 

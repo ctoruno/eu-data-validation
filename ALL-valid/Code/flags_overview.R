@@ -1,11 +1,12 @@
 flags_overview<- function(){
   
-  html_flags<- html_flags.df%>%
+  html_flags <- html_flags.df%>%
     select(Country, GPP_Variable_Name)%>%
-    mutate("HTML_flag" = "Red")
+    mutate("HTML_flag" = "Red") %>%
+    distinct()
   
-  df<- data.frame(matrix(nrow = 0, ncol = 2))
-  colnames(df)<- c("Country", "GPP_Variable_Name")
+  df <- data.frame(matrix(nrow = 0, ncol = 2))
+  colnames(df) <- c("Country", "GPP_Variable_Name")
   
   for (i in unique(html_flags.df$Country)){
     
@@ -14,16 +15,16 @@ flags_overview<- function(){
     
   }
   
-  df2<-left_join(df, html_flags)
+  df2 <-left_join(df, html_flags) %>% distinct()
   
-  df2[is.na(df2)]<- "Green"
+  df2[is.na(df2)] <- "Green"
   df3<- left_join(df2, outlier_analysis.df%>%
                     rename("GPP_Variable_Name" = "Question",
                            "Outliers_flag" = "Flag"))
-  df3$Outliers_flag<- gsub(" .*", "", df3$Outliers_flag)
+  df3$Outliers_flag <- gsub(" .*", "", df3$Outliers_flag)
   
   
-  ranking<- TPS_ranking_analysis.df%>%
+  ranking <- TPS_ranking_analysis.df%>%
     ungroup()%>%
     select(country_name_ltn, question, flagged_questions, Type_Survey)%>%
     distinct()%>%
@@ -31,17 +32,17 @@ flags_overview<- function(){
     unnest(cols = everything())%>%
     arrange(country_name_ltn, question)
   
-  df4<- left_join(df3, ranking%>%
+  df4 <- left_join(df3, ranking%>%
                     rename("Country" = "country_name_ltn",
                            "GPP_Variable_Name" = "question",
                            "Population_ranking_flag" = "population",
                            "Expert_ranking_flag" = "expert"))
   
-  df4$Population_ranking_flag<- gsub(" .*", "", df4$Population_ranking_flag)
+  df4$Population_ranking_flag <- gsub(" .*", "", df4$Population_ranking_flag)
   
-  df4$Expert_ranking_flag<- gsub(" .*", "", df4$Expert_ranking_flag)
+  df4$Expert_ranking_flag <- gsub(" .*", "", df4$Expert_ranking_flag)
   
-  gpp<- master_data.df %>% 
+  gpp <- master_data.df %>% 
     select(country_name_ltn, all_of(reportvarslist)) 
   
   ## 1.3 Re-orient indicators ==================================================================================
@@ -56,69 +57,27 @@ flags_overview<- function(){
     pivot_longer(cols = all_of(reportvarslist), names_to = "GPP_Variable_Name", values_to = "Score")%>%
     rename("Country"= "country_name_ltn")
   
-  subp<- metadata%>%
-    select(GPP_Variable_Name, Sub_Pillar, Pillar)%>%
-    rbind(variable_list.df%>%
-            select(variable, subpillar, pillar)%>%
-            rename("GPP_Variable_Name" = "variable", 
-                   "Sub_Pillar" = "subpillar",
-                   "Pillar" = "pillar"))%>%
+  subp <- metadata %>%
+    select(GPP_Variable_Name = DAU_GPP, Question, subpillar = sub_pillar) %>%
+    arrange(subpillar) %>%
+    left_join(QRQ_description %>% select(pillar, pillar_name, pillar_id, subpillar, subpillar_name),
+              by = "subpillar") %>%
     distinct()
   
+  df5 <- left_join(df4, gppaggregate)
   
-  df5<- left_join(df4, gppaggregate)
-  
-  df6<- left_join(df5, subp)
-  
-  df6$Final_flag<- rep(NA_character_, nrow(df6))
-  
-  for (i in 1:nrow(df6)){
-    
-    if (df6$HTML_flag[[i]] == "Red"){
-      
-      if (df6$Outliers_flag[[i]] == "Green"){
-        
-        if (is.na(df6$Population_ranking_flag[[i]])| df6$Population_ranking_flag[[i]] == "Green"){
-          
-          if (is.na(df6$Expert_ranking_flag[[i]]) | df6$Expert_ranking_flag[[i]] == "Green"){
-            
-            df6$Final_flag[[i]]<- "Green"
-            
-          } else {df6$Final_flag[[i]]<- "Red"}
-          
-        } else {df6$Final_flag[[i]]<- "Red"}
-        
-      } else {df6$Final_flag[[i]]<- "Red"}
-      
-    } else if (df6$Outliers_flag[[i]] == "Red"){
-      
-      if (is.na(df6$Population_ranking_flag[[i]])| df6$Population_ranking_flag[[i]] == "Green"){
-        
-        if (is.na(df6$Expert_ranking_flag[[i]]) | df6$Expert_ranking_flag[[i]] == "Green"){
-          
-          df6$Final_flag[[i]]<- "Green"
-          
-        }
-      }
-    } else if (is.na(df6$Population_ranking_flag[[i]]) & is.na(df6$Expert_ranking_flag[[i]])){
-      
-      df6$Final_flag[[i]]<- "Green"
-      
-    } else if (is.na(df6$Population_ranking_flag[[i]]) & df6$Expert_ranking_flag[[i]] == "Red"){
-      
-      df6$Final_flag[[i]]<- "Red"
-      
-    } else if (is.na(df6$Expert_ranking_flag[[i]]) & df6$Population_ranking_flag[[i]] == "Red") {
-      
-      df6$Final_flag[[i]]<- "Red"
-      
-    } else {
-      
-      df6$Final_flag[[i]]<- "Green"
-      
-    }
-  }
-  
+  df6 <- left_join(df5, subp, relationship = "many-to-many", by = "GPP_Variable_Name") %>%
+    select(!Outliers_flag) %>%
+    mutate(
+      Final_flag = 
+        case_when(
+          is.na(HTML_flag) & is.na(Population_ranking_flag) & is.na(Expert_ranking_flag) ~ "Red",
+          Population_ranking_flag == "Red" | Expert_ranking_flag == "Red" ~ "Red",
+          Population_ranking_flag == "Green" | Expert_ranking_flag == "Green" ~ "Green",
+          HTML_flag == "Red" ~ "Red",
+          T ~ "Green"
+        )
+    )
   
   return(df6)
   
