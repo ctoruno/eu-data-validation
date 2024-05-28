@@ -70,7 +70,7 @@ QRQ_ranking.fn <- function(data,
       group_by(indicator, country_name_ltn) %>%
       mutate(
         Diff_Rank         = max(abs(Rank_QRQ - Rank_ROLI)),
-        LONG_flagged_questions = if_else(Diff_Rank >= 3, "Red Flag", 
+        ROLI_flagged_questions = if_else(Diff_Rank >= 3, "Red Flag", 
                                          "Green Flag", NA_character_)
       )
     
