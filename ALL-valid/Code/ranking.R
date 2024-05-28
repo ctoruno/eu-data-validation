@@ -129,7 +129,7 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = master_data.df,
       pivot_longer(cols = all_of(gppvars), names_to = "question", values_to = "prev_value")
     
     
-    curraggregate.df <- normalizedcurr %>%
+    gppaggregate.df <- normalizedcurr %>%
       group_by(country_name_ltn, nuts_id) %>%
       summarise_at(gppvars, mean, na.rm= TRUE) %>%
       pivot_longer(cols = all_of(gppvars), names_to = "question", values_to = "value") %>%
@@ -141,10 +141,24 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = master_data.df,
       distinct()%>%
       rename(value = value_weighted)%>%
       left_join(y = variable_list.df, by = join_by("question" == "variable"), relationship = "many-to-many") %>%
-      left_join(y = tps.df, by = c("tps_question", "country_name_ltn")) %>%
+      left_join(y = prevaggregate.df, by = c("question", "country_name_ltn")) %>%
       distinct() %>% 
       drop_na()
     
+    
+    rankings.df <- gppaggregate.df %>%
+      group_by(question) %>%
+      mutate(Rank_curr = rank(-value),
+             Rank_prev = rank(-prev_value)) %>%
+      arrange(question, Rank_curr)
+    
+    flagged_data.df <- rankings.df %>%
+      group_by(question, country_name_ltn) %>%
+      mutate(
+        Diff_Rank         = max(abs(Rank_curr - Rank_prev)),
+        flagged_questions = if_else(Diff_Rank >= 7, "Red Flag",
+                                    "Green Flag", NA_character_)
+      )
     
   }
   
