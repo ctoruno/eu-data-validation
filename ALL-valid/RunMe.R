@@ -262,10 +262,10 @@ LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, analysis = "LONG")
 
 # Implementing the flagging system that allow us to pick the most problematic variables ===========================
 
-flagging_system.df <- flags_overview(type = "GPP")
+GPP_flagging_system.df <- flags_overview(type = "GPP")
 
 ### QRQ ======================================================================================================
 
 # Implementing the flagging system that allow us to pick the best scenario ===========================
 
-flagging_system.df <- flags_overview(type = "QRQ")
+QRQ_flagging_system.df <- flags_overview(type = "QRQ")
