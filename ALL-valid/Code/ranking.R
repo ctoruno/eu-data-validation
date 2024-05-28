@@ -86,7 +86,7 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = master_data.df,
     
     
     ## 2.1 Identifying Indicators ================================================================================
-    gppvars<- c(variable_list.df$variable, "BRB_permit_B")
+    gppvars <- c(variable_list.df$variable, "BRB_permit_B")
     
     ## 2.2 Sub-setting data  =====================================================================================
     
@@ -105,25 +105,25 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = master_data.df,
     GPP.df$BRB_health_A<- ifelse(GPP.df$BRB_health_A== 0, 2, GPP.df$BRB_health_A)
     GPP.df$BRB_health_B<- ifelse(GPP.df$BRB_health_B== 0, 2, GPP.df$BRB_health_B)
     
-    GPP.df$year<- as.character(GPP.df$year)
+    GPP.df$year <- as.character(GPP.df$year)
     
     
     data_subset.df <- gpp_data.df %>%
       select(country_name_ltn, nuts_id, year, all_of(gppvars))
     
-    data_subset.df$year<- as.character(data_subset.df$year)
+    data_subset.df$year <- as.character(data_subset.df$year)
     
     
     ## 2.3 Normalizing data  =====================================================================================
     
     normalizedprev <- normalizingvars(GPP.df, gppvars)
     
-    normalizedcurr<- normalizingvars(data_subset.df, gppvars)
+    normalizedcurr <- normalizingvars(data_subset.df, gppvars)
     
     ## 2.4 Aggregate data  =======================================================================================
     
 
-    prevaggregate.df<- normalizedprev%>%
+    prevaggregate.df<- normalizedprev %>%
       group_by(country_name_ltn) %>%
       summarise_at(gppvars, mean, na.rm= TRUE) %>%
       pivot_longer(cols = all_of(gppvars), names_to = "question", values_to = "prev_value")
@@ -156,7 +156,7 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = master_data.df,
       group_by(question, country_name_ltn) %>%
       mutate(
         Diff_Rank         = max(abs(Rank_curr - Rank_prev)),
-        flagged_questions = if_else(Diff_Rank >= 7, "Red Flag",
+        flagged_questions = if_else(Diff_Rank >= 5, "Red Flag",
                                     "Green Flag", NA_character_)
       )
     

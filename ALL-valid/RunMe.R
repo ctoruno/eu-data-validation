@@ -225,11 +225,19 @@ QRQ_ROLI_final <- eu_qrq_roli %>%
 
 html_flags.df <- html_flags()
 
-# Ranking analysis  
+# TPS Ranking analysis  
 
 TPS_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = master_data.df,
                                                    tps_data.df = TPS.df,
-                                                   metadata.df = metadataTPS)
+                                                   metadata.df = metadataTPS, 
+                                                   analysis = "TPS")
+
+# Internal Ranking analysis
+
+internal_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = master_data.df,
+                                                        tps_data.df = TPS.df,
+                                                        metadata.df = metadataTPS, 
+                                                        analysis = "INTERNAL")
 
 # Outliers analysis
 

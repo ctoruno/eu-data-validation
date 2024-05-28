@@ -48,6 +48,8 @@ flags_overview <- function(
     
     ## 1.3 Ranking flags ==================================================================================
     
+    # TPS
+    
     # Prepare 'ranking' dataframe by selecting and reshaping relevant columns from 'TPS_ranking_analysis.df'
     
     ranking <- TPS_ranking_analysis.df %>%
@@ -70,6 +72,18 @@ flags_overview <- function(
     
     df4$Population_ranking_flag <- gsub(" .*", "", df4$Population_ranking_flag)
     df4$Expert_ranking_flag <- gsub(" .*", "", df4$Expert_ranking_flag)
+    
+    # INTERNAL
+    
+    df5 <- df4 %>%
+      left_join(internal_ranking_analysis.df %>%
+                  select(Country = country_name_ltn, 
+                         GPP_Variable_Name = question, 
+                         Internal_ranking_flag = flagged_questions),
+                by = c("Country", "GPP_Variable_Name")
+      )
+    
+    df5$Internal_ranking_flag <- gsub(" .*", "", df5$Internal_ranking_flag)
     
     ## 1.4 Theorethical framework ==================================================================================
     
@@ -110,20 +124,24 @@ flags_overview <- function(
     
     # Join 'df4' with 'gppaggregate' and 'subp' dataframes
     
-    df5 <- left_join(df4, gppaggregate)
+    df6 <- left_join(df5, gppaggregate)
     
     ## 1.6 Flagging system ==================================================================================
     
     # In this step we create the flagging system according to the conditions we established
     # Please remember that the case_when is hierarchical that's means the initial condition is greater than the rest. The order matters.
     
-    df6 <- left_join(df5, subp, relationship = "many-to-many", by = "GPP_Variable_Name") %>%
+    df7 <- left_join(df6, subp, relationship = "many-to-many", by = "GPP_Variable_Name") %>%
       select(!Outliers_flag) %>%
       mutate(
         Final_flag = 
           case_when(
             # If 'HTML_flag', 'Population_ranking_flag', and 'Expert_ranking_flag' are all NA, set 'Final_flag' to "Red"
-            is.na(HTML_flag) & is.na(Population_ranking_flag) & is.na(Expert_ranking_flag) ~ "Red",
+            is.na(HTML_flag) & is.na(Population_ranking_flag) & is.na(Expert_ranking_flag) & is.na(Internal_ranking_flag) ~ "Red",
+            # If 'Internal Ranking' is "Red", set 'Final_flag' to "Red"
+            Internal_ranking_flag == "Red" ~ "Red", 
+            # If 'Internal Ranking' is "Green", set 'Final_flag' to "Green"
+            Internal_ranking_flag == "Green" ~ "Green", 
             # If 'Population_ranking_flag' is "Red", set 'Final_flag' to "Red"
             Population_ranking_flag == "Red" ~ "Red", 
             # If 'Population_ranking_flag' is "Green" set 'Final_flag' to "Green"
@@ -141,7 +159,7 @@ flags_overview <- function(
     
     # Return the final dataframe 'df6'
     
-    return(df6)
+    return(df7)
     
   } else {
     
