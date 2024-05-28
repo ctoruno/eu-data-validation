@@ -76,16 +76,23 @@ flags_overview <- function(
     # Select relevant columns from 'master_data.df' and normalize the variables
     
     gpp <- master_data.df %>% 
-      select(country_name_ltn, all_of(reportvarslist))
+      select(country_name_ltn, nuts_id, all_of(reportvarslist))
     
     # Normalize the variables
     normalized <- normalizingvars(gpp, reportvarslist)
     
     # Aggregate the normalized variables at the country level
     gppaggregate <- normalized %>%
-      group_by(country_name_ltn) %>%
-      summarise_at(reportvarslist, mean, na.rm = TRUE) %>%
+      group_by(country_name_ltn, nuts_id) %>%
+      summarise_at(reportvarslist, mean, na.rm= TRUE) %>%
       pivot_longer(cols = all_of(reportvarslist), names_to = "GPP_Variable_Name", values_to = "Score") %>%
+      left_join(weight.df%>% 
+                  select(nuts_id, regionpoppct))%>%
+      group_by(country_name_ltn, GPP_Variable_Name)%>%
+      mutate(value_weighted = sum(Score*regionpoppct))%>%
+      select(country_name_ltn, GPP_Variable_Name, value_weighted)%>%
+      distinct()%>%
+      rename(Score = value_weighted)%>%
       rename("Country" = "country_name_ltn")
     
     # Prepare 'subp' dataframe by selecting and joining relevant columns from 'metadata' and 'QRQ_description'
