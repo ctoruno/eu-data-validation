@@ -73,7 +73,10 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = master_data.df,
       group_by(question, tps_question) %>%
       mutate(Rank_GPP = rank(-value),
              Rank_TPS = rank(-tps_value)) %>%
-      arrange(question, tps_question, Rank_GPP)
+      arrange(question, tps_question, Rank_GPP)%>% 
+      ungroup()%>%
+      group_by(country_name_ltn, question)%>%
+      mutate(Rank_TPS_avg = mean(Rank_TPS))
     
     flagged_data.df <- rankings.df %>%
       group_by(question, tps_question, country_name_ltn) %>%

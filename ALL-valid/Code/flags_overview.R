@@ -24,7 +24,7 @@ flags_overview <- function(
     
     # Populate 'df' with combinations of unique countries from 'html_flags.df' and 'reportvarslist' which contain the variables from the report
     
-    for (i in unique(html_flags.df$Country)) {
+    for (i in countrylist) {
       df <- rbind(df, tibble("Country" = rep(i, length(reportvarslist)),
                              "GPP_Variable_Name" = reportvarslist))
     }
@@ -156,7 +156,8 @@ flags_overview <- function(
             # For all other cases, set 'Final_flag' to "Green"
             TRUE ~ "Green"
           )
-      )
+      )%>%
+      select(Country, GPP_Variable_Name , Score, HTML_flag , Population_ranking_flag , Expert_ranking_flag , Internal_ranking_flag , Final_flag , everything())
     
     # Return the final dataframe 'df6'
     

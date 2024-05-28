@@ -269,3 +269,14 @@ GPP_flagging_system.df <- flags_overview(type = "GPP")
 # Implementing the flagging system that allow us to pick the best scenario ===========================
 
 QRQ_flagging_system.df <- flags_overview(type = "QRQ")
+
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 4.  Outcome Functions                                                                        ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+openxlsx::write.xlsx(GPP_flagging_system.df, paste0(path2eu,
+                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_flags.xlsx"))
+
