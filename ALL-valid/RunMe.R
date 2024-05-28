@@ -79,10 +79,17 @@ reportvars.df <- codebook.df %>%
 
 reportvarslist <- reportvars.df$Variable # The final list of variables from the report
 
+# This file contains the weight distributions for each country
+weight.df<- read_excel(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/region_labels.xlsx"))
+
 # This file contains the TPS data base which comes from TPS folder
 
 TPS.df <- read_csv(paste0(path2eu,
                           "/EU-S Data/eu-data-validation/CD-valid/Input/TPS_data.csv")) 
+
+# This file contains the latest previous GPP data
+
+GPP_previous.df <- haven::read_dta(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/eu_merge.dta")) 
 
 # This file contains the match among the GPP and the thematical framework
 
