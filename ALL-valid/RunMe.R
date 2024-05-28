@@ -232,9 +232,10 @@ outlier_analysis.df <- outlier_analysis(gpp_data.df = master_data.df)
 
 TPS_validation <- QRQ_ranking.fn(data = QRQ_TPS_final, analysis = "TPS")
 
+ROLI_validation <-  QRQ_ranking.fn(data = QRQ_ROLI_final, analysis = "ROLI")
+
 LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, analysis = "LONG")
 
-ROLI_validation <-  QRQ_ranking.fn(data = QRQ_ROLI_final, analysis = "ROLI")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
