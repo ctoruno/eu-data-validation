@@ -80,7 +80,8 @@ flags_overview <- function(
                   select(Country = country_name_ltn, 
                          GPP_Variable_Name = question, 
                          Internal_ranking_flag = flagged_questions),
-                by = c("Country", "GPP_Variable_Name")
+                by = c("Country", "GPP_Variable_Name"),
+                relationship = "many-to-many"
       )
     
     df5$Internal_ranking_flag <- gsub(" .*", "", df5$Internal_ranking_flag)
