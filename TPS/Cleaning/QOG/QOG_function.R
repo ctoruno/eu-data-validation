@@ -35,9 +35,11 @@ QOG_clean <- function(df){
   #cntry <- c("1","2","3","5","6","11","7", "8", "12", "26", "9", "10", "4", "13", "14", "15", "17", "18", "16", "19", 
   #           "20", "21", "22", "23", "27", "25", "24")
   
-  cntry <- c("Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", 
-             "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", 
-             "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden")
+  cntry <- c("Austria", "Belgium", "Bulgaria", "Cyprus", "Czech Republic", "Germany", "Denmark", "Estonia", "Greece", 
+             "Spain", "Finland", "France", "Croatia", "Hungary", "Ireland", "Italy",  "Lithuania", "Luxembourg",
+             "Latvia", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Sweden",
+             "Slovenia", "Slovakia")
+  
   
   ## 1.2 Sub-setting data========================================================================================
   
@@ -95,10 +97,6 @@ QOG_clean <- function(df){
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   aggregate$Country<- rep(NA, nrow(aggregate))
-  
-  nuts <- c("AT", "BE", "BU", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", 
-            "FR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", 
-            "RO", "SE", "SI", "SK")
   
   clean <- aggregate%>%
     mutate(Country = case_when(is.na(Country) ~ 

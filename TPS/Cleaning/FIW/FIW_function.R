@@ -69,10 +69,6 @@ FIW_clean <- function(df){
 
   dfv2$Country<- rep(NA, nrow(dfv2))
   
-  nuts <- c("AT", "BE", "BU", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", 
-            "FR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", 
-            "RO", "SE", "SI", "SK")
-  
   clean <- dfv2%>%
     mutate(Country = case_when(is.na(Country) ~ 
                                  deframe(tibble(cntry, nuts))[`Country/Territory`], 

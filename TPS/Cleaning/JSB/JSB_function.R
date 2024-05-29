@@ -27,7 +27,7 @@ JSB_clean<- function(df){
   
   ## 1.1 Identifying indicators    =============================================================================
   # 5,10,17,21,37
-  targetvars<- c("Fig(5)DT.Non-criminal", "Fig(7)DT.Lit.civ&comm.All.i", "Fig(17)Comp.av.length.NCA", 
+  targetvars<- c("Fig(5)DT.Non-criminal", "Fig(10)CR.Non-criminal", "Fig(17)Comp.av.length.NCA", 
                  "Fig(21)Consumers.admin", "Fig(37)Lawyers")
   
   cntry<- c("AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", "FR", "HR", "HU", "IE", "IT", 
@@ -39,19 +39,11 @@ JSB_clean<- function(df){
   
   for (n in targetvars){
     
-    if (n == "Fig(5)DT.Non-criminal" | n== "Fig(37)Lawyers"){
+    if (n == "Fig(5)DT.Non-criminal" | n== "Fig(37)Lawyers" |n == "Fig(10)CR.Non-criminal"){
       f<- df[[n]]
       colnames(f) <- f[1,]
       f <- f[-1, ] 
 
-    }
-  
-    if (n == "Fig(7)DT.Lit.civ&comm.All.i"){
-      
-      f<- df[[n]]
-      f<- f[c(3, 6)]
-      colnames(f) <- c("CC", "2021")
-      
     }
     
     if (n == "Fig(17)Comp.av.length.NCA"){

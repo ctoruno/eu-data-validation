@@ -80,10 +80,6 @@ SPE_507_clean <- function(df){
   ##
   ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  nuts<- c("AT", "BE", "BU", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", 
-           "FR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", 
-           "RO", "SE", "SI", "SK")
-  
   aggregate$Country<- rep(NA, nrow(aggregate))
   
   clean<- aggregate%>%

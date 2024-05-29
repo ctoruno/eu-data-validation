@@ -2,7 +2,12 @@ html_flags<- function(){
   
   
   subp<- metadata%>%
-    select(GPP_Variable_Name, Sub_Pillar, Pillar)%>%
+    select(GPP_Variable_Name = DAU_GPP, Question, subpillar = sub_pillar) %>%
+    arrange(subpillar) %>%
+    left_join(QRQ_description %>% select(pillar, pillar_name, pillar_id, subpillar, subpillar_name),
+              by = "subpillar") %>%
+    distinct() %>%
+    select(GPP_Variable_Name, Sub_Pillar = subpillar, Pillar = pillar)%>%
     rbind(variable_list.df%>%
             select(variable, subpillar, pillar)%>%
             rename("GPP_Variable_Name" = "variable", 

@@ -68,9 +68,9 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = fullmerge,
     group_by(question, tps_question, country_name_ltn) %>%
     mutate(
       Diff_Rank         = max(abs(Rank_GPP - Rank_TPS)),
-      flagged_questions = if_else(Diff_Rank > 5 & Diff_Rank < 10, "Yellow Flag",
-                                  if_else(Diff_Rank >= 10, "Red Flag", 
-                                          "Green Flag", NA_character_))
+      flagged_questions = if_else(Diff_Rank > 5 & Diff_Rank < 10, "Yellow",
+                                  if_else(Diff_Rank >= 10, "Red", 
+                                          "Green", NA_character_))
     ) %>%
     ungroup() %>%
     group_by(Pillar, country_name_ltn, Type_Survey) %>%
@@ -83,18 +83,18 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = fullmerge,
     distinct() %>%
     mutate(
       flagged_pillars_cat = if_else(
-        flagged_pillars > 0.25 & flagged_pillars < 0.5, "Yellow Flag",
+        flagged_pillars > 0.25 & flagged_pillars < 0.5, "Yellow",
         if_else(
-          flagged_pillars >= 0.5, "Red Flag", "Green Flag"
+          flagged_pillars >= 0.5, "Red", "Green"
         )
       ),
       diff_score = if_else(Type_Survey == "population",
                            abs(value - tps_value),
                            NA_real_),
       flagged_score = if_else(
-        diff_score > 0.15 & flagged_pillars < 0.3, "Yellow Flag",
+        diff_score > 0.15 & flagged_pillars < 0.3, "Yellow",
         if_else(
-          diff_score >= 0.3, "Red Flag", "Green Flag"
+          diff_score >= 0.3, "Red", "Green"
         )
       )
     )
