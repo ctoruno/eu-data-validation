@@ -29,7 +29,7 @@
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
 
-args[1] = "Croatia"
+args[1] = "Austria"
 args[2] = "Allison Bostrom, Santiago Pardo"
 
 # List of chosen analyses (add/remove as needed)
@@ -52,6 +52,8 @@ source("Code/flagging_system.R")
 source("Code/TPS_nuts.R")
 source("Code/time_changes_nuts.R")
 source("Code/html_flags.R")
+source("Code/report_tables.R")
+source("Code/paragraph.R")
 
 if (args[3] == "update"){
   
@@ -106,6 +108,7 @@ for (i in 1:length(reports2update)){
     filter(Report == 1)
   
   reportvarslist<- reportvars$Variable
+  weight.df<- read_excel(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/region_labels.xlsx"))
   
   
   
@@ -152,6 +155,9 @@ for (i in 1:length(reports2update)){
                                      tps     = TPS.df,
                                      mat     = metadata,
                                      type    = args[3])
+    
+    
+    report_tables_list<- report_tables(reports2update[[i]])
   }
   if (args[3] == "full"){
     
@@ -173,6 +179,8 @@ for (i in 1:length(reports2update)){
     outlier_analysis.df<- outlier_analysis(gpp_data.df = fullmerge)
     
     flagging_system.df<- flagging_system(gpp_data.df = fullmerge)
+    
+    flags_overview.df <- flags_overview()
     
   }
   # List of analysis functions
@@ -238,13 +246,21 @@ for (i in 1:length(reports2update)){
                                 "/",
                                 reports2update[[i]],
                                 ".xlsx"))
+
+    
+    openxlsx::write.xlsx(report_tables_list, paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/",
+                                          reports2update[[i]],
+                                          "/",
+                                          reports2update[[i]],
+                                          "_report_tables.xlsx"))
+    
   } else if (args[3] == "full"){
     
     
     
-    openxlsx::write.xlsx(flagging_system.df,
+    openxlsx::write.xlsx(flags_overview.df,
                          paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/",
-                                "flagging_system.xlsx"))
+                                "flags_overview.xlsx"))
     
     openxlsx::write.xlsx(TPS_ranking_analysis.df,
                          paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/",
@@ -257,6 +273,8 @@ for (i in 1:length(reports2update)){
     openxlsx::write.xlsx(outlier_analysis.df,
                          paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/",
                                 "outliers.xlsx"))
+    
+    
     
   }
   
