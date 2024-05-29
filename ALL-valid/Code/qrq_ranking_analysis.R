@@ -33,8 +33,8 @@ QRQ_ranking.fn <- function(data,
       group_by(indicator, TPS_variable, country_name_ltn) %>%
       mutate(
         Diff_Rank         = max(abs(Rank_QRQ - Rank_TPS)),
-        TPS_flagged_questions = if_else(Diff_Rank >= 7, "Red Flag", 
-                                        "Green Flag", NA_character_)
+        TPS_flagged_questions = if_else(Diff_Rank >= 7, "Red", 
+                                        "Green", NA_character_)
       )
     return(flagged_data.df)
     
@@ -51,8 +51,8 @@ QRQ_ranking.fn <- function(data,
       group_by(indicator, country_name_ltn, country_code_nuts) %>%
       mutate(
         Diff_Rank         = max(abs(Rank_QRQ - Rank_LONG)),
-        LONG_flagged_questions = if_else(Diff_Rank >= 15, "Red Flag", 
-                                         "Green Flag", NA_character_)
+        LONG_flagged_questions = if_else(Diff_Rank >= 15, "Red", 
+                                         "Green", NA_character_)
       )
     
     return(flagged_data.df)
@@ -70,8 +70,8 @@ QRQ_ranking.fn <- function(data,
       group_by(indicator, country_name_ltn) %>%
       mutate(
         Diff_Rank         = max(abs(Rank_QRQ - Rank_ROLI)),
-        ROLI_flagged_questions = if_else(Diff_Rank >= 3, "Red Flag", 
-                                         "Green Flag", NA_character_)
+        ROLI_flagged_questions = if_else(Diff_Rank >= 3, "Red", 
+                                         "Green", NA_character_)
       )
     
     return(flagged_data.df)
