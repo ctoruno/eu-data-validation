@@ -60,6 +60,10 @@ if (Sys.info()["user"] == "ctoruno") {
   path2SP<- paste0("/Users/Dhabiby/World Justice Project/Research - Data Analytics")
   path2eu<- paste0("/Users/Dhabiby/World Justice Project/Research - EU Subnational")
   
+} else if (Sys.info()["user"] == "nclapacs") {
+  path2SP <- paste0("/Users/nclapacs/OneDrive - World Justice Project/Data Analytics")
+  path2eu <- paste0("/Users/nclapacs/OneDrive - World Justice Project/EU Subnational")
+  
 } else {
   path2SP <- "PLEASE INSERT YOUR PERSONAL PATH TO THE  WJP - DATA ANALYTICS DIRECTORY"
   path2eu <- "PLEASE INSERT YOUR PERSONAL PATH TO THE  WJP - EU SUBNATIONAL DIRECTORY"
