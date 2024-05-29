@@ -277,6 +277,27 @@ QRQ_flagging_system.df <- flags_overview(type = "QRQ")
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+### GPP ======================================================================================================
+
 openxlsx::write.xlsx(GPP_flagging_system.df, paste0(path2eu,
                                                     "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_flags.xlsx"))
+
+openxlsx::write.xlsx(TPS_ranking_analysis.df, paste0(path2eu,
+                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_external_ranking.xlsx"))
+
+### QRQ ======================================================================================================
+
+openxlsx::write.xlsx(TPS_validation, paste0(path2eu,
+                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_external_ranking.xlsx"))
+
+openxlsx::write.xlsx(ROLI_validation, paste0(path2eu,
+                                            "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_internal_ranking.xlsx"))
+
+openxlsx::write.xlsx(LONG_validation, paste0(path2eu,
+                                             "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_longitudinal.xlsx"))
+
+openxlsx::write.xlsx(QRQ_flagging_system.df, paste0(path2eu,
+                                             "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_flags.xlsx"))
+
+
 
