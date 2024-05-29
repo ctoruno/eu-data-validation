@@ -43,7 +43,7 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = master_data.df,
     ## 1.5 Aggregate indicators at the country level =============================================================
     
     matchTPS <- mat %>%
-      select(question = GPP_Variable_Name, tps_question = TPS_Variable_Name, Pillar, Type_Survey, Match)
+      select(question = GPP_Variable_Name, tps_question = TPS_Variable_Name, Sub_Pillar, Pillar, Type_Survey, Match, EU_Questionnaire)
     
     tps.df <- tps_data.df %>%
       select(country_name_ltn, all_of(tpsvars), ) %>%
