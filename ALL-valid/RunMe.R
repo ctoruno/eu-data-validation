@@ -80,7 +80,7 @@ reportvars.df <- codebook.df %>%
 reportvarslist <- reportvars.df$Variable # The final list of variables from the report
 
 # This file contains the weight distributions for each country
-weight.df<- read_excel(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/region_labels.xlsx"))
+weight.df<- read_excel(paste0(path2eu, "/EU-S Datareports/eu-gpp-report/data-viz/inputs/region_labels.xlsx"))
 
 # This file contains the TPS data base which comes from TPS folder
 
@@ -152,6 +152,11 @@ EU_QRQ_country <- eu_qrq_final %>%
 #### QRQ TPS scores ======================================================================================================
 
 # These are the TPS scores that we will compare with the QRQ scores
+
+QRQ_codebook<- import_list(paste0(path2eu,
+                                 "/EU-S Data/eu-data-validation/ALL-valid/",
+                                 "Inputs/EU QRQ Codebook.xlsx"))
+QRQ_codebook<- rbind(QRQ_codebook$CJ, QRQ_codebook$CCA, QRQ_codebook$CCB, QRQ_codebook$GOV)
 
 QRQ_TPS <- read_excel(paste0(path2eu,
                              "/EU-S Data/eu-data-validation/ALL-valid/",
