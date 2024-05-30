@@ -128,7 +128,7 @@ time_changes_nuts <- function(data.df = master_data.df,
       
       difference <- current_point - previous_point
       
-      direction <- if_else(difference > 0, "Positive change", "Negative change")
+      direction <- if_else(difference > 0, "Positive change", ifelse(difference<0, "Negative change", "No Change"))
       
       recdat<- recent_year_data%>%
         filter(nuts_id == j)
@@ -137,7 +137,10 @@ time_changes_nuts <- function(data.df = master_data.df,
         
         t_test_result<- 99
         
-      }else{
+      } else if (length(unique(na.omit(recdat[[list_var_t.test[[i]]]])))==1 & length(unique(na.omit(previous_year_data[[list_var_t.test[[i]]]])))==1){
+        t_test_result<- 99
+        
+      } else{
         
         t_test_result <- t.test(x = recdat[[list_var_t.test[[i]]]], 
                                 y = previous_year_data[[list_var_t.test[[i]]]])

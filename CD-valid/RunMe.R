@@ -157,7 +157,6 @@ for (i in 1:length(reports2update)){
                                      type    = args[3])
     
     
-    report_tables_list<- report_tables(reports2update[[i]])
   }
   if (args[3] == "full"){
     
@@ -246,6 +245,8 @@ for (i in 1:length(reports2update)){
                                 "/",
                                 reports2update[[i]],
                                 ".xlsx"))
+    
+    report_tables_list<- report_tables(reports2update[[i]])
 
     
     openxlsx::write.xlsx(report_tables_list, paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/",
@@ -297,6 +298,7 @@ for (i in 1:length(reports2update)){
                       params = list(country = reports2update[[i]], author = authors[[i]], date= Sys.Date()),
                       output_file=paste0(reports2update[[i]], " Full Fieldwork Validation Report", ".html"),
                       output_dir = paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Outcomes/Full Fieldwork/", reports2update[[i]]))
+    
     
   } 
 }
