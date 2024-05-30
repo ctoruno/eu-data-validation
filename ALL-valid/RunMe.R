@@ -80,7 +80,7 @@ reportvars.df <- codebook.df %>%
 reportvarslist <- reportvars.df$Variable # The final list of variables from the report
 
 # This file contains the weight distributions for each country
-weight.df<- read_excel(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/region_labels.xlsx"))
+weight.df<- read_excel(paste0(path2eu, "/EU-S Datareports/eu-gpp-report/data-viz/inputs/region_labels.xlsx"))
 
 # This file contains the TPS data base which comes from TPS folder
 
@@ -152,6 +152,11 @@ EU_QRQ_country <- eu_qrq_final %>%
 #### QRQ TPS scores ======================================================================================================
 
 # These are the TPS scores that we will compare with the QRQ scores
+
+QRQ_codebook<- import_list(paste0(path2eu,
+                                 "/EU-S Data/eu-data-validation/ALL-valid/",
+                                 "Inputs/EU QRQ Codebook.xlsx"))
+QRQ_codebook<- rbind(QRQ_codebook$CJ, QRQ_codebook$CCA, QRQ_codebook$CCB, QRQ_codebook$GOV)
 
 QRQ_TPS <- read_excel(paste0(path2eu,
                              "/EU-S Data/eu-data-validation/ALL-valid/",
@@ -234,7 +239,7 @@ TPS_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = master_data.df,
 
 # Internal Ranking analysis
 
-internal_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = master_data.df,
+INTERNAL_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = master_data.df,
                                                         tps_data.df = TPS.df,
                                                         metadata.df = metadataTPS, 
                                                         analysis = "INTERNAL")
@@ -250,7 +255,6 @@ TPS_validation <- QRQ_ranking.fn(data = QRQ_TPS_final, analysis = "TPS")
 ROLI_validation <-  QRQ_ranking.fn(data = QRQ_ROLI_final, analysis = "ROLI")
 
 LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, analysis = "LONG")
-
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
