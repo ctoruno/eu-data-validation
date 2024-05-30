@@ -80,7 +80,7 @@ reportvars.df <- codebook.df %>%
 reportvarslist <- reportvars.df$Variable # The final list of variables from the report
 
 # This file contains the weight distributions for each country
-weight.df<- read_excel(paste0(path2eu, "/EU-S Datareports/eu-gpp-report/data-viz/inputs/region_labels.xlsx"))
+weight.df<- read_excel(paste0(path2eu, "/EU-S Data/reports/eu-gpp-report/data-viz/inputs/region_labels.xlsx"))
 
 # This file contains the TPS data base which comes from TPS folder
 
