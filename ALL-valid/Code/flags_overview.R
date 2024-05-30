@@ -237,7 +237,12 @@ flags_overview <- function(
       rowwise() %>%
       mutate(
         total_flags = sum(country_flags, nuts_flags, na.rm = TRUE)
-      )
+      )%>% 
+      left_join(QRQ_description)
+    
+    
+    
+    return(df5)
     
   }
   
