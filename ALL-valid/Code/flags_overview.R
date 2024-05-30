@@ -36,17 +36,7 @@ flags_overview <- function(
     # Replace all NA values in 'df2' with "Green"
     df2[is.na(df2)] <- "Green"
     
-    ## 1.2 Outliers flags ==================================================================================
-    
-    # Join 'df2' with 'outlier_analysis.df', renaming columns for consistency
-    # Remove trailing text from 'Outliers_flag' values
-    df3 <- left_join(df2, outlier_analysis.df %>%
-                       rename("GPP_Variable_Name" = "Question",
-                              "Outliers_flag" = "Flag"))
-    
-    df3$Outliers_flag <- gsub(" .*", "", df3$Outliers_flag)
-    
-    ## 1.3 Ranking flags ==================================================================================
+    ## 1.2 Ranking flags ==================================================================================
     
     # TPS
     
@@ -54,7 +44,7 @@ flags_overview <- function(
     
     ranking <- TPS_ranking_analysis.df %>%
       ungroup() %>%
-      select(country_name_ltn, question, flagged_questions, Type_Survey) %>%
+      select(country_name_ltn, question, flagged_questions, Type_Survey, Trend) %>%
       distinct() %>%
       pivot_wider(names_from = Type_Survey, values_from = flagged_questions, values_fn = list) %>%
       unnest(cols = everything()) %>%
@@ -62,38 +52,41 @@ flags_overview <- function(
     
     # Join 'df3' with 'ranking' and rename columns for consistency
     
-    df4 <- left_join(df3, ranking %>%
+    df3 <- left_join(df2, ranking %>%
                        rename("Country" = "country_name_ltn",
                               "GPP_Variable_Name" = "question",
                               "Population_ranking_flag" = "population",
-                              "Expert_ranking_flag" = "expert"))
+                              "Expert_ranking_flag" = "expert",
+                              "Trend_TPS" = "Trend"))
     
     # Remove trailing text from 'Population_ranking_flag' and 'Expert_ranking_flag' values
     
-    df4$Population_ranking_flag <- gsub(" .*", "", df4$Population_ranking_flag)
-    df4$Expert_ranking_flag <- gsub(" .*", "", df4$Expert_ranking_flag)
+    df3$Population_ranking_flag <- gsub(" .*", "", df3$Population_ranking_flag)
+    df3$Expert_ranking_flag <- gsub(" .*", "", df3$Expert_ranking_flag)
     
     # INTERNAL
     
     # Join 'df4' with 'ranking' and rename columns for consistency
     
-    df5 <- df4 %>%
+    df4 <- df3 %>%
       left_join(INTERNAL_ranking_analysis.df %>%
                   select(Country = country_name_ltn, 
                          GPP_Variable_Name = question, 
-                         Internal_ranking_flag = flagged_questions),
+                         Internal_ranking_flag = flagged_questions,
+                         Trend_GPP = Trend),
                 by = c("Country", "GPP_Variable_Name"),
                 relationship = "many-to-many"
       )
     
-    df5$Internal_ranking_flag <- gsub(" .*", "", df5$Internal_ranking_flag)
+    df4$Internal_ranking_flag <- gsub(" .*", "", df4$Internal_ranking_flag)
     
     ## 1.4 Theorethical framework ==================================================================================
     
     # Select relevant columns from 'master_data.df' and normalize the variables
     
     gpp <- master_data.df %>% 
-      select(country_name_ltn, nuts_id, all_of(reportvarslist))
+      select(country_name_ltn, nuts_id, 
+             all_of(reportvarslist))
     
     # Normalize the variables
     normalized <- normalizingvars(gpp, reportvarslist)
@@ -116,52 +109,116 @@ flags_overview <- function(
     # This step is necessary to join the theoretical framework with the scores and the analyses
     
     subp <- metadata %>%
-      select(GPP_Variable_Name = DAU_GPP, Question, subpillar = sub_pillar) %>%
-      arrange(subpillar) %>%
-      left_join(QRQ_description %>% 
-                  select(pillar, pillar_name, pillar_id, subpillar, subpillar_name),
-                by = "subpillar") %>%
-      distinct()
+      select(GPP_Variable_Name = DAU_GPP, Question, subpillar = sub_pillar)
     
     ## 1.5 Join everything ==================================================================================
     
     # Join 'df5' with 'gppaggregate' and 'subp' dataframes
     
-    df6 <- left_join(df5, gppaggregate)
+    df5 <- left_join(df4, gppaggregate) %>%
+      mutate(
+        GPP_Variable_Name = if_else(GPP_Variable_Name == "CPA_protest", "CP_protest",
+                                    if_else(GPP_Variable_Name == "CPB_consultation", "CP_consultation",
+                                    GPP_Variable_Name))
+      )
     
     ## 1.6 Flagging system ==================================================================================
     
     # In this step we create the flagging system according to the conditions we established
     # Please remember that the case_when is hierarchical that's means the initial condition is greater than the rest. The order matters.
     
-    df7 <- left_join(df6, subp, relationship = "many-to-many", by = "GPP_Variable_Name") %>%
-      select(!Outliers_flag) %>%
+    df6 <- df5 %>%
+      mutate(
+        Trends = 
+          if_else(Trend_TPS == Trend_GPP, "Same trends", "Opposite trends")
+      ) %>%
       mutate(
         Final_flag = 
           case_when(
             # If 'HTML_flag', 'Population_ranking_flag', and 'Expert_ranking_flag' are all NA, set 'Final_flag' to "Red"
-            is.na(HTML_flag) & is.na(Population_ranking_flag) & is.na(Expert_ranking_flag) & is.na(Internal_ranking_flag) ~ "Red",
-            # If 'Internal Ranking' is "Red", set 'Final_flag' to "Red"
-            Internal_ranking_flag == "Red" & Population_ranking_flag == "Red" ~ "Red", 
-            # If 'Internal Ranking' is "Green", set 'Final_flag' to "Green"
+            is.na(Population_ranking_flag) & is.na(Expert_ranking_flag) & is.na(Internal_ranking_flag) ~ "No information",
+            
+            # If 'Internal Ranking' is "Red", the 'Population_ranking_flag' is "Red" and the trends are the same, set 'Final_flag' to "Red"
+            Internal_ranking_flag == "Red" & Population_ranking_flag == "Red" & Trends == "Same trends"~ "Red", 
+            
+            # If 'Internal Ranking' is "Red", the 'Population_ranking_flag' is "Red" and the trends are opposite, set 'Final_flag' to "Red"
+            Internal_ranking_flag == "Red" & Population_ranking_flag == "Red" & Trends == "Opposite trends"~ "Green",
+            
+            # If 'Internal Ranking' is "Red", the 'Expert_ranking_flag' is "Red" and the trends are the same, set 'Final_flag' to "Red"
+            Internal_ranking_flag == "Red" & Expert_ranking_flag == "Red" & Trends == "Same trends"~ "Red", 
+            
+            # If 'Internal Ranking' is "Red", the 'Expert_ranking_flag' is "Red" and the trends are opposite, set 'Final_flag' to "Red"
+            Internal_ranking_flag == "Red" & Expert_ranking_flag == "Red" & Trends == "Opposite trends"~ "Green",
+            
+            # If 'Internal Ranking' is "Green" and 'Population_ranking_flag' is "Green", set 'Final_flag' to "Green"
             Internal_ranking_flag == "Green" & Population_ranking_flag == "Green" ~ "Green", 
-            # If 'Population_ranking_flag' is "Red", set 'Final_flag' to "Red"
+            
+            # If 'Internal Ranking' is "Red", the 'Population_ranking_flag' is "Green", the trends are same and the 'HTML_flag' or 'Expert_ranking_flag' are "Green", set 'Final_flag' to "Green"
+            Internal_ranking_flag == "Red" & Population_ranking_flag == "Green" & Trends == "Same trends" & (Expert_ranking_flag == "Green" | HTML_flag == "Green") ~ "Green",
+            
+            # If 'Internal Ranking' is "Green", the 'Population_ranking_flag' is "Red", the trends are same and the 'HTML_flag' or 'Expert_ranking_flag' are "Green", set 'Final_flag' to "Green"
+            Internal_ranking_flag == "Green" & Population_ranking_flag == "Red" & Trends == "Same trends" & (Expert_ranking_flag == "Green" | HTML_flag == "Green") ~ "Green",
+            
+            # If 'Internal Ranking' is "Red", the 'Population_ranking_flag' is "Green", the trends are same and we don't have information about HTML or experts, set 'Final_flag' to "Red"
+            Internal_ranking_flag == "Red" & Population_ranking_flag == "Green" & Trends == "Same trends" ~ "Red",
+            
+            # If 'Internal Ranking' is "Green", the 'Population_ranking_flag' is "Red" and the trends are same and we don't have information about HTML or experts, set 'Final_flag' to "Red"
+            Internal_ranking_flag == "Green" & Population_ranking_flag == "Red" & Trends == "Same trends" ~ "Red",
+            
+            # If 'Internal Ranking' is "Red", the 'Population_ranking_flag' is "Green" and the trends are opposite, set 'Final_flag' to "Green"
+            Internal_ranking_flag == "Red" & Population_ranking_flag == "Green" & Trends == "Opposite trends" ~ "Green",
+            
+            # If 'Internal Ranking' is "Green", the 'Population_ranking_flag' is "Red" and the trends are opposite, set 'Final_flag' to "Green"
+            Internal_ranking_flag == "Green" & Population_ranking_flag == "Red" & Trends == "Opposite trends" ~ "Green",
+            
+            # If 'Internal Ranking' is "Red", the 'Population_ranking_flag' is "Green" and the trends are opposite, set 'Final_flag' to "Green"
+            Internal_ranking_flag == "Red" & Expert_ranking_flag == "Green" & Trends == "Opposite trends" ~ "Green",
+            
+            # If 'Internal Ranking' is "Green", the 'Population_ranking_flag' is "Red" and the trends are opposite, set 'Final_flag' to "Green"
+            Internal_ranking_flag == "Green" & Expert_ranking_flag == "Red" & Trends == "Opposite trends" ~ "Green",
+            
+            # If 'Internal Ranking' is "Red" and 'Population_ranking_flag' is missing, set 'Final_flag' to "Red"
+            Internal_ranking_flag == "Red" ~ "Red", 
+            
+            # If 'Internal Ranking' is "Green" and 'Population_ranking_flag' is missing, set 'Final_flag' to "Green"
+            Internal_ranking_flag == "Green" ~ "Green", 
+            
+            # If 'Population_ranking_flag' is "Red" and 'Internal Ranking' is missing, set 'Final_flag' to "Red"
             Population_ranking_flag == "Red" ~ "Red", 
-            # If 'Population_ranking_flag' is "Green" set 'Final_flag' to "Green"
+            
+            # If 'Population_ranking_flag' is "Green" and 'Internal Ranking' is missing, set 'Final_flag' to "Green"
             Population_ranking_flag == "Green" ~ "Green", 
-            # If 'Expert_ranking_flag' is "Red", set 'Final_flag' to "Red"
-            Expert_ranking_flag == "Red" ~ "Red",
-            # If Expert_ranking_flag' is "Green", set 'Final_flag' to "Green"
-            Expert_ranking_flag == "Green" ~ "Green",
-            # If 'HTML_flag' is "Red", set 'Final_flag' to "Red"
-            HTML_flag == "Red" ~ "Red",
+            
+            # If 'Expert_ranking_flag' is "Red" and 'HTML_flag' is "Red" and 'Internal Ranking' and 'Population_ranking_flag' is missing, set 'Final_flag' to "Red"
+            Expert_ranking_flag == "Red" & HTML_flag == "Red" ~ "Red",
+            
+            # If 'Expert_ranking_flag' is "Green" and 'HTML_flag' is "Green", and 'Internal Ranking' and 'Population_ranking_flag' is missing, set 'Final_flag' to "Green"
+            Expert_ranking_flag == "Green" & HTML_flag == "Green" ~ "Green",
+            
+            # If 'Expert_ranking_flag' is "Red" and 'HTML_flag' is "Green", and 'Internal Ranking' and 'Population_ranking_flag' is missing, set 'Final_flag' to "Red"
+            Expert_ranking_flag == "Red"  & HTML_flag == "Green" ~ "Green",
+            
+            # If 'Expert_ranking_flag' is "Green" and 'HTML_flag' is "Red", and 'Internal Ranking' and 'Population_ranking_flag' is missing, set 'Final_flag' to "Red"
+            Expert_ranking_flag == "Green"  & HTML_flag == "Red" ~ "Green",
+            
             # For all other cases, set 'Final_flag' to "Green"
-            TRUE ~ "Green"
+            TRUE ~ NA_character_
           )
       )%>%
-      select(Country, GPP_Variable_Name , Score, HTML_flag , Population_ranking_flag , Expert_ranking_flag , Internal_ranking_flag , Final_flag , everything())
+      select(Country, GPP_Variable_Name , Score, HTML_flag , Population_ranking_flag , Expert_ranking_flag , Internal_ranking_flag , starts_with("Trend"), Final_flag) %>%
+      distinct() %>%
+      drop_na(Score)
+    
+    ## 1.6 Subpillars names ==================================================================================
+    
+    # In this step we create merge the questions with each subpillars 
+    # IMPORTANT: This step will generate duplicates because there are question which corresponds to many subpillars
+    
+    df7 <- df6 %>%
+      left_join(subp, by = "GPP_Variable_Name", relationship = "many-to-many")
     
     # Return the final dataframe 'df7'
+    
     
     return(df7)
     

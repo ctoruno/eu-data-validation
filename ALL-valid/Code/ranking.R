@@ -16,10 +16,10 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-TPS_ranking_analysis.fn <- function(gpp_data.df = master_data.df,
-                                    tps_data.df = TPS.df,
-                                    metadata.df = metadataTPS,
-                                    analysis) {
+ranking_analysis.fn <- function(gpp_data.df = master_data.df,
+                                tps_data.df = TPS.df,
+                                metadata.df = metadataTPS,
+                                analysis) {
   
   
   if(analysis == "TPS") {
@@ -81,10 +81,13 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = master_data.df,
     flagged_data.df <- rankings.df %>%
       group_by(question, tps_question, country_name_ltn) %>%
       mutate(
-        Diff_Rank         = max(abs(Rank_GPP - Rank_TPS)),
-        flagged_questions = if_else(Diff_Rank >= 7, "Red Flag",
+        Trend             = Rank_GPP - Rank_TPS_avg,
+        Trend             = if_else(Trend < 0, "Positive", "Negative"),
+        Diff_Rank         = max(abs(Rank_GPP - Rank_TPS_avg)),
+        flagged_questions = if_else(Diff_Rank > 10, "Red Flag",
                                     "Green Flag", NA_character_)
-      )
+      ) %>%
+      distinct()
   } else {
     
     
@@ -158,8 +161,10 @@ TPS_ranking_analysis.fn <- function(gpp_data.df = master_data.df,
     flagged_data.df <- rankings.df %>%
       group_by(question, country_name_ltn) %>%
       mutate(
+        Trend             = Rank_curr - Rank_prev,
+        Trend             = if_else(Trend < 0, "Positive", "Negative"),
         Diff_Rank         = max(abs(Rank_curr - Rank_prev)),
-        flagged_questions = if_else(Diff_Rank >= 5, "Red Flag",
+        flagged_questions = if_else(Diff_Rank > 7, "Red Flag",
                                     "Green Flag", NA_character_)
       )
     
