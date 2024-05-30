@@ -29,8 +29,8 @@
 #!/usr/bin/env Rscript 
 args = commandArgs(trailingOnly=TRUE)
 
-args[1] = "Austria"
-args[2] = "Allison Bostrom, Santiago Pardo"
+args[1] = "Poland"
+args[2] = "Carlos Toruno, Noah Clapacs"
 
 # List of chosen analyses (add/remove as needed)
 # Mode options are "pretest" "html" "full" "update"
@@ -108,7 +108,7 @@ for (i in 1:length(reports2update)){
     filter(Report == 1)
   
   reportvarslist<- reportvars$Variable
-  weight.df<- read_excel(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/region_labels.xlsx"))
+  weight.df<- read.xlsx("https://github.com/WJP-DAU/eu-gpp-report/raw/main/data-viz/inputs/region_labels.xlsx", sheet = 1)
   
   
   
