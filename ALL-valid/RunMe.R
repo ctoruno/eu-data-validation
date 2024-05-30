@@ -234,7 +234,7 @@ TPS_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = master_data.df,
 
 # Internal Ranking analysis
 
-internal_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = master_data.df,
+INTERNAL_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = master_data.df,
                                                         tps_data.df = TPS.df,
                                                         metadata.df = metadataTPS, 
                                                         analysis = "INTERNAL")
@@ -250,7 +250,6 @@ TPS_validation <- QRQ_ranking.fn(data = QRQ_TPS_final, analysis = "TPS")
 ROLI_validation <-  QRQ_ranking.fn(data = QRQ_ROLI_final, analysis = "ROLI")
 
 LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, analysis = "LONG")
-
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##

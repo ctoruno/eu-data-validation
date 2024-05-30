@@ -75,8 +75,10 @@ flags_overview <- function(
     
     # INTERNAL
     
+    # Join 'df4' with 'ranking' and rename columns for consistency
+    
     df5 <- df4 %>%
-      left_join(internal_ranking_analysis.df %>%
+      left_join(INTERNAL_ranking_analysis.df %>%
                   select(Country = country_name_ltn, 
                          GPP_Variable_Name = question, 
                          Internal_ranking_flag = flagged_questions),
@@ -123,7 +125,7 @@ flags_overview <- function(
     
     ## 1.5 Join everything ==================================================================================
     
-    # Join 'df4' with 'gppaggregate' and 'subp' dataframes
+    # Join 'df5' with 'gppaggregate' and 'subp' dataframes
     
     df6 <- left_join(df5, gppaggregate)
     
@@ -140,9 +142,9 @@ flags_overview <- function(
             # If 'HTML_flag', 'Population_ranking_flag', and 'Expert_ranking_flag' are all NA, set 'Final_flag' to "Red"
             is.na(HTML_flag) & is.na(Population_ranking_flag) & is.na(Expert_ranking_flag) & is.na(Internal_ranking_flag) ~ "Red",
             # If 'Internal Ranking' is "Red", set 'Final_flag' to "Red"
-            Internal_ranking_flag == "Red" ~ "Red", 
+            Internal_ranking_flag == "Red" & Population_ranking_flag == "Red" ~ "Red", 
             # If 'Internal Ranking' is "Green", set 'Final_flag' to "Green"
-            Internal_ranking_flag == "Green" ~ "Green", 
+            Internal_ranking_flag == "Green" & Population_ranking_flag == "Green" ~ "Green", 
             # If 'Population_ranking_flag' is "Red", set 'Final_flag' to "Red"
             Population_ranking_flag == "Red" ~ "Red", 
             # If 'Population_ranking_flag' is "Green" set 'Final_flag' to "Green"
@@ -159,7 +161,7 @@ flags_overview <- function(
       )%>%
       select(Country, GPP_Variable_Name , Score, HTML_flag , Population_ranking_flag , Expert_ranking_flag , Internal_ranking_flag , Final_flag , everything())
     
-    # Return the final dataframe 'df6'
+    # Return the final dataframe 'df7'
     
     return(df7)
     
