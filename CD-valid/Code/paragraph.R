@@ -1515,16 +1515,6 @@ paragraph<- function(country, type){
             </ul>
             </ul>
             </li>
-            <ul>
-            <li> Pillar 4. Fundamental Rights
-            <ul>
-            <li>Negative trend in 4.5: Solidarity</li>
-            <ul>
-            <li>When we asked people if, in practice, workers in Poland can freely form labor unions and bargain for their rights with their employers, we found a score of 0.610 when our previous score was 0.661.Although the difference between scores is not very large, the t-test returned a p-value of 0.0, indicating that overall individuals are answering more negatively than before.</li>
-            </ul>
-            </ul>
-            </li>
-            </ul>
             ")
     }
     
