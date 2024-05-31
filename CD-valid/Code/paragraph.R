@@ -1498,7 +1498,34 @@ paragraph<- function(country, type){
     if (type == "pretest"){
     p<- c("There is no paragraph")
     } else {
-      p<- c("There is no paragraph")
+      p<- c("
+            <b>Insights summary</b>
+            <br>
+            We see that, across time, sub-pillars 1.11 and 4.4 are flagged. Given that the previous GPP data from Poland are from 2018, we expect there to be significant difference, so this is a relatively secure outcome. Further, when observing the TPS public opinion polls and expert polling, we find no flagged sub-pillars. This indicates that our data are consistent with other population and expert surveys, which is a key objective. Because of this, we are flagging a need for further analysis in these sub-pillars which yield red flags in the GPP analysis and are not supported in our TPS analyses.
+            <br>
+            <br>
+            <b> Sub Pillars to research </b>
+            <br>
+            <ul>
+            <li> Pillar 1. Constraints on Government Powers
+            <ul>
+            <li>Negative trend in 1.11: Government officials who abuse their power are sanctioned for misconduct (accountability and sanctions for misconduct)</li>
+            <ul>
+            <li>When we asked people a hypothetical situation about a government official taking money for personal benefit and the likelihood of receiving sanctions, we found a score of 0.561 when our previous score was 0.704. This indicates that people think it is less likely that the official is punished appropriately. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more negatively than before.</li>
+            </ul>
+            </ul>
+            </li>
+            <ul>
+            <li> Pillar 4. Fundamental Rights
+            <ul>
+            <li>Negative trend in 4.5: Solidarity</li>
+            <ul>
+            <li>When we asked people if, in practice, workers in Poland can freely form labor unions and bargain for their rights with their employers, we found a score of 0.610 when our previous score was 0.661.Although the difference between scores is not very large, the t-test returned a p-value of 0.0, indicating that overall individuals are answering more negatively than before.</li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+            ")
     }
     
   }
