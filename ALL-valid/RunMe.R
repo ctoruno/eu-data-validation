@@ -232,17 +232,17 @@ html_flags.df <- html_flags()
 
 # TPS Ranking analysis  
 
-TPS_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = master_data.df,
-                                                   tps_data.df = TPS.df,
-                                                   metadata.df = metadataTPS, 
-                                                   analysis = "TPS")
+TPS_ranking_analysis.df <- ranking_analysis.fn(gpp_data.df = master_data.df,
+                                               tps_data.df = TPS.df,
+                                               metadata.df = metadataTPS, 
+                                               analysis = "TPS")
 
 # Internal Ranking analysis
 
-INTERNAL_ranking_analysis.df <- TPS_ranking_analysis.fn(gpp_data.df = master_data.df,
-                                                        tps_data.df = TPS.df,
-                                                        metadata.df = metadataTPS, 
-                                                        analysis = "INTERNAL")
+INTERNAL_ranking_analysis.df <- ranking_analysis.fn(gpp_data.df = master_data.df,
+                                                    tps_data.df = TPS.df,
+                                                    metadata.df = metadataTPS, 
+                                                    analysis = "INTERNAL")
 
 # Outliers analysis
 
@@ -250,11 +250,11 @@ outlier_analysis.df <- outlier_analysis(gpp_data.df = master_data.df)
 
 ### QRQ ======================================================================================================
 
-TPS_validation <- QRQ_ranking.fn(data = QRQ_TPS_final, analysis = "TPS")
+#TPS_validation <- QRQ_ranking.fn(data = QRQ_TPS_final, analysis = "TPS")
 
-ROLI_validation <-  QRQ_ranking.fn(data = QRQ_ROLI_final, analysis = "ROLI")
+#ROLI_validation <-  QRQ_ranking.fn(data = QRQ_ROLI_final, analysis = "ROLI")
 
-LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, analysis = "LONG")
+#LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, analysis = "LONG")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -268,6 +268,9 @@ LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, analysis = "LONG")
 
 GPP_flagging_system.df <- flags_overview(type = "GPP")
 
+
+openxlsx::write.xlsx(GPP_flagging_system.df, paste0(path2eu,
+                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_flaging_system.xlsx"))
 ### QRQ ======================================================================================================
 
 # Implementing the flagging system that allow us to pick the best scenario ===========================
