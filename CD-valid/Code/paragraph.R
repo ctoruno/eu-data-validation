@@ -1171,7 +1171,57 @@ paragraph<- function(country, type){
     <br>          
           ")
     } else {
-      p<- c("There is no paragraph")
+      p<- c("<b>Insights summary</b>
+              <br>
+              We are seeing that across time, a few pillars and subpillars are flagged. Our previous data is from 2021, and thus we might not expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, we only have two red flags. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging four subpillars, however we are conscious that we trust these scores less and that some of these have green flags in another analysis. 
+            <br>
+              <br>
+              Given that we do not expect to see large changes from our previous data in Latvia, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Latvia. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+              <br>
+              <b> Sub Pillars to Research </b>
+              <br>
+              <ul>
+              <li> Pillar 1. Constraints on Government Powers
+              <ul>
+              <li> Negative trend in 1.06: Respect for the legitimacy of the constitutional order, the law making process, and political opponents (absence of authoritarianism)</li>
+              <ul>
+              <li> When we asked if people agreed that emergency powers are utilized to circumvent institutional checks and balances, we found a score of 0.422 while V-Dem provided a score of 0.845 when asking if members of the executive respect the constitution. The large discrepancy between these scores should be explained further. Since this source of comparison is a low match with an expert TPS, we recommend to give context about respect for checks and balances.
+            </li>
+              </ul>
+              </ul>
+              <li> Pillar 5. Security
+              <ul>
+              <li>
+              Positive trend in 5.1: People feel safe</li>
+              <ul>
+              <li>
+              When we asked how safe people feel walking in their own neighborhood at night, we found a score of 0.627 while our previous score was 0.59. Although the difference between scores is not very large, the t-test indicates that overall, individuals are answering more positively than before.    
+              </li>
+              </ul>
+              </ul>
+              </li>
+              <li> Pillar 8. Criminal Justice 
+              <ul>
+              <li> Mixed trends in 8.2: Prosecution and pre-trial process </li>
+              <ul>
+              <li> When we asked if people agree or disagree that prosecutors handle criminal cases independently and without external influence, we found a score of 0.534, while Special Eurobarometer 489 found a score of 0.149 when they asked if the country needed improvement in the police and prosecution service investigating crimes properly including those committed by politicians. Additionally, our previous score for this question was 0.425. </li>
+              <li> However, when we asked how many prosecutors in charge of criminal investigations are involved in corrupt practices, we found a score of 0.377 while the previous score was 0.411. When we asked how many public defense attorneys are involved in corrupt practices, we found a score of 0.366 while the previous score was 0.403. Therefore, there are some mixed trends regarding prosecution and pre-trial processes. <li>
+              </ul>
+              <li> Positive trend in 8.6: Due process of law </li>
+              <ul>
+              <li> When we asked how confident people are that the criminal justice system guarantees a fair trial of all accused people, we found a score of 0.459, while our previous score was 0.385. Furthermore, when we asked if people thought that the criminal justice system treats those accused as innocent until proven guilty, we found a score of 0.528 while our previous score was 0.371. In this regard, the score of this question has increased significantly since 2021, so we recommend researching the explanation of this change. </li>
+              </ul>
+              <li> Negative trend in 8.7: Prisons </li>
+              <ul>
+              <li> When we asked how confident people are that the criminal justice system guarantees the safety and human rights of people deprived of their liberty, we found a score of 0.517, while Varieties of Democracy found a score of 0.942 when they asked if there was freedom from torture. Although the questions have a low match, they are still related and should be complemented with research about safety and human rights in the criminal justice system. </li>
+              </ul>
+              </ul>
+              </li>
+              </ul>
+              <br>
+              The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. The identified inconsistencies are present in all the NUTS regions.
+            ")
     }
     
   }
@@ -1501,8 +1551,11 @@ paragraph<- function(country, type){
       p<- c("
             <b>Insights summary</b>
             <br>
-            We see that, across time, sub-pillars 1.11 and 4.4 are flagged. Given that the previous GPP data from Poland are from 2018, we expect there to be significant difference, so this is a relatively secure outcome. Further, when observing the TPS public opinion polls and expert polling, we find no flagged sub-pillars. This indicates that our data are consistent with other population and expert surveys, which is a key objective. Because of this, we are flagging a need for further analysis in these sub-pillars which yield red flags in the GPP analysis and are not supported in our TPS analyses.
+            We see that, across time, sub-pillars 1.11. Given that the previous GPP data from Poland are from 2018, we expect there to be significant difference, so this is a relatively secure outcome. Further, when observing the TPS public opinion polls and expert polling, we find no flagged sub-pillars. This indicates that our data are consistent with other population and expert surveys, which is a key objective. Because of this, we are flagging a need for further analysis in these sub-pillars which yield red flags in the GPP analysis and are not supported in our TPS analyses.
             <br>
+            <br>
+              Given that we expect to see large changes from our previous data in Poland, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Poland. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>            
             <br>
             <b> Sub Pillars to research </b>
             <br>
@@ -1515,6 +1568,8 @@ paragraph<- function(country, type){
             </ul>
             </ul>
             </li>
+            </ul>
+            <br>
             ")
     }
     
@@ -1639,7 +1694,42 @@ paragraph<- function(country, type){
     <br>
     ")
     } else {
-      p<- c("There is no paragraph")
+      p<- c(" <b>Insights summary</b>
+              <br>
+              We are seeing that across time, a few pillars and subpillars are flagged. However, our previous data is from 2018, and thus we expect there to be changes. Furthermore, in comparison to the TPS public opinion polls, we only have one red flag. This indicates that our data is in accordance with other population surveys, which is one of the most important goals. In terms of the TPS expert surveys, we are flagging a two subpillars, however we are conscious that we trust these scores less and that one of these has green flags in another analysis. 
+            <br>
+              <br>
+              Given that we expect to see large changes from our previous data in Romania, we are noting sub pillars that are flagged in both the GPP and TPS analyses. In this regard, all the topics that are flagged in the time comparison but supported by green flags in the TPS are considered as something normal in the context of Romania. Therefore, what we are highlighting are the discrepancies found in the data in two aspects: the ones that are consistent in both analyses, and also the ones that are not supported by another analysis.
+            <br>
+              <br>
+              <b> Sub Pillars to Research </b>
+              <br>
+              <ul>
+              <li> Pillar 1. Constraints on Government Powers
+              <ul>
+              <li> Negative trend in 1.06: Respect for the legitimacy of the constitutional order, the law making process, and political opponents (absence of authoritarianism)</li>
+              <ul>
+              <li> When we asked if people agreed that emergency powers are utilized to circumvent institutional checks and balances, we found a score of 0.357 while V-Dem provided a score of 0.727 when asking if members of the executive respect the constitution. The large discrepancy between these scores should be explained further. Since this source of comparison is a low match with an expert TPS, we recommend to give context about respect for checks and balances.
+            </li>
+              </ul>
+              </ul>
+              </ul>
+              <ul>
+              <li> Pillar 5. Security
+              <ul>
+              <li>
+              Positive trend in 5.2: Absence of crime and violence</li>
+              <ul>
+              <li>
+              When we asked if people know or have heard if organized crime happens in their community or neighborhood, we found a score of 0.976 while the Organized Crime Index gave a Criminality Average Score of 0.602. Although these questions are not matched very well, it is still imporant to supplement the comparison with research on organized crime in Romania.     
+              </li>
+              </ul>
+              </ul>
+              </li>
+              </ul>
+            <br>
+              The topic areas highlighted above are what our data is telling us through the given analyses. However, it is still important to take into account the media reports and other qualitative background research to potentially identify any other sub-pillar that should be researched more thoroughly. The identified inconsistencies are present in all the NUTS regions.
+            ")
     }
     
   }
