@@ -96,7 +96,7 @@ if (Sys.info()["user"] == "ctoruno") {
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 normalizingvars<- function(gppctry, gppvars){
-
+  
   oriented<- gppctry
   
   for(i in gppvars){
@@ -116,43 +116,43 @@ normalizingvars<- function(gppctry, gppvars){
   gppro2<- intersect(gppvars, ro2)
   
   for(i in gppro){
-  
-      oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
-                                                       ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
+    
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 4, ifelse(oriented[[i]] == 2, 3, 
+                                                         ifelse(oriented[[i]] == 3, 2, ifelse(oriented[[i]] == 4, 1, NA_real_))))
   }
-
+  
   for(i in gppro2){
+    
+    oriented[[i]]<- ifelse(oriented[[i]] == 1, 2, ifelse(oriented[[i]] == 2, 1, NA_real_))
+  }
   
-      oriented[[i]]<- ifelse(oriented[[i]] == 1, 2, ifelse(oriented[[i]] == 2, 1, NA_real_))
-    }
-
-## 1.4 Normalize indicators ==================================================================================
-cols_oriented <- names(select_if(oriented, is.numeric))
-max_values <- lapply(cols_oriented, function(col_name){
+  ## 1.4 Normalize indicators ==================================================================================
+  cols_oriented <- names(select_if(oriented, negate(is.character)))
+  max_values <- lapply(cols_oriented, function(col_name){
+    
+    codebook.df %>% 
+      filter(Variable %in% col_name) %>%
+      mutate(max_value = 
+               case_when(
+                 Scale == "Scale 2" ~ 2,
+                 Scale == "Scale 3" ~ 3,
+                 Scale == "Scale 4" ~ 4,
+                 Scale == "Scale 5" ~ 5
+               )) %>%
+      pull(max_value)
+  })
   
-  codebook.df %>% 
-    filter(Variable %in% col_name) %>%
-    mutate(max_value = 
-             case_when(
-               Scale == "Scale 2" ~ 2,
-               Scale == "Scale 3" ~ 3,
-               Scale == "Scale 4" ~ 4,
-               Scale == "Scale 5" ~ 5
-             )) %>%
-    pull(max_value)
-})
-
-oriented[nrow(oriented) + 1,] <- c(rep("maxs", ncol(select_if(oriented, is.character))), max_values)
-oriented[nrow(oriented) + 1,] <- c(rep("mins", ncol(select_if(oriented, is.character))), rep(list(1), ncol(select_if(oriented, is.numeric))))
-
-
-process    <- preProcess(oriented, method = c("range"))
-normalized <- predict(process, oriented)
-
-normalized <- slice(normalized, 1:(n() - 2))
-
-return(normalized)
-
+  oriented[nrow(oriented) + 1,] <- c(rep("maxs", ncol(select_if(oriented, is.character))), max_values)
+  oriented[nrow(oriented) + 1,] <- c(rep("mins", ncol(select_if(oriented, is.character))), rep(list(1), ncol(select_if(oriented, negate(is.character)))))
+  
+  
+  process    <- preProcess(oriented, method = c("range"))
+  normalized <- predict(process, oriented)
+  
+  normalized <- slice(normalized, 1:(n() - 2))
+  
+  return(normalized)
+  
 }
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
