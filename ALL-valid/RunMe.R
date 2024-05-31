@@ -270,7 +270,7 @@ GPP_flagging_system.df <- flags_overview(type = "GPP")
 
 
 openxlsx::write.xlsx(GPP_flagging_system.df, paste0(path2eu,
-                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_flaging_system.xlsx"))
+                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_flagging_system.xlsx"))
 ### QRQ ======================================================================================================
 
 # Implementing the flagging system that allow us to pick the best scenario ===========================
@@ -291,6 +291,9 @@ openxlsx::write.xlsx(GPP_flagging_system.df, paste0(path2eu,
 
 openxlsx::write.xlsx(TPS_ranking_analysis.df, paste0(path2eu,
                                                     "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_external_ranking.xlsx"))
+
+openxlsx::write.xlsx(INTERNAL_ranking_analysis.df, paste0(path2eu,
+                                                     "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_internal_ranking.xlsx"))
 
 ### QRQ ======================================================================================================
 
