@@ -64,8 +64,9 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
       rename(value = value_weighted)%>%
       left_join(y = matchTPS, by = "question", relationship = "many-to-many") %>%
       left_join(y = tps.df, by = c("tps_question", "country_name_ltn")) %>%
+      select(country_name_ltn, question, value, tps_question, tps_value, Type_Survey) %>%
       distinct() %>% 
-      drop_na()
+      drop_na() 
     
     ## 1.7 Ranking analysis  =============================================================================
     
@@ -84,7 +85,7 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
         Trend             = Rank_GPP - Rank_TPS_avg,
         Trend             = if_else(Trend < 0, "Positive", "Negative"),
         Diff_Rank         = max(abs(Rank_GPP - Rank_TPS_avg)),
-        flagged_questions = if_else(Diff_Rank > 13, "Red Flag",
+        flagged_questions = if_else(Diff_Rank > 10, "Red Flag",
                                     "Green Flag", NA_character_)
       ) %>%
       distinct()
@@ -101,7 +102,8 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
       group_by(country_name_ltn) %>%
       mutate(max_year = max(year, na.rm = T)) %>%
       filter(max_year == year) %>%
-      select(country_name_ltn, year, all_of(gppvars)) 
+      select(country_name_ltn, year, all_of(gppvars)) %>%
+      ungroup()
     
     GPP.df$BRB_permit_A<- ifelse(GPP.df$BRB_permit_A== 0, 2, GPP.df$BRB_permit_A)
     GPP.df$BRB_permit_B<- ifelse(GPP.df$BRB_permit_B== 0, 2, GPP.df$BRB_permit_B)
@@ -137,7 +139,6 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
       summarise_at(gppvars, mean, na.rm= TRUE) %>%
       pivot_longer(cols = all_of(gppvars), names_to = "question", values_to = "prev_value")
     
-    
     gppaggregate.df <- normalizedcurr %>%
       group_by(country_name_ltn, nuts_id) %>%
       summarise_at(gppvars, mean, na.rm= TRUE) %>%
@@ -149,7 +150,7 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
       select(country_name_ltn, question, value_weighted)%>%
       distinct()%>%
       rename(value = value_weighted)%>%
-      left_join(y = variable_list.df, by = join_by("question" == "variable"), relationship = "many-to-many") %>%
+      #left_join(y = variable_list.df, by = join_by("question" == "variable"), relationship = "many-to-many") %>%
       left_join(y = prevaggregate.df, by = c("question", "country_name_ltn")) %>%
       distinct() %>% 
       drop_na()
@@ -167,7 +168,7 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
         Trend             = Rank_curr - Rank_prev,
         Trend             = if_else(Trend < 0, "Positive", "Negative"),
         Diff_Rank         = max(abs(Rank_curr - Rank_prev)),
-        flagged_questions = if_else(Diff_Rank > 10, "Red Flag",
+        flagged_questions = if_else(Diff_Rank > 7, "Red Flag",
                                     "Green Flag", NA_character_)
       )
     
