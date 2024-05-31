@@ -84,7 +84,7 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
         Trend             = Rank_GPP - Rank_TPS_avg,
         Trend             = if_else(Trend < 0, "Positive", "Negative"),
         Diff_Rank         = max(abs(Rank_GPP - Rank_TPS_avg)),
-        flagged_questions = if_else(Diff_Rank > 10, "Red Flag",
+        flagged_questions = if_else(Diff_Rank > 13, "Red Flag",
                                     "Green Flag", NA_character_)
       ) %>%
       distinct()
@@ -98,6 +98,9 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
     
     GPP.df <- GPP_previous.df %>%
       filter(!is.na(country_name_ltn)) %>%
+      group_by(country_name_ltn) %>%
+      mutate(max_year = max(year, na.rm = T)) %>%
+      filter(max_year == year) %>%
       select(country_name_ltn, year, all_of(gppvars)) 
     
     GPP.df$BRB_permit_A<- ifelse(GPP.df$BRB_permit_A== 0, 2, GPP.df$BRB_permit_A)
@@ -164,7 +167,7 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
         Trend             = Rank_curr - Rank_prev,
         Trend             = if_else(Trend < 0, "Positive", "Negative"),
         Diff_Rank         = max(abs(Rank_curr - Rank_prev)),
-        flagged_questions = if_else(Diff_Rank > 7, "Red Flag",
+        flagged_questions = if_else(Diff_Rank > 10, "Red Flag",
                                     "Green Flag", NA_character_)
       )
     
