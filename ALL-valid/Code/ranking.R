@@ -64,7 +64,7 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
       rename(value = value_weighted)%>%
       left_join(y = matchTPS, by = "question", relationship = "many-to-many") %>%
       left_join(y = tps.df, by = c("tps_question", "country_name_ltn")) %>%
-      select(country_name_ltn, question, value, tps_question, tps_value, Type_Survey) %>%
+      select(country_name_ltn, question, value, tps_question, tps_value, Match, Type_Survey, EU_Questionnaire) %>%
       distinct() %>% 
       drop_na() 
     
@@ -150,7 +150,8 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
       select(country_name_ltn, question, value_weighted)%>%
       distinct()%>%
       rename(value = value_weighted)%>%
-      #left_join(y = variable_list.df, by = join_by("question" == "variable"), relationship = "many-to-many") %>%
+      left_join(y = variable_list.df%>% 
+                  select(variable, `2023  EU Questionnaire`), by = join_by("question" == "variable"), relationship = "many-to-many") %>%
       left_join(y = prevaggregate.df, by = c("question", "country_name_ltn")) %>%
       distinct() %>% 
       drop_na()
