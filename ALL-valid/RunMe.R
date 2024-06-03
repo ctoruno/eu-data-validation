@@ -40,6 +40,7 @@ source("Code/ranking.R")
 source("Code/outlier_analysis.R")
 source("Code/flags_overview.R")
 source("Code/html_flags.R")
+source("Code/diff_rank.R")
 
 ### QRQ ======================================================================================================
 
@@ -269,8 +270,6 @@ outlier_analysis.df <- outlier_analysis(gpp_data.df = master_data.df)
 GPP_flagging_system.df <- flags_overview(type = "GPP")
 
 
-openxlsx::write.xlsx(GPP_flagging_system.df, paste0(path2eu,
-                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_flagging_system.xlsx"))
 ### QRQ ======================================================================================================
 
 # Implementing the flagging system that allow us to pick the best scenario ===========================
@@ -294,6 +293,26 @@ openxlsx::write.xlsx(TPS_ranking_analysis.df, paste0(path2eu,
 
 openxlsx::write.xlsx(INTERNAL_ranking_analysis.df, paste0(path2eu,
                                                      "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_internal_ranking.xlsx"))
+
+openxlsx::write.xlsx(GPP_flagging_system.df, paste0(path2eu,
+                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_flagging_system.xlsx"))
+
+### Threshold outputs ========================================================================================
+
+tpsthresh<- TPS_ranking_analysis.df%>%
+  select(country_name_ltn, Type_Survey, upper_bound)%>%
+  distinct()%>%
+  pivot_wider(names_from = Type_Survey, values_from = upper_bound)
+
+rankthresh<- left_join(tpsthresh, INTERNAL_ranking_analysis.df%>%
+            select(country_name_ltn, upper_bound)%>%
+            distinct()%>%
+            rename(internal = upper_bound)
+)%>%
+  arrange(country_name_ltn)
+
+openxlsx::write.xlsx(rankthresh, paste0(path2eu,
+                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/ranking_thresholds.xlsx"))
 
 ### QRQ ======================================================================================================
 

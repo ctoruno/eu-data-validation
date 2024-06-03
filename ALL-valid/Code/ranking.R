@@ -76,7 +76,7 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
              Rank_TPS = rank(-tps_value)) %>%
       arrange(question, tps_question, Rank_GPP)%>% 
       ungroup()%>%
-      group_by(country_name_ltn, question)%>%
+      group_by(country_name_ltn, question, Type_Survey)%>%
       mutate(Rank_TPS_avg = mean(Rank_TPS))
     
     flagged_data.df <- rankings.df %>%
@@ -85,7 +85,7 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
         Trend             = Rank_GPP - Rank_TPS_avg,
         Trend             = if_else(Trend < 0, "Positive", "Negative"),
         Diff_Rank         = max(abs(Rank_GPP - Rank_TPS_avg)),
-        flagged_questions = if_else(Diff_Rank > 10, "Red Flag",
+        traditional_flag = if_else(Diff_Rank > 10, "Red Flag",
                                     "Green Flag", NA_character_)
       ) %>%
       distinct()
@@ -168,11 +168,13 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
         Trend             = Rank_curr - Rank_prev,
         Trend             = if_else(Trend < 0, "Positive", "Negative"),
         Diff_Rank         = max(abs(Rank_curr - Rank_prev)),
-        flagged_questions = if_else(Diff_Rank > 7, "Red Flag",
+        traditional_flag = if_else(Diff_Rank > 7, "Red Flag",
                                     "Green Flag", NA_character_)
       )
     
   }
+  
+  flagged_data.df<- diff_rank(flagged_data.df, analysis)
   
   
   return(flagged_data.df)
