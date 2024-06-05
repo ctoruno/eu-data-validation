@@ -41,7 +41,8 @@ source("Code/outlier_analysis.R")
 source("Code/flags_overview.R")
 source("Code/html_flags.R")
 source("Code/diff_rank.R")
-
+source("Code/nuts_html_flags.R")
+source("Code/nuts_flags_overview.R")
 ### QRQ ======================================================================================================
 
 source("Code/qrq_ranking_analysis.R")
