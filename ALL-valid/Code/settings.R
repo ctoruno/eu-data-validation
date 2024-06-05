@@ -107,8 +107,9 @@ normalizingvars<- function(gppctry, gppvars){
   
   ro<- c("JSE_indjudges", "ORC_govtefforts", "ORC_impartial_measures", "CPA_freevote", "CPA_cleanelec_local", 
          "CPA_media_freeop", "CPB_freexp_cso", "CPA_freepolassoc", "CPB_freexp", "LEP_bribesreq", "IRE_campaign",
-         "IPR_easy2read", "IPR_rights", "IPR_easy2find", "IPR_easy2find_online", "TRT_parliament", "TRT_police", 
-         "TRT_pparties", "CTZ_laborcond", "JSE_equality", "CJP_proofburden", "JSE_rightsaware", "JSE_access2assis", "JSE_affordcosts", "JSE_quickresol", "COR_judges", "JSE_enforce", "LEP_indpolinv", "COR_police", "LEP_indprosecutors", "CJP_resprights", "CJP_fairtrial", "CJP_saferights", "CPB_community", "CPB_freeassoc", "COR_govt_local", "COR_parliament", "ROL_equality_sig", "JSE_polinfluence", "COR_govt_national", "IRE_govtbudget", "IRE_govtcontracts", "IRE_disclosure", "SEC_walking", "CPA_law_langaval", "CPB_unions", "CPB_freemedia", "CPA_partdem_congress", "CPB_freexp_pp","CPA_partdem_localgvt")
+         "IPR_easy2read", "IPR_rights", "TRT_govt_local", "TRT_govt_national",  "TRT_prosecutors",   
+         "TRT_pda", "TRT_judges", "TRT_media", "IPR_easy2find", "IPR_easy2find_online", "TRT_parliament", "TRT_police", 
+         "TRT_pparties", "TRT_people",   "CTZ_laborcond", "JSE_equality", "CJP_proofburden", "JSE_rightsaware", "JSE_access2assis", "JSE_affordcosts", "JSE_quickresol", "COR_judges", "JSE_enforce", "LEP_indpolinv", "COR_police", "COR_prosecutors",    "COR_pda", "LEP_indprosecutors", "CJP_resprights", "CJP_fairtrial", "CJP_saferights", "CPB_community", "CPB_freeassoc", "COR_govt_local", "COR_parliament", "ROL_equality_sig", "JSE_polinfluence", "COR_govt_national", "IRE_govtbudget", "IRE_govtcontracts", "IRE_disclosure", "SEC_walking", "CPA_law_langaval", "CPB_unions", "CPB_freemedia", "CPA_freemedia", "CPA_cons_cso", "CPA_partdem_congress", "CPB_freexp_pp","CPA_partdem_localgvt", "CJP_efficient" , "CJP_access" , "CJP_fairpunishment", "CJP_egalitarian", "CJP_victimsupport")
   
   ro2<- c("CPA_protest", "CPA_cso")
   
