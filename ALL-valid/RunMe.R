@@ -253,9 +253,11 @@ INTERNAL_ranking_analysis.df <- ranking_analysis.fn(gpp_data.df = master_data.df
 nuts_html_flags.df <- nuts_html_flags()
 
 
-# Outliers analysis
+# Outliers analyses
 
-outlier_analysis.df <- outlier_analysis(gpp_data.df = master_data.df)
+NUTS_outliers.df <- outlier_analysis(gpp_data.df = master_data.df, type = "NUTS")
+
+Question_outliers.df <- outlier_analysis(gpp_data.df = master_data.df, type = "question")
 
 ### QRQ ======================================================================================================
 
@@ -293,9 +295,6 @@ QRQ_flagging_system.df <- flags_overview(type = "QRQ")
 
 ### GPP ======================================================================================================
 
-openxlsx::write.xlsx(GPP_flagging_system.df, paste0(path2eu,
-                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_flags.xlsx"))
-
 openxlsx::write.xlsx(TPS_ranking_analysis.df, paste0(path2eu,
                                                     "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_external_ranking.xlsx"))
 
@@ -321,6 +320,15 @@ rankthresh<- left_join(tpsthresh, INTERNAL_ranking_analysis.df%>%
 
 openxlsx::write.xlsx(rankthresh, paste0(path2eu,
                                     "/EU-S Data/eu-data-validation/ALL-valid/Outputs/ranking_thresholds.xlsx"))
+
+### NUTS GPP =================================================================================================
+
+
+openxlsx::write.xlsx(NUTS_outliers.df, paste0(path2eu,
+                                                     "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_NUTS_outliers.xlsx"))
+
+openxlsx::write.xlsx(Question_outliers.df, paste0(path2eu,
+                                                          "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_Question_outliers.xlsx"))
 
 ### QRQ ======================================================================================================
 
