@@ -245,6 +245,14 @@ INTERNAL_ranking_analysis.df <- ranking_analysis.fn(gpp_data.df = master_data.df
                                                     metadata.df = metadataTPS, 
                                                     analysis = "INTERNAL")
 
+
+#### Loading results from the NUTS analysis functions =============================================================
+
+# This function brings the flags from the HTMLs
+
+nuts_html_flags.df <- nuts_html_flags()
+
+
 # Outliers analysis
 
 outlier_analysis.df <- outlier_analysis(gpp_data.df = master_data.df)
