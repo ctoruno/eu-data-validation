@@ -12,20 +12,25 @@ nuts_flags_overview <- function(
     # Select only the 'Country' and 'GPP_Variable_Name' columns and add a new column 'HTML_flag' with all values set to "Red"
     # Ensure the dataframe contains only unique rows
     
-    html_flags <- html_flags.df %>%
-      select(Country, GPP_Variable_Name) %>%
+    html_flags <- nuts_html_flags.df %>%
+      select(Country, NUTS, GPP_Variable_Name) %>%
       mutate("HTML_flag" = "Red") %>%
+      mutate(NUTS = gsub(":.*", "", NUTS)) %>%
       distinct()
     
     # Initialize an empty dataframe 'df' with columns 'Country' and 'GPP_Variable_Name'
     
-    df <- data.frame(matrix(nrow = 0, ncol = 2))
-    colnames(df) <- c("NUTS code", "GPP_Variable_Name")
+    df <- data.frame(matrix(nrow = 0, ncol = 3))
+    colnames(df) <- c("NUTS", "Country", "GPP_Variable_Name")
     
     # Populate 'df' with combinations of unique countries from 'html_flags.df' and 'reportvarslist' which contain the variables from the report
     
     for (i in unique(master_data.df$nuts_id)) {
-      df <- rbind(df, tibble("NUTS code" = rep(i, length(reportvarslist)),
+      cy<- master_data.df%>%
+        filter(nuts_id==i)
+      
+      df <- rbind(df, tibble("NUTS" = rep(i, length(reportvarslist)),
+                             "Country" = cy$country_name_ltn[[1]],
                              "GPP_Variable_Name" = reportvarslist))
     }
     
@@ -38,13 +43,22 @@ nuts_flags_overview <- function(
     
     ## 1.2 Outliers flags ==================================================================================
     
-    # Join 'df2' with 'outlier_analysis.df', renaming columns for consistency
-    # Remove trailing text from 'Outliers_flag' values
-    df3 <- left_join(df2, outlier_analysis.df %>%
-                       rename("GPP_Variable_Name" = "Question",
-                              "Outliers_flag" = "Flag"))
+    # Join 'df2' with 'NUTS_outliers.df', renaming columns for consistency
     
-    df3$Outliers_flag <- gsub(" .*", "", df3$Outliers_flag)
+    df3 <- left_join(df2, NUTS_outliers.df %>%
+                       rename("NUTS"= "NUTS Region",
+                         "GPP_Variable_Name" = "Question",
+                              "NUTS_outliers_flag" = "Flag")%>%
+                     select(NUTS, GPP_Variable_Name, NUTS_outliers_flag))
+    
+    df4<- left_join(df3, Question_outliers.df%>%
+                     rename("NUTS"= "nuts_id",
+                            "GPP_Variable_Name" = "Question",
+                            "Question_outliers_flag" = "Flag")%>%
+                     select(NUTS, GPP_Variable_Name, Question_outliers_flag))
+    
+    #df3$Outliers_flag <- gsub(" .*", "", df3$Outliers_flag)
+    
     
     ## 1.3 Ranking flags ==================================================================================
     
@@ -62,31 +76,14 @@ nuts_flags_overview <- function(
     
     # Join 'df3' with 'ranking' and rename columns for consistency
     
-    df4 <- left_join(df3, ranking %>%
+    df5 <- left_join(df4, ranking %>%
                        rename("Country" = "country_name_ltn",
                               "GPP_Variable_Name" = "question",
                               "Population_ranking_flag" = "population",
                               "Expert_ranking_flag" = "expert"))
     
-    # Remove trailing text from 'Population_ranking_flag' and 'Expert_ranking_flag' values
     
-    df4$Population_ranking_flag <- gsub(" .*", "", df4$Population_ranking_flag)
-    df4$Expert_ranking_flag <- gsub(" .*", "", df4$Expert_ranking_flag)
-    
-    # INTERNAL
-    
-    df5 <- df4 %>%
-      left_join(internal_ranking_analysis.df %>%
-                  select(Country = country_name_ltn, 
-                         GPP_Variable_Name = question, 
-                         Internal_ranking_flag = flagged_questions),
-                by = c("Country", "GPP_Variable_Name"),
-                relationship = "many-to-many"
-      )
-    
-    df5$Internal_ranking_flag <- gsub(" .*", "", df5$Internal_ranking_flag)
-    
-    ## 1.4 Theorethical framework ==================================================================================
+    ## 1.4 Theoretical framework ==================================================================================
     
     # Select relevant columns from 'master_data.df' and normalize the variables
     
@@ -100,15 +97,9 @@ nuts_flags_overview <- function(
     gppaggregate <- normalized %>%
       group_by(country_name_ltn, nuts_id) %>%
       summarise_at(reportvarslist, mean, na.rm= TRUE) %>%
-      pivot_longer(cols = all_of(reportvarslist), names_to = "GPP_Variable_Name", values_to = "Score") %>%
-      left_join(weight.df%>% 
-                  select(nuts_id, regionpoppct))%>%
-      group_by(country_name_ltn, GPP_Variable_Name)%>%
-      mutate(value_weighted = sum(Score*regionpoppct))%>%
-      select(country_name_ltn, GPP_Variable_Name, value_weighted)%>%
-      distinct()%>%
-      rename(Score = value_weighted)%>%
-      rename("Country" = "country_name_ltn")
+      pivot_longer(cols = all_of(reportvarslist), names_to = "GPP_Variable_Name", values_to = "Score")%>%
+      rename("Country" = "country_name_ltn",
+             "NUTS" = "nuts_id")
     
     # Prepare 'subp' dataframe by selecting and joining relevant columns from 'metadata' and 'QRQ_description'
     # This step is necessary to join the theoretical framework with the scores and the analyses
@@ -125,39 +116,45 @@ nuts_flags_overview <- function(
     
     # Join 'df4' with 'gppaggregate' and 'subp' dataframes
     
-    df6 <- left_join(df5, gppaggregate)
+    df6 <- left_join(df4, gppaggregate)
     
+    options <- c("Green", "Red", NA_character_)
+    
+    # Add a new column with a random selection of the options
+    #set.seed(123) # Setting seed for reproducibility
+    #df6$TPS_flag <- sample(options, size = nrow(df6), replace = TRUE)
+    
+    df6$TPS_flag <- rep(NA_character_, nrow(df6))
     ## 1.6 Flagging system ==================================================================================
     
     # In this step we create the flagging system according to the conditions we established
     # Please remember that the case_when is hierarchical that's means the initial condition is greater than the rest. The order matters.
     
     df7 <- left_join(df6, subp, relationship = "many-to-many", by = "GPP_Variable_Name") %>%
-      select(!Outliers_flag) %>%
       mutate(
         Final_flag = 
           case_when(
-            # If 'HTML_flag', 'Population_ranking_flag', and 'Expert_ranking_flag' are all NA, set 'Final_flag' to "Red"
-            is.na(HTML_flag) & is.na(Population_ranking_flag) & is.na(Expert_ranking_flag) & is.na(Internal_ranking_flag) ~ "Red",
-            # If 'Internal Ranking' is "Red", set 'Final_flag' to "Red"
-            Internal_ranking_flag == "Red" ~ "Red", 
-            # If 'Internal Ranking' is "Green", set 'Final_flag' to "Green"
-            Internal_ranking_flag == "Green" ~ "Green", 
+            # If TPS is NA, NUTS outliers is Red, and Question Outliers is Red set 'Final_flag' to "Red"
+            is.na(TPS_flag) & NUTS_outliers_flag == "Red" & Question_outliers_flag == "Red" ~ "Red",
+            # If TPS is "Red", NUTS outliers is Green , and Question Outliers is Green set 'Final_flag' to "Green"
+            TPS_flag == "Red" &  NUTS_outliers_flag == "Green" & Question_outliers_flag == "Green"~ "Green", 
+            # If 'TPS' is "Green", set 'Final_flag' to "Green"
+            TPS_flag == "Red" &  NUTS_outliers_flag == "Red" & Question_outliers_flag == "Green"~ "Red", 
             # If 'Population_ranking_flag' is "Red", set 'Final_flag' to "Red"
-            Population_ranking_flag == "Red" ~ "Red", 
+            TPS_flag == "Red" &  NUTS_outliers_flag == "Green" & Question_outliers_flag == "Red"~ "Red", 
+            TPS_flag == "Green" &  NUTS_outliers_flag == "Green" & Question_outliers_flag == "Red"~ "Green", 
+            TPS_flag == "Green" &  NUTS_outliers_flag == "Red" & Question_outliers_flag == "Green"~ "Green", 
             # If 'Population_ranking_flag' is "Green" set 'Final_flag' to "Green"
-            Population_ranking_flag == "Green" ~ "Green", 
+            NUTS_outliers_flag == "Red" & Question_outliers_flag == "Red" ~ "Red", 
             # If 'Expert_ranking_flag' is "Red", set 'Final_flag' to "Red"
-            Expert_ranking_flag == "Red" ~ "Red",
+            NUTS_outliers_flag == "Red" & Question_outliers_flag == "Green" & HTML_flag == "Red" ~ "Red",
             # If Expert_ranking_flag' is "Green", set 'Final_flag' to "Green"
-            Expert_ranking_flag == "Green" ~ "Green",
-            # If 'HTML_flag' is "Red", set 'Final_flag' to "Red"
-            HTML_flag == "Red" ~ "Red",
+            NUTS_outliers_flag == "Green" & Question_outliers_flag == "Red" & HTML_flag == "Red" ~ "Red",
             # For all other cases, set 'Final_flag' to "Green"
             TRUE ~ "Green"
           )
       )%>%
-      select(Country, GPP_Variable_Name , Score, HTML_flag , Population_ranking_flag , Expert_ranking_flag , Internal_ranking_flag , Final_flag , everything())
+      select(Country, NUTS, GPP_Variable_Name , Score, HTML_flag , NUTS_outliers_flag , Question_outliers_flag , TPS_flag , Final_flag , everything())
     
     # Return the final dataframe 'df6'
     

@@ -279,6 +279,7 @@ Question_outliers.df <- outlier_analysis(gpp_data.df = master_data.df, type = "q
 # Implementing the flagging system that allow us to pick the most problematic variables ===========================
 
 GPP_flagging_system.df <- flags_overview(type = "GPP")
+GPP_nuts_flagging_system.df <- nuts_flags_overview(type = "GPP")
 
 
 ### QRQ ======================================================================================================
