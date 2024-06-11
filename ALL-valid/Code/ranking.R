@@ -30,7 +30,7 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
     
     tpsvars <- mat$TPS_Variable_Name
     gppvars <- mat$GPP_Variable_Name
-    
+    gppvars <- gppvars[!grepl("^DIS_", gppvars)]
     
     ## 1.2 Sub-setting data  =====================================================================================
     gpp2 <- gpp_data.df %>% 
@@ -94,6 +94,7 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
     
     ## 2.1 Identifying Indicators ================================================================================
     gppvars <- c(variable_list.df$variable, "BRB_permit_B")
+    gppvars <- setdiff(gppvars, c("BRB_permit_A", "BRB_benefits_A", "BRB_id_A", "BRB_school_A", "BRB_health_A"))
     
     ## 2.2 Sub-setting data  =====================================================================================
     
@@ -105,15 +106,15 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
       select(country_name_ltn, year, all_of(gppvars)) %>%
       ungroup()
     
-    GPP.df$BRB_permit_A<- ifelse(GPP.df$BRB_permit_A== 0, 2, GPP.df$BRB_permit_A)
+    #GPP.df$BRB_permit_A<- ifelse(GPP.df$BRB_permit_A== 0, 2, GPP.df$BRB_permit_A)
     GPP.df$BRB_permit_B<- ifelse(GPP.df$BRB_permit_B== 0, 2, GPP.df$BRB_permit_B)
-    GPP.df$BRB_benefits_A<- ifelse(GPP.df$BRB_benefits_A== 0, 2, GPP.df$BRB_benefits_A)
+    #GPP.df$BRB_benefits_A<- ifelse(GPP.df$BRB_benefits_A== 0, 2, GPP.df$BRB_benefits_A)
     GPP.df$BRB_benefits_B<- ifelse(GPP.df$BRB_benefits_B== 0, 2, GPP.df$BRB_benefits_B)
-    GPP.df$BRB_id_A<- ifelse(GPP.df$BRB_id_A== 0, 2, GPP.df$BRB_id_A)
+    #GPP.df$BRB_id_A<- ifelse(GPP.df$BRB_id_A== 0, 2, GPP.df$BRB_id_A)
     GPP.df$BRB_id_B<- ifelse(GPP.df$BRB_id_B== 0, 2, GPP.df$BRB_id_B)
-    GPP.df$BRB_school_A<- ifelse(GPP.df$BRB_school_A== 0, 2, GPP.df$BRB_school_A)
+    #GPP.df$BRB_school_A<- ifelse(GPP.df$BRB_school_A== 0, 2, GPP.df$BRB_school_A)
     GPP.df$BRB_school_B<- ifelse(GPP.df$BRB_school_B== 0, 2, GPP.df$BRB_school_B)
-    GPP.df$BRB_health_A<- ifelse(GPP.df$BRB_health_A== 0, 2, GPP.df$BRB_health_A)
+    #GPP.df$BRB_health_A<- ifelse(GPP.df$BRB_health_A== 0, 2, GPP.df$BRB_health_A)
     GPP.df$BRB_health_B<- ifelse(GPP.df$BRB_health_B== 0, 2, GPP.df$BRB_health_B)
     
     GPP.df$year <- as.character(GPP.df$year)
