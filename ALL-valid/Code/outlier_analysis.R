@@ -20,24 +20,25 @@ outlier_analysis<- function(gpp_data.df = master_data.df, type){
   
   ## 1.1 Identifying indicators    =============================================================================
   nuts<- unique(gpp_data.df$nuts_id)
-  
+  repvars<- reportvarslist[!grepl("^DIS_", reportvarslist)]
+  repvars<- setdiff(repvars, c("BRB_permit_A", "BRB_benefits_A", "BRB_id_A", "BRB_school_A", "BRB_health_A"))
   
   ## 1.2 Sub-setting data  =====================================================================================
   gpp2 <- gpp_data.df %>% 
-    select(nuts_id, all_of(reportvarslist)) 
+    select(nuts_id, all_of(repvars)) 
   
-  normalized <- normalizingvars(gpp2, reportvarslist)
+  normalized <- normalizingvars(gpp2, repvars)
   
   gppaggregate.df <- normalized %>%
     group_by(nuts_id) %>%
-    summarise_at(reportvarslist, mean, na.rm= TRUE)
+    summarise_at(repvars, mean, na.rm= TRUE)
     
   if (type == "NUTS"){
     
     results<- data.frame(matrix(nrow = 0, ncol = 8))
     colnames(results)<- c("NUTS Region", "Question", "Score", "Lower Bound", "Median", "Upper Bound", "IQR", "Flag")
     
-    for (i in reportvarslist){
+    for (i in repvars){
       
       
       iqr<- IQR(gppaggregate.df[[i]], na.rm = TRUE)
@@ -75,8 +76,9 @@ outlier_analysis<- function(gpp_data.df = master_data.df, type){
       group_by(Question) %>%
       mutate(Rank = rank(-Score))
     
-    results<- data.frame(matrix(nrow = 0, ncol = 9))
-    colnames(results)<- c("NUTS Region", "Question", "Score", "Rank", "Lower Bound", "Median", "Upper Bound", "IQR", "Flag")
+    results<- data.frame(matrix(nrow = 0, ncol = 13))
+    colnames(results)<- c("NUTS Region", "Question", "Score", "Rank", "Lower Bound", "Q1", "Median", "Q3", "Upper Bound", "IQR", "Flag",
+                          "SD", "SD_flag")
     
     for (i in unique(gppaggregate.df$nuts_id)){
       
@@ -90,12 +92,20 @@ outlier_analysis<- function(gpp_data.df = master_data.df, type){
       lower_bound<- q1 - (1.5*iqr)
       upper_bound<- q3 + (1.5*iqr)
       
+      mean_agg<- mean(nrank[["Rank"]], na.rm = TRUE)
+      sd_agg<- sd(nrank[["Rank"]], na.rm = TRUE)
+      bound<- 2.5*sd_agg
+      
       df<- nrank%>%
         mutate("Lower Bound" = lower_bound,
+               "Q1" = q1,
                "Median" = q2,
+               "Q3" = q3,
                "Upper Bound" = upper_bound,
                "IQR"= iqr,
-               Flag = if_else(Rank>upper_bound | Rank < lower_bound, "Red", "Green")
+               Flag = if_else(Rank>upper_bound | Rank < lower_bound, "Red", "Green"),
+               SD= bound,
+               SD_flag = if_else(Rank>mean_agg+bound | Rank < mean_agg - bound, "Red", "Green")
         )
       results<- rbind(results, df)
       
