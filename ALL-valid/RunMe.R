@@ -141,15 +141,16 @@ variable_list.df <- read_excel(paste0(path2eu,
 #### QRQ scores data ======================================================================================================
 
 eu_qrq_final <- read_dta(paste0(path2eu,
-                                "/EU-S Data/eu-data-validation/ALL-valid/",
-                                "Inputs/eu_qrq_final.dta")) %>%
+                                "/EU-S Data/eu-qrq/1. Data/",
+                                "eu_qrq_nuts.dta")) %>%
   pivot_longer(cols = !c(nuts, country), 
                names_to = "indicator", values_to = "QRQ_value")
 
-EU_QRQ_country <- eu_qrq_final %>%
-  group_by(country, indicator) %>%
-  summarise(QRQ_value = mean(QRQ_value, na.rm = T)) %>%
-  rename(country_name_ltn = country)
+EU_QRQ_country <- read_dta(paste0(path2eu,
+                                  "/EU-S Data/eu-qrq/1. Data/",
+                                  "eu_qrq_country.dta")) %>%
+  pivot_longer(cols = !c(country), 
+               names_to = "indicator", values_to = "QRQ_value")
 
 #### QRQ TPS scores ======================================================================================================
 
@@ -279,7 +280,6 @@ LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, analysis = "LONG")
 # Implementing the flagging system that allow us to pick the most problematic variables ===========================
 
 GPP_flagging_system.df <- flags_overview(type = "GPP")
-GPP_nuts_flagging_system.df <- nuts_flags_overview(type = "GPP")
 
 
 ### QRQ ======================================================================================================
