@@ -59,7 +59,7 @@ QRQ_ranking.fn <- function(data,
         LONG_flagged_questions = if_else(Diff_Rank >= 15, "Red", 
                                          "Green", NA_character_)
       )
-    flagged_data.df<- diff_rank(flagged_data.df, "qrq")
+    flagged_data.df<- diff_rank(flagged_data.df, "LONG")
     return(flagged_data.df)
     
   } else {
