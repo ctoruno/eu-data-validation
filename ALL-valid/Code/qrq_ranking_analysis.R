@@ -38,6 +38,7 @@ QRQ_ranking.fn <- function(data,
         TPS_flagged_questions = if_else(Diff_Rank >= 7, "Red", 
                                         "Green", NA_character_)
       )
+    flagged_data.df<- diff_rank(flagged_data.df, "qrq")
     return(flagged_data.df)
     
   } else if (analysis == "LONG") {
@@ -58,14 +59,14 @@ QRQ_ranking.fn <- function(data,
         LONG_flagged_questions = if_else(Diff_Rank >= 15, "Red", 
                                          "Green", NA_character_)
       )
-    
+    flagged_data.df<- diff_rank(flagged_data.df, "qrq")
     return(flagged_data.df)
     
   } else {
     
     # QRQ ROLI scores ======================================================================================================
     
-    rankings.df <- QRQ_ROLI_final %>% 
+    rankings.df <- data %>% 
       group_by(indicator) %>%
       mutate(Rank_QRQ = rank(-QRQ_value),
              Rank_ROLI = rank(-ROLI_QRQ_value))
@@ -79,7 +80,7 @@ QRQ_ranking.fn <- function(data,
         ROLI_flagged_questions = if_else(Diff_Rank >= 3, "Red", 
                                          "Green", NA_character_)
       )
-    
+    flagged_data.df<- diff_rank(flagged_data.df, "qrq")
     return(flagged_data.df)
     
     
