@@ -196,8 +196,8 @@ QRQ_TPS_final <- QRQ_final_TPS %>%
 #### QRQ longidutinal scores ======================================================================================================
 
 eu_qrq_final_LONG <- read_dta(paste0(path2eu,
-                                     "/EU-S Data/eu-data-validation/ALL-valid/",
-                                     "Inputs/eu_qrq_final_LONG.dta")) %>%
+                                     "/EU-S Data/eu-qrq/1. Data/",
+                                     "Benchmarks/eu_qrq_final_LONG.dta")) %>%
   pivot_longer(cols = !c(nuts, country), 
                names_to = "indicator", values_to = "long_QRQ_value") 
 
@@ -209,8 +209,8 @@ QRQ_LONG_final <- eu_qrq_final_LONG %>%
 #### QRQ ROLI scores ======================================================================================================
 
 eu_qrq_roli <- read_dta(paste0(path2eu,
-                               "/EU-S Data/eu-data-validation/ALL-valid/",
-                               "Inputs/eu_qrq_final_country.dta")) %>%
+                               "/EU-S Data/eu-qrq/1. Data/",
+                               "Benchmarks/eu_qrq_ROLI_new.dta")) %>%
   pivot_longer(cols = !country, 
                names_to = "indicator", values_to = "ROLI_QRQ_value") %>%
   rename(country_name_ltn = country)
@@ -262,11 +262,11 @@ Question_outliers.df <- outlier_analysis(gpp_data.df = master_data.df, type = "q
 
 ### QRQ ======================================================================================================
 
-#TPS_validation <- QRQ_ranking.fn(data = QRQ_TPS_final, analysis = "TPS")
+TPS_validation <- QRQ_ranking.fn(data = QRQ_TPS_final, analysis = "TPS")
 
-#ROLI_validation <-  QRQ_ranking.fn(data = QRQ_ROLI_final, analysis = "ROLI")
+ROLI_validation <-  QRQ_ranking.fn(data = QRQ_ROLI_final, analysis = "ROLI")
 
-#LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, analysis = "LONG")
+LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, analysis = "LONG")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
