@@ -237,34 +237,35 @@ flags_overview <- function(
     # Join EU_QRQ_country with TPS_validation, filter out certain indicators, and calculate TPS flags
     df2 <- EU_QRQ_country %>%
       left_join(TPS_validation %>%
-                  select(country_name_ltn, indicator, TPS_flagged_questions),
+                  select(country_name_ltn, indicator, TPS_flag_tr, TPS_flag_iqr),
                 by = c("country_name_ltn", "indicator")
       ) %>%
       filter(indicator %!in% c("p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "p_7", "p_8")) %>%
       mutate(
-        TPS_flagged_questions = str_replace_all(TPS_flagged_questions, " Flag", ""),
-        country_flags_TPS = if_else(TPS_flagged_questions == "Red", 1, 0)
+        TPS_flag_tr  = str_replace_all(TPS_flag_tr, " Flag", ""),
+        TPS_flag_iqr = str_replace_all(TPS_flag_iqr, " Flag", ""),
+        c_flags_TPS_tr = if_else(TPS_flag_tr == "Red", 1, 0),
+        c_flags_TPS_iqr = if_else(TPS_flag_iqr == "Red", 1, 0),
       ) %>%
       group_by(country_name_ltn, indicator) %>%
-      summarise(country_flags_TPS = sum(country_flags_TPS, na.rm = TRUE))
+      summarise(c_flags_TPS_tr = sum(c_flags_TPS_tr, na.rm = TRUE),
+                c_flags_TPS_iqr = sum(c_flags_TPS_iqr, na.rm = TRUE))
     
     ## ROLI flags ==================================================================================
     
     # Join df2 with ROLI_validation, calculate ROLI flags, and summarize total flags per country and indicator
     df3 <- df2 %>%
       left_join(ROLI_validation %>%
-                  select(country_name_ltn, indicator, ROLI_flagged_questions),
+                  select(country_name_ltn, indicator, QRQ_value, ROLI_flag_tr, ROLI_flag_iqr),
                 by = c("country_name_ltn", "indicator")
       ) %>%
       mutate(
-        ROLI_flagged_questions = str_replace_all(ROLI_flagged_questions, " Flag", ""),
-        ROLI_flagged_questions = if_else(ROLI_flagged_questions == "Red", 1, 0)
+        ROLI_flag_tr = str_replace_all(ROLI_flag_tr, " Flag", ""),
+        c_flags_ROLI_tr = if_else(ROLI_flag_tr == "Red", 1, 0),
+        ROLI_flag_iqr = str_replace_all(ROLI_flag_iqr, " Flag", ""),
+        c_flags_ROLI_iqr = if_else(ROLI_flag_tr == "Red", 1, 0)
       ) %>%
-      rowwise() %>%
-      mutate(
-        country_flags = sum(country_flags_TPS + ROLI_flagged_questions)
-      ) %>%
-      select(country_name_ltn, indicator, country_flags)
+      select(country_name_ltn, indicator, QRQ_value, c_flags_TPS_tr, c_flags_TPS_iqr, c_flags_ROLI_tr, c_flags_ROLI_iqr)
     
     ## LONGITUDINAL flags ==================================================================================
     
@@ -274,30 +275,30 @@ flags_overview <- function(
              country_name_ltn = country) %>%
       filter(indicator %!in% c("p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "p_7", "p_8")) %>%
       left_join(df3, by = c("country_name_ltn", "indicator")) %>%
-      rename(country_code_nuts = nuts)
-    
-    ## Flagging system ==================================================================================
-    
-    # Join df4 with LONG_validation, calculate LONG flags, and summarize total flags per country
-    df5 <- df4 %>%
+      rename(country_code_nuts = nuts) %>%
       left_join(LONG_validation %>%
-                  select(country_name_ltn, country_code_nuts, indicator, LONG_flagged_questions),
+                  select(country_name_ltn, country_code_nuts, indicator, LONG_flag_tr, LONG_flag_iqr),
                 by = c("country_name_ltn", "country_code_nuts", "indicator")
       ) %>%
       mutate(
-        LONG_flagged_questions = str_replace_all(LONG_flagged_questions, " Flag", ""),
-        nuts_flags = if_else(
-          LONG_flagged_questions == "Green", 0, 1
-        )
+        LONG_flag_tr = str_replace_all(LONG_flag_tr, " Flag", ""),
+        LONG_flag_iqr = str_replace_all(LONG_flag_iqr, " Flag", ""),
+        c_flags_LONG_tr = if_else(LONG_flag_tr == "Red", 1, 0),
+        c_flags_LONG_iqr = if_else(LONG_flag_iqr == "Red", 1, 0)
       ) %>%
-      select(!LONG_flagged_questions) %>%
-      rowwise() %>%
-      mutate(
-        total_flags = sum(country_flags, nuts_flags, na.rm = TRUE)
-      )%>% 
-      left_join(QRQ_description)
+      select(country_name_ltn, country_code_nuts, indicator, QRQ_NUTS_value, c_flags_TPS_tr, c_flags_TPS_iqr, c_flags_ROLI_tr, c_flags_ROLI_iqr, c_flags_LONG_tr, c_flags_LONG_iqr)
     
+    # Join df4 with LONG_validation, calculate LONG flags, and summarize total flags per country
+    df5 <- df4 %>%
+      left_join(QRQ_description %>%
+                  select(`Pillar number` = `Pillar score`, Pillar, `Sub-pillar number` = `Sub-pillar score`, `Sub-pillar`, indicator, Topics, Chapter))
     
+    ## Flagging system ==================================================================================
+    
+    df6 <- df5 %>%
+      group_by(country_name_ltn,country_code_nuts,indicator) %>%
+      mutate(total_flags_tr = sum(c(c_flags_TPS_tr, c_flags_ROLI_tr, c_flags_LONG_tr), na.rm = T),
+             total_flags_iqr = sum(c(c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_LONG_iqr), na.rm = T))
     
     return(df5)
     

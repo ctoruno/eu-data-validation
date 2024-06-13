@@ -143,14 +143,17 @@ variable_list.df <- read_excel(paste0(path2eu,
 eu_qrq_final <- read_dta(paste0(path2eu,
                                 "/EU-S Data/eu-qrq/1. Data/",
                                 "eu_qrq_nuts.dta")) %>%
+  select(country, nuts, starts_with("p_")) %>%
   pivot_longer(cols = !c(nuts, country), 
                names_to = "indicator", values_to = "QRQ_value")
 
 EU_QRQ_country <- read_dta(paste0(path2eu,
                                   "/EU-S Data/eu-qrq/1. Data/",
                                   "eu_qrq_country.dta")) %>%
+  select(country, starts_with("p_")) %>%
   pivot_longer(cols = !c(country), 
-               names_to = "indicator", values_to = "QRQ_value")
+               names_to = "indicator", values_to = "QRQ_value") %>%
+  rename(country_name_ltn = country)
 
 #### QRQ TPS scores ======================================================================================================
 

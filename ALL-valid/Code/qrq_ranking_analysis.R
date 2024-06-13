@@ -35,10 +35,16 @@ QRQ_ranking.fn <- function(data,
         Trend             = Rank_QRQ - Rank_TPS,
         Trend             = if_else(Trend < 0, "Negative", "Positive"),
         Diff_Rank         = max(abs(Rank_QRQ - Rank_TPS)),
-        TPS_flagged_questions = if_else(Diff_Rank >= 7, "Red", 
-                                        "Green", NA_character_)
+        TPS_flag_tr       = if_else(Diff_Rank >= 10, "Red", 
+                                    "Green", NA_character_)
       )
-    flagged_data.df<- diff_rank(flagged_data.df, "qrq")
+    
+    flagged_data.df <- diff_rank(flagged_data.df, "qrq") %>%
+      select(country_name_ltn, country_code_nuts, indicator, subpillar_name, 
+             QRQ_value, TPS_variable, TPS_value, Rank_QRQ, Rank_TPS, Diff_Rank, 
+             Trend, TPS_flag_tr, TPS_flag_iqr = flagged_questions)
+    
+    
     return(flagged_data.df)
     
   } else if (analysis == "LONG") {
@@ -56,10 +62,16 @@ QRQ_ranking.fn <- function(data,
         Trend             = Rank_QRQ - Rank_LONG,
         Trend             = if_else(Trend < 0, "Negative", "Positive"),
         Diff_Rank         = max(abs(Rank_QRQ - Rank_LONG)),
-        LONG_flagged_questions = if_else(Diff_Rank >= 15, "Red", 
+        LONG_flag_tr = if_else(Diff_Rank >= 15, "Red", 
                                          "Green", NA_character_)
       )
-    flagged_data.df<- diff_rank(flagged_data.df, "LONG")
+    
+    flagged_data.df <- diff_rank(flagged_data.df, "LONG") %>%
+      select(country_name_ltn, country_code_nuts, indicator, 
+             QRQ_value, long_QRQ_value, Rank_QRQ, Rank_LONG, Diff_Rank, Trend,
+             LONG_flag_tr, LONG_flag_iqr = flagged_questions)
+      
+    
     return(flagged_data.df)
     
   } else {
@@ -77,10 +89,14 @@ QRQ_ranking.fn <- function(data,
         Trend             = Rank_QRQ - Rank_ROLI,
         Trend             = if_else(Trend < 0, "Negative", "Positive"),
         Diff_Rank         = max(abs(Rank_QRQ - Rank_ROLI)),
-        ROLI_flagged_questions = if_else(Diff_Rank >= 3, "Red", 
+        ROLI_flag_tr      = if_else(Diff_Rank >= 7, "Red", 
                                          "Green", NA_character_)
       )
-    flagged_data.df<- diff_rank(flagged_data.df, "qrq")
+    
+    flagged_data.df <- diff_rank(flagged_data.df, "qrq") %>%
+      select(country_name_ltn, indicator, QRQ_value, ROLI_QRQ_value, Rank_QRQ, 
+             Rank_ROLI, Diff_Rank, Trend, ROLI_flag_tr, ROLI_flag_iqr = flagged_questions)
+    
     return(flagged_data.df)
     
     
