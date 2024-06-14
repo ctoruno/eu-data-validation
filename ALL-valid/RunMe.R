@@ -140,20 +140,42 @@ variable_list.df <- read_excel(paste0(path2eu,
 
 #### QRQ scores data ======================================================================================================
 
-eu_qrq_final <- read_dta(paste0(path2eu,
-                                "/EU-S Data/eu-qrq/1. Data/",
-                                "eu_qrq_nuts.dta")) %>%
+##### QRQ s1 ======================================================================================================
+
+eu_qrq_final_s1 <- read_dta(paste0(path2eu,
+                                   "/EU-S Data/eu-qrq/1. Data/",
+                                   "eu_qrq_nuts.dta")) %>%
   select(country, nuts, starts_with("p_")) %>%
   pivot_longer(cols = !c(nuts, country), 
                names_to = "indicator", values_to = "QRQ_value")
 
-EU_QRQ_country <- read_dta(paste0(path2eu,
-                                  "/EU-S Data/eu-qrq/1. Data/",
-                                  "eu_qrq_country.dta")) %>%
+EU_QRQ_country_s1 <- read_dta(paste0(path2eu,
+                                     "/EU-S Data/eu-qrq/1. Data/",
+                                     "eu_qrq_country.dta")) %>%
   select(country, starts_with("p_")) %>%
   pivot_longer(cols = !c(country), 
                names_to = "indicator", values_to = "QRQ_value") %>%
   rename(country_name_ltn = country)
+
+##### QRQ s2 ======================================================================================================
+
+eu_qrq_final_s2 <- read_dta(paste0(path2eu,
+                                   "/EU-S Data/eu-qrq/1. Data/",
+                                   "eu_qrq_no_out1.dta")) %>%
+  select(country, nuts, starts_with("p_")) %>%
+  pivot_longer(cols = !c(nuts, country), 
+               names_to = "indicator", values_to = "QRQ_value")
+
+
+##### QRQ s3 ======================================================================================================
+
+eu_qrq_final_s3 <- read_dta(paste0(path2eu,
+                                   "/EU-S Data/eu-qrq/1. Data/",
+                                   "eu_qrq_no_out2.dta")) %>%
+  select(country, nuts, starts_with("p_")) %>%
+  pivot_longer(cols = !c(nuts, country), 
+               names_to = "indicator", values_to = "QRQ_value")
+
 
 #### QRQ TPS scores ======================================================================================================
 
@@ -195,7 +217,7 @@ QRQ_final_TPS <- QRQ_TPS_MATCH.df %>%
 
 QRQ_TPS_final <- QRQ_final_TPS %>%
   left_join(EU_QRQ_country, by = c("indicator","country_name_ltn")) %>%
-  select(country_name_ltn, country_code_nuts, indicator, subpillar_name, QRQ_value, TPS_variable, TPS_value)
+  select(country_name_ltn, country_code_nuts, indicator, QRQ_value, TPS_variable, TPS_value)
 
 #### QRQ longidutinal scores ======================================================================================================
 

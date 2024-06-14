@@ -40,7 +40,7 @@ QRQ_ranking.fn <- function(data,
       )
     
     flagged_data.df <- diff_rank(flagged_data.df, "qrq") %>%
-      select(country_name_ltn, country_code_nuts, indicator, subpillar_name, 
+      select(country_name_ltn, country_code_nuts, indicator,
              QRQ_value, TPS_variable, TPS_value, Rank_QRQ, Rank_TPS, Diff_Rank, 
              Trend, TPS_flag_tr, TPS_flag_iqr = flagged_questions)
     

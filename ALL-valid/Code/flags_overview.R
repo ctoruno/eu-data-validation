@@ -288,18 +288,14 @@ flags_overview <- function(
       ) %>%
       select(country_name_ltn, country_code_nuts, indicator, QRQ_NUTS_value, c_flags_TPS_tr, c_flags_TPS_iqr, c_flags_ROLI_tr, c_flags_ROLI_iqr, c_flags_LONG_tr, c_flags_LONG_iqr)
     
-    # Join df4 with LONG_validation, calculate LONG flags, and summarize total flags per country
-    df5 <- df4 %>%
-      left_join(QRQ_description %>%
-                  select(`Pillar number` = `Pillar score`, Pillar, `Sub-pillar number` = `Sub-pillar score`, `Sub-pillar`, indicator, Topics, Chapter))
-    
     ## Flagging system ==================================================================================
     
-    df6 <- df5 %>%
+    df5 <- df4 %>%
       group_by(country_name_ltn,country_code_nuts,indicator) %>%
       mutate(total_flags_tr = sum(c(c_flags_TPS_tr, c_flags_ROLI_tr, c_flags_LONG_tr), na.rm = T),
-             total_flags_iqr = sum(c(c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_LONG_iqr), na.rm = T))
-    
+             total_flags_iqr = sum(c(c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_LONG_iqr), na.rm = T)) %>%
+      select(country_name_ltn, country_code_nuts, indicator, QRQ_NUTS_value, c_flags_TPS_tr, c_flags_ROLI_tr, c_flags_LONG_tr, total_flags_tr)
+      
     return(df5)
     
   }
