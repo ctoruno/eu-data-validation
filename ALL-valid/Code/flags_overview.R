@@ -23,10 +23,11 @@ flags_overview <- function(
     colnames(df) <- c("Country", "GPP_Variable_Name")
     
     # Populate 'df' with combinations of unique countries from 'html_flags.df' and 'reportvarslist' which contain the variables from the report
+    fullvars<- unique(c(TPS_ranking_analysis.df$question, INTERNAL_ranking_analysis.df$question, html_flags.df$GPP_Variable_Name))
     
     for (i in countrylist) {
-      df <- rbind(df, tibble("Country" = rep(i, length(reportvarslist)),
-                             "GPP_Variable_Name" = reportvarslist))
+      df <- rbind(df, tibble("Country" = rep(i, length(fullvars)),
+                             "GPP_Variable_Name" = fullvars))
     }
     
     # Join 'df' with 'html_flags' and remove duplicate rows
@@ -86,16 +87,16 @@ flags_overview <- function(
     
     gpp <- master_data.df %>% 
       select(country_name_ltn, nuts_id, 
-             all_of(reportvarslist))
+             all_of(fullvars))
     
     # Normalize the variables
-    normalized <- normalizingvars(gpp, reportvarslist)
+    normalized <- normalizingvars(gpp, fullvars)
     
     # Aggregate the normalized variables at the country level
     gppaggregate <- normalized %>%
       group_by(country_name_ltn, nuts_id) %>%
-      summarise_at(reportvarslist, mean, na.rm= TRUE) %>%
-      pivot_longer(cols = all_of(reportvarslist), names_to = "GPP_Variable_Name", values_to = "Score") %>%
+      summarise_at(fullvars, mean, na.rm= TRUE) %>%
+      pivot_longer(cols = all_of(fullvars), names_to = "GPP_Variable_Name", values_to = "Score") %>%
       left_join(weight.df%>% 
                   select(nuts_id, regionpoppct))%>%
       group_by(country_name_ltn, GPP_Variable_Name)%>%
@@ -321,6 +322,26 @@ flags_overview <- function(
              scenario) %>%
       arrange(country_code_nuts, indicator, scenario)
 
+    
+    ## Outliers Analyses ==================================================================================
+    
+    
+    df6<- df6%>%
+      left_join(Positions_validation%>% 
+                  select(Country, `NUTS Region`, Indicator, Scenario, Flag)%>%
+                  rename(country_name_ltn = Country,
+                         country_code_nuts = `NUTS Region`,
+                         indicator = Indicator,
+                         scenario = Scenario,
+                         c_flags_POS_iqr = Flag))%>%
+      left_join(Scores_validation%>%
+                  select(Country, `NUTS Region`, Indicator, Scenario, Flag)%>%
+                  rename(country_name_ltn = Country,
+                         country_code_nuts = `NUTS Region`,
+                         indicator = Indicator,
+                         scenario = Scenario,
+                         c_flags_SCOR_iqr = Flag))
+    
       
     return(df6)
     
