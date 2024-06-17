@@ -4,7 +4,10 @@ html_flags<- function(){
   subp<- metadata%>%
     select(GPP_Variable_Name = DAU_GPP, Question, subpillar = sub_pillar) %>%
     arrange(subpillar) %>%
-    left_join(QRQ_description %>% select(pillar, pillar_name, pillar_id, subpillar, subpillar_name),
+    left_join(QRQ_description %>% select(pillar = `Pillar score`, 
+                                         pillar_name = Pillar, 
+                                         subpillar = `Sub-pillar score`, 
+                                         subpillar_name = `Sub-pillar` ),
               by = "subpillar") %>%
     distinct() %>%
     select(GPP_Variable_Name, Sub_Pillar = subpillar, Pillar = pillar)%>%

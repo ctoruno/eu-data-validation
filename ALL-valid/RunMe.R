@@ -147,7 +147,10 @@ eu_qrq_final_s1 <- read_dta(paste0(path2eu,
                                    "eu_qrq_nuts.dta")) %>%
   select(country, nuts, starts_with("p_")) %>%
   pivot_longer(cols = !c(nuts, country), 
-               names_to = "indicator", values_to = "QRQ_value")
+               names_to = "indicator", values_to = "QRQ_value") %>%
+  mutate(
+    scenario = "scenario 1"
+  )
 
 EU_QRQ_country_s1 <- read_dta(paste0(path2eu,
                                      "/EU-S Data/eu-qrq/1. Data/",
@@ -155,7 +158,10 @@ EU_QRQ_country_s1 <- read_dta(paste0(path2eu,
   select(country, starts_with("p_")) %>%
   pivot_longer(cols = !c(country), 
                names_to = "indicator", values_to = "QRQ_value") %>%
-  rename(country_name_ltn = country)
+  rename(country_name_ltn = country) %>%
+  mutate(
+    scenario = "scenario 1"
+  )
 
 ##### QRQ s2 ======================================================================================================
 
@@ -164,8 +170,21 @@ eu_qrq_final_s2 <- read_dta(paste0(path2eu,
                                    "eu_qrq_no_out1.dta")) %>%
   select(country, nuts, starts_with("p_")) %>%
   pivot_longer(cols = !c(nuts, country), 
-               names_to = "indicator", values_to = "QRQ_value")
+               names_to = "indicator", values_to = "QRQ_value")  %>%
+  mutate(
+    scenario = "scenario 2"
+  )
 
+EU_QRQ_country_s2 <- read_dta(paste0(path2eu,
+                                     "/EU-S Data/eu-qrq/1. Data/",
+                                     "eu_qrq_country_no_out1.dta")) %>%
+  select(country, starts_with("p_")) %>%
+  pivot_longer(cols = !c(country), 
+               names_to = "indicator", values_to = "QRQ_value") %>%
+  rename(country_name_ltn = country) %>%
+  mutate(
+    scenario = "scenario 2"
+  )
 
 ##### QRQ s3 ======================================================================================================
 
@@ -174,9 +193,72 @@ eu_qrq_final_s3 <- read_dta(paste0(path2eu,
                                    "eu_qrq_no_out2.dta")) %>%
   select(country, nuts, starts_with("p_")) %>%
   pivot_longer(cols = !c(nuts, country), 
-               names_to = "indicator", values_to = "QRQ_value")
+               names_to = "indicator", values_to = "QRQ_value")  %>%
+  mutate(
+    scenario = "scenario 3"
+  )
 
+EU_QRQ_country_s3 <- read_dta(paste0(path2eu,
+                                     "/EU-S Data/eu-qrq/1. Data/",
+                                     "eu_qrq_country_no_out2.dta")) %>%
+  select(country, starts_with("p_")) %>%
+  pivot_longer(cols = !c(country), 
+               names_to = "indicator", values_to = "QRQ_value") %>%
+  rename(country_name_ltn = country) %>%
+  mutate(
+    scenario = "scenario 3"
+  )
 
+##### QRQ s4 ======================================================================================================
+
+eu_qrq_final_s4 <- read_dta(paste0(path2eu,
+                                   "/EU-S Data/eu-qrq/1. Data/",
+                                   "eu_qrq_no_out3.dta")) %>%
+  select(country, nuts, starts_with("p_")) %>%
+  pivot_longer(cols = !c(nuts, country), 
+               names_to = "indicator", values_to = "QRQ_value")  %>%
+  mutate(
+    scenario = "scenario 4"
+  )
+
+EU_QRQ_country_s4 <- read_dta(paste0(path2eu,
+                                     "/EU-S Data/eu-qrq/1. Data/",
+                                     "eu_qrq_country_no_out3.dta")) %>%
+  select(country, starts_with("p_")) %>%
+  pivot_longer(cols = !c(country), 
+               names_to = "indicator", values_to = "QRQ_value") %>%
+  rename(country_name_ltn = country) %>%
+  mutate(
+    scenario = "scenario 4"
+  )
+
+##### QRQ best score ======================================================================================================
+
+eu_qrq_final_s5 <- readxl::read_xlsx(paste0(path2eu,
+                                            "/EU-S Data/eu-data-validation/ALL-valid/Outputs/best_scenario_nuts.xlsx")
+                                     ) %>%
+  mutate(
+    scenario = "best scenario"
+  ) %>%
+  select(!best_score) %>%
+  select(!best_scenario)
+
+EU_QRQ_country_s5 <- readxl::read_xlsx(paste0(path2eu,
+                                              "/EU-S Data/eu-data-validation/ALL-valid/Outputs/best_scenario_country.xlsx")
+) %>%
+  mutate(
+    scenario = "best scenario"
+  ) %>%
+  rename(
+    country_name_ltn = country
+  )
+
+##### QRQ final ======================================================================================================
+
+eu_qrq_final <- rbind(eu_qrq_final_s1, eu_qrq_final_s2, eu_qrq_final_s3, eu_qrq_final_s4, eu_qrq_final_s5 ) 
+
+EU_QRQ_country <- rbind(EU_QRQ_country_s1, EU_QRQ_country_s2, EU_QRQ_country_s3, EU_QRQ_country_s4, EU_QRQ_country_s5) 
+  
 #### QRQ TPS scores ======================================================================================================
 
 # These are the TPS scores that we will compare with the QRQ scores
@@ -217,13 +299,14 @@ QRQ_final_TPS <- QRQ_TPS_MATCH.df %>%
 
 QRQ_TPS_final <- QRQ_final_TPS %>%
   left_join(EU_QRQ_country, by = c("indicator","country_name_ltn")) %>%
-  select(country_name_ltn, country_code_nuts, indicator, QRQ_value, TPS_variable, TPS_value)
+  select(country_name_ltn, country_code_nuts, indicator, QRQ_value, TPS_variable, TPS_value, scenario)
 
 #### QRQ longidutinal scores ======================================================================================================
 
 eu_qrq_final_LONG <- read_dta(paste0(path2eu,
                                      "/EU-S Data/eu-qrq/1. Data/",
                                      "Benchmarks/eu_qrq_final_LONG.dta")) %>%
+  select(country, nuts, starts_with("p_")) %>%
   pivot_longer(cols = !c(nuts, country), 
                names_to = "indicator", values_to = "long_QRQ_value") 
 
@@ -288,11 +371,17 @@ Question_outliers.df <- outlier_analysis(gpp_data.df = master_data.df, type = "q
 
 ### QRQ ======================================================================================================
 
-TPS_validation <- QRQ_ranking.fn(data = QRQ_TPS_final, analysis = "TPS")
+TPS_validation <- QRQ_ranking.fn(data = QRQ_TPS_final, 
+                                 analysis = "TPS")
 
-ROLI_validation <-  QRQ_ranking.fn(data = QRQ_ROLI_final, analysis = "ROLI")
+ROLI_validation <-  QRQ_ranking.fn(data = QRQ_ROLI_final, 
+                                   analysis = "ROLI")
 
-LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, analysis = "LONG")
+LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, 
+                                  analysis = "LONG")
+
+GPP_validation <- QRQ_ranking.fn(data = master_data.df, 
+                                 analysis = "GPP")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -313,7 +402,9 @@ GPP_flagging_system.df <- flags_overview(type = "GPP")
 
 QRQ_flagging_system.df <- flags_overview(type = "QRQ")
 
-
+write_xlsx(QRQ_flagging_system.df, path = paste0(path2eu,
+                                                 "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_flagging_system.xlsx")
+           )
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 4.  Outcome Functions                                                                        ----
