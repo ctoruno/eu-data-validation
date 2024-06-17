@@ -46,6 +46,7 @@ source("Code/nuts_flags_overview.R")
 ### QRQ ======================================================================================================
 
 source("Code/qrq_ranking_analysis.R")
+source("Code/qrq_outlier_analysis.R")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -383,6 +384,19 @@ LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final,
 GPP_validation <- QRQ_ranking.fn(data = master_data.df, 
                                  analysis = "GPP")
 
+# Outliers analyses
+
+Positions_validation <- qrq_outlier_analysis(data = eu_qrq_final, type = "position")
+
+write_xlsx(Positions_validation, path = paste0(path2eu,
+                                                 "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_positions_outliers.xlsx")
+)
+
+Scores_validation <- qrq_outlier_analysis(data = eu_qrq_final, type = "score")
+
+write_xlsx(Scores_validation, path = paste0(path2eu,
+                                               "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_scores_outliers.xlsx")
+)
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 3.  Implementing flagging system                                                                          ----
