@@ -243,9 +243,7 @@ flags_overview <- function(
       ) %>%
       filter(indicator %!in% c("p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "p_7", "p_8")) %>%
       mutate(
-        TPS_flag_tr  = str_replace_all(TPS_flag_tr, " Flag", ""),
         TPS_flag_iqr = str_replace_all(TPS_flag_iqr, " Flag", ""),
-        c_flags_TPS_tr = if_else(TPS_flag_tr == "Red", 1, 0),
         c_flags_TPS_iqr = if_else(TPS_flag_iqr == "Red", 1, 0),
       ) %>%
       group_by(country_name_ltn, indicator, scenario, QRQ_value) %>%
@@ -261,8 +259,6 @@ flags_overview <- function(
                 by = c("country_name_ltn", "indicator", "scenario", "QRQ_value")
       ) %>%
       mutate(
-        ROLI_flag_tr = str_replace_all(ROLI_flag_tr, " Flag", ""),
-        c_flags_ROLI_tr = if_else(ROLI_flag_tr == "Red", 1, 0),
         ROLI_flag_iqr = str_replace_all(ROLI_flag_iqr, " Flag", ""),
         c_flags_ROLI_iqr = if_else(ROLI_flag_tr == "Red", 1, 0)
       ) %>%
@@ -274,25 +270,6 @@ flags_overview <- function(
     df4 <- eu_qrq_final %>%
       rename(QRQ_NUTS_value = QRQ_value,
              country_name_ltn = country) %>%
-      filter(indicator %!in% c("p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "p_7", "p_8")) %>%
-      left_join(df3, by = c("country_name_ltn", "indicator", "scenario")) %>%
-      rename(country_code_nuts = nuts) %>%
-      left_join(LONG_validation %>%
-                  select(country_name_ltn, country_code_nuts, indicator, QRQ_NUTS_value = QRQ_value, LONG_flag_tr, LONG_flag_iqr, scenario),
-                by = c("country_name_ltn", "country_code_nuts", "indicator", "scenario", "QRQ_NUTS_value")
-      ) %>%
-      mutate(
-        LONG_flag_tr = str_replace_all(LONG_flag_tr, " Flag", ""),
-        LONG_flag_iqr = str_replace_all(LONG_flag_iqr, " Flag", ""),
-        c_flags_LONG_tr = if_else(LONG_flag_tr == "Red", 1, 0),
-        c_flags_LONG_iqr = if_else(LONG_flag_iqr == "Red", 1, 0)
-      ) %>%
-      select(country_name_ltn, country_code_nuts, indicator, QRQ_value,
-             QRQ_NUTS_value, c_flags_TPS_tr, c_flags_TPS_iqr, 
-             c_flags_ROLI_tr, c_flags_ROLI_iqr, 
-             c_flags_LONG_tr, c_flags_LONG_iqr, scenario)
-    
-    df5 <- df4 %>%
       left_join(GPP_validation %>%
                   select(country_name_ltn, country_code_nuts, indicator, QRQ_NUTS_value = QRQ_value, GPP_flag_tr, GPP_flag_iqr, scenario), 
                 by = c("country_name_ltn", "country_code_nuts", "indicator", "scenario", "QRQ_NUTS_value")) %>%
