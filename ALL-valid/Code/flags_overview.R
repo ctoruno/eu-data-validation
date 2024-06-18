@@ -269,6 +269,9 @@ flags_overview <- function(
     df4 <- eu_qrq_final %>%
       rename(QRQ_NUTS_value = QRQ_value,
              country_name_ltn = country) %>%
+      left_join(df3, by = c("country_name_ltn", "indicator", "scenario")) %>%
+      rename(country_code_nuts = nuts,
+             QRQ_country_value = QRQ_value) %>%
       left_join(GPP_validation %>%
                   select(country_name_ltn, country_code_nuts, indicator, QRQ_NUTS_value = QRQ_value, GPP_flag_iqr, scenario), 
                 by = c("country_name_ltn", "country_code_nuts", "indicator", "scenario", "QRQ_NUTS_value")) %>%
@@ -277,18 +280,17 @@ flags_overview <- function(
         c_flags_GPP_iqr = if_else(GPP_flag_iqr == "Red", 1, 0)
       ) %>%
       select(country_name_ltn, country_code_nuts, indicator, 
-             QRQ_value, QRQ_NUTS_value, 
+             QRQ_country_value, QRQ_NUTS_value, 
              c_flags_TPS_iqr, c_flags_ROLI_iqr, 
              c_flags_GPP_iqr, scenario)
     
     ## Flagging system ==================================================================================
     
-    df6 <- df5 %>%
+    df5 <- df4 %>%
       group_by(country_name_ltn,country_code_nuts,indicator, scenario) %>%
       mutate(total_flags_iqr = sum(c(c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_GPP_iqr), na.rm = T)) %>%
-      select(country_name_ltn, country_code_nuts, indicator, QRQ_value, QRQ_NUTS_value,
-             c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_LONG_iqr, c_flags_GPP_iqr,
-             total_flags_tr, total_flags_iqr,
+      select(country_name_ltn, country_code_nuts, indicator, QRQ_country_value, QRQ_NUTS_value,
+             c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_GPP_iqr, total_flags_iqr,
              scenario) %>%
       arrange(country_code_nuts, indicator, scenario)
 
@@ -296,7 +298,7 @@ flags_overview <- function(
     ## Outliers Analyses ==================================================================================
     
     
-    df6<- df6%>%
+    df6<- df5%>%
       left_join(Positions_validation%>% 
                   select(Country, `NUTS Region`, Indicator, Scenario, Flag)%>%
                   rename(country_name_ltn = Country,
@@ -311,9 +313,32 @@ flags_overview <- function(
                          indicator = Indicator,
                          scenario = Scenario,
                          c_flags_SCORE_iqr = Flag))
-    
+
+        df7 <- df6 %>%
+      filter(
+        indicator %!in% c("p_1_01_1", "p_1_01_2", "p_1_02_1", "p_1_03_1", "p_1_03_2", "p_1_03_3",
+                          "p_1_03_4", "p_1_03_5", "p_1_04_1", "p_1_04_2", "p_1_05_1", "p_1_05_2",
+                          "p_1_06_1", "p_1_06_2", "p_1_06_3", "p_1_06_4", "p_1_06_5", "p_1_06_6",
+                          "p_1_07_1", "p_1_07_2", "p_1_08_1", "p_1_08_2", "p_1_08_3", "p_1_08_4",
+                          "p_1_09_1", "p_1_09_2", "p_1_09_3", "p_1_10_1", "p_1_11_1", "p_1_12_1",
+                          "p_1_12_2", "p_1_12_3", "p_2_1_1", "p_2_2_1",  "p_2_2_2", "p_2_3_1",
+                          "p_2_4_1", "p_2_5_1",  "p_2_5_2", "p_3_1_1",  "p_3_1_2",  "p_3_1_3",
+                          "p_3_2_1",  "p_3_2_2", "p_3_2_3",  "p_3_2_4",  "p_3_2_5",  "p_3_2_6",
+                          "p_4_01_1", "p_4_02_1", "p_4_03_1", "p_4_04_1", "p_4_05_1", "p_4_05_2",
+                          "p_4_05_3", "p_4_06_1", "p_4_07_1", "p_4_08_1", "p_4_08_2", "p_4_08_3",
+                          "p_4_09_1", "p_4_09_2", "p_4_09_3", "p_4_09_4", "p_4_10_1", "p_4_11_1",
+                          "p_4_11_2", "p_4_11_3", "p_4_12_1", "p_4_13_1", "p_4_14_1", "p_4_14_2",
+                          "p_4_14_3", "p_4_14_4", "p_4_14_5", "p_6_1_1",  "p_6_1_2", "p_6_2_1",
+                          "p_6_3_1",  "p_6_3_2",  "p_6_3_3",  "p_6_3_4", "p_7_1_1",  "p_7_1_2",
+                          "p_7_2_1", "p_7_3_1",  "p_7_3_2", "p_7_4_1",  "p_7_4_2",  "p_7_4_3",  
+                          "p_7_4_4", "p_7_5_1",  "p_7_5_2", "p_7_6_1",  "p_7_6_2",  "p_7_6_3",
+                          "p_8_1_1",  "p_8_1_2", "p_8_2_1",  "p_8_2_2", "p_8_3_1",  "p_8_3_2",
+                          "p_8_3_3",  "p_8_3_4",  "p_8_3_5", "p_8_4_1", "p_8_4_2",  "p_8_4_3",
+                          "p_8_5_1", "p_8_6_1",  "p_8_6_2",  "p_8_6_3",  "p_8_6_4",  "p_8_6_5",
+                          "p_8_7_1")
+      )
       
-    return(df6)
+    return(df7)
     
   }
   
