@@ -77,7 +77,6 @@ QRQ_ranking.fn <- function(data,
   } else if (analysis == "GPP") {
     
     # List of subpillars ======================================================================================================
-    subp <- "p_8_1"
     subpillar <- c(
       "p_8_1",
       "p_8_2", 

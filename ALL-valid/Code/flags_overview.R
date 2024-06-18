@@ -238,7 +238,7 @@ flags_overview <- function(
     # Join EU_QRQ_country with TPS_validation, filter out certain indicators, and calculate TPS flags
     df2 <- EU_QRQ_country %>%
       left_join(TPS_validation %>%
-                  select(country_name_ltn, indicator, TPS_flag_tr, TPS_flag_iqr, scenario),
+                  select(country_name_ltn, indicator, TPS_flag_iqr, scenario),
                 by = c("country_name_ltn", "indicator", "scenario")
       ) %>%
       filter(indicator %!in% c("p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "p_7", "p_8")) %>%
@@ -247,8 +247,7 @@ flags_overview <- function(
         c_flags_TPS_iqr = if_else(TPS_flag_iqr == "Red", 1, 0),
       ) %>%
       group_by(country_name_ltn, indicator, scenario, QRQ_value) %>%
-      summarise(c_flags_TPS_tr = sum(c_flags_TPS_tr, na.rm = TRUE),
-                c_flags_TPS_iqr = sum(c_flags_TPS_iqr, na.rm = TRUE))
+      summarise(c_flags_TPS_iqr = sum(c_flags_TPS_iqr, na.rm = TRUE))
     
     ## ROLI flags ==================================================================================
     
@@ -262,7 +261,7 @@ flags_overview <- function(
         ROLI_flag_iqr = str_replace_all(ROLI_flag_iqr, " Flag", ""),
         c_flags_ROLI_iqr = if_else(ROLI_flag_tr == "Red", 1, 0)
       ) %>%
-      select(country_name_ltn, indicator, QRQ_value, c_flags_TPS_tr, c_flags_TPS_iqr, c_flags_ROLI_tr, c_flags_ROLI_iqr, scenario)
+      select(country_name_ltn, indicator, QRQ_value, c_flags_TPS_iqr, c_flags_ROLI_iqr, scenario)
     
     ## LONGITUDINAL flags ==================================================================================
     
@@ -271,29 +270,23 @@ flags_overview <- function(
       rename(QRQ_NUTS_value = QRQ_value,
              country_name_ltn = country) %>%
       left_join(GPP_validation %>%
-                  select(country_name_ltn, country_code_nuts, indicator, QRQ_NUTS_value = QRQ_value, GPP_flag_tr, GPP_flag_iqr, scenario), 
+                  select(country_name_ltn, country_code_nuts, indicator, QRQ_NUTS_value = QRQ_value, GPP_flag_iqr, scenario), 
                 by = c("country_name_ltn", "country_code_nuts", "indicator", "scenario", "QRQ_NUTS_value")) %>%
       mutate(
-        GPP_flag_tr = str_replace_all(GPP_flag_tr, " Flag", ""),
         GPP_flag_iqr = str_replace_all(GPP_flag_iqr, " Flag", ""),
-        c_flags_GPP_tr = if_else(GPP_flag_tr == "Red", 1, 0),
         c_flags_GPP_iqr = if_else(GPP_flag_iqr == "Red", 1, 0)
       ) %>%
       select(country_name_ltn, country_code_nuts, indicator, 
              QRQ_value, QRQ_NUTS_value, 
-             c_flags_TPS_tr, c_flags_TPS_iqr, 
-             c_flags_ROLI_tr, c_flags_ROLI_iqr, 
-             c_flags_LONG_tr, c_flags_LONG_iqr,
-             c_flags_GPP_tr , c_flags_GPP_iqr, scenario)
+             c_flags_TPS_iqr, c_flags_ROLI_iqr, 
+             c_flags_GPP_iqr, scenario)
     
     ## Flagging system ==================================================================================
     
     df6 <- df5 %>%
       group_by(country_name_ltn,country_code_nuts,indicator, scenario) %>%
-      mutate(total_flags_tr = sum(c(c_flags_TPS_tr, c_flags_ROLI_tr, c_flags_LONG_tr, c_flags_GPP_tr), na.rm = T),
-             total_flags_iqr = sum(c(c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_LONG_iqr, c_flags_GPP_iqr), na.rm = T)) %>%
+      mutate(total_flags_iqr = sum(c(c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_GPP_iqr), na.rm = T)) %>%
       select(country_name_ltn, country_code_nuts, indicator, QRQ_value, QRQ_NUTS_value,
-             c_flags_TPS_tr, c_flags_ROLI_tr, c_flags_LONG_tr, c_flags_GPP_tr,
              c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_LONG_iqr, c_flags_GPP_iqr,
              total_flags_tr, total_flags_iqr,
              scenario) %>%
@@ -317,7 +310,7 @@ flags_overview <- function(
                          country_code_nuts = `NUTS Region`,
                          indicator = Indicator,
                          scenario = Scenario,
-                         c_flags_SCOR_iqr = Flag))
+                         c_flags_SCORE_iqr = Flag))
     
       
     return(df6)
