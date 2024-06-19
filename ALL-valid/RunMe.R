@@ -313,20 +313,6 @@ eurobarometer524<- read_dta(file.path(path2SP,
 nutsencoding<- read_excel(paste0(path2eu,
                                  "/EU-S Data/eu-data-validation/ALL-valid/Inputs/NUTS encodings.xlsx"))
 
-#### QRQ longidutinal scores ======================================================================================================
-
-eu_qrq_final_LONG <- read_dta(paste0(path2eu,
-                                     "/EU-S Data/eu-qrq/1. Data/",
-                                     "Benchmarks/eu_qrq_final_LONG.dta")) %>%
-  select(country, nuts, starts_with("p_")) %>%
-  pivot_longer(cols = !c(nuts, country), 
-               names_to = "indicator", values_to = "long_QRQ_value") 
-
-QRQ_LONG_final <- eu_qrq_final_LONG %>%
-  left_join(eu_qrq_final, by = c("indicator","country", "nuts")) %>%
-  rename(country_name_ltn = country,
-         country_code_nuts = nuts)
-  
 #### QRQ ROLI scores ======================================================================================================
 
 eu_qrq_roli <- read_dta(paste0(path2eu,
@@ -388,9 +374,6 @@ TPS_validation <- QRQ_ranking.fn(data = QRQ_TPS_final,
 
 ROLI_validation <-  QRQ_ranking.fn(data = QRQ_ROLI_final, 
                                    analysis = "ROLI")
-
-LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final, 
-                                  analysis = "LONG")
 
 GPP_validation <- QRQ_ranking.fn(data = master_data.df, 
                                  analysis = "GPP")
