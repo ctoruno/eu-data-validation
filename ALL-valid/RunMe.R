@@ -47,6 +47,7 @@ source("Code/nuts_flags_overview.R")
 
 source("Code/qrq_ranking_analysis.R")
 source("Code/qrq_outlier_analysis.R")
+source("Code/FLE_524_cleaning.R")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -302,6 +303,16 @@ QRQ_TPS_final <- QRQ_final_TPS %>%
   left_join(EU_QRQ_country, by = c("indicator","country_name_ltn")) %>%
   select(country_name_ltn, country_code_nuts, indicator, QRQ_value, TPS_variable, TPS_value, scenario)
 
+
+# This is the data from Flash Eurobarometer 524
+eurobarometer524<- read_dta(file.path(path2SP, 
+                                      "8. Data/TPS/Eurobarometer/FLE_524_raw.dta",
+                                      fsep = "/")) 
+
+# This matches the NUTS region labels from FLE 524 with the relevant NUTS region IDs we want
+nutsencoding<- read_excel(paste0(path2eu,
+                                 "/EU-S Data/eu-data-validation/ALL-valid/Inputs/NUTS encodings.xlsx"))
+
 #### QRQ longidutinal scores ======================================================================================================
 
 eu_qrq_final_LONG <- read_dta(paste0(path2eu,
@@ -384,7 +395,7 @@ LONG_validation <- QRQ_ranking.fn(data = QRQ_LONG_final,
 GPP_validation <- QRQ_ranking.fn(data = master_data.df, 
                                  analysis = "GPP")
 
-# Outliers analyses
+#### Outliers analyses =======================================================================================
 
 Positions_validation <- qrq_outlier_analysis(data = eu_qrq_final, type = "position")
 
@@ -397,6 +408,15 @@ Scores_validation <- qrq_outlier_analysis(data = eu_qrq_final, type = "score")
 write_xlsx(Scores_validation, path = paste0(path2eu,
                                                "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_scores_outliers.xlsx")
 )
+
+#### NUTS level TPS ========================================================================================
+
+TPS_nuts_qrq <- FLE_524_cleaning(eurobarometer524)
+
+write_xlsx(TPS_nuts_qrq, path = paste0(path2eu,
+                                        "/EU-S Data/eu-data-validation/ALL-valid/Outputs/TPS_nuts_qrq.xlsx")
+)
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 3.  Implementing flagging system                                                                          ----
