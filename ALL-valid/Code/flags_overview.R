@@ -284,21 +284,36 @@ flags_overview <- function(
              c_flags_TPS_iqr, c_flags_ROLI_iqr, 
              c_flags_GPP_iqr, scenario)
     
+    df5 <- df4 %>%
+      left_join(TPS_nuts_validation %>%
+                  select(country_name_ltn, country_code_nuts, indicator, TPS_NUTS_flag_iqr, QRQ_NUTS_value, scenario), 
+                by = c("country_name_ltn", "country_code_nuts", "indicator", "QRQ_NUTS_value", "scenario")) %>%
+      mutate(
+        TPS_NUTS_flag_iqr = str_replace_all(TPS_NUTS_flag_iqr, " Flag", ""),
+        c_flags_TPS_NUTS_iqr = if_else(TPS_NUTS_flag_iqr == "Red", 1, 0)
+      ) %>%
+      select(country_name_ltn, country_code_nuts, indicator, 
+             QRQ_country_value, QRQ_NUTS_value, 
+             c_flags_TPS_iqr, c_flags_ROLI_iqr, 
+             c_flags_GPP_iqr, c_flags_TPS_NUTS_iqr,
+             scenario)
+      
+    
     ## Flagging system ==================================================================================
     
-    df5 <- df4 %>%
+    df6 <- df5 %>%
       group_by(country_name_ltn,country_code_nuts,indicator, scenario) %>%
-      mutate(total_flags_iqr = sum(c(c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_GPP_iqr), na.rm = T)) %>%
+      mutate(total_flags_iqr = sum(c(c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_GPP_iqr, c_flags_TPS_NUTS_iqr), na.rm = T)) %>%
       select(country_name_ltn, country_code_nuts, indicator, QRQ_country_value, QRQ_NUTS_value,
-             c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_GPP_iqr, total_flags_iqr,
-             scenario) %>%
+             c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_GPP_iqr, c_flags_TPS_NUTS_iqr,
+             total_flags_iqr, scenario) %>%
       arrange(country_code_nuts, indicator, scenario)
 
     
     ## Outliers Analyses ==================================================================================
     
     
-    df6<- df5%>%
+    df7 <- df6 %>%
       left_join(Positions_validation%>% 
                   select(Country, `NUTS Region`, Indicator, Scenario, Flag)%>%
                   rename(country_name_ltn = Country,
@@ -314,7 +329,7 @@ flags_overview <- function(
                          scenario = Scenario,
                          c_flags_SCORE_iqr = Flag))
 
-        df7 <- df6 %>%
+    df8 <- df7 %>%
       filter(
         indicator %!in% c("p_1_01_1", "p_1_01_2", "p_1_02_1", "p_1_03_1", "p_1_03_2", "p_1_03_3",
                           "p_1_03_4", "p_1_03_5", "p_1_04_1", "p_1_04_2", "p_1_05_1", "p_1_05_2",
@@ -338,7 +353,7 @@ flags_overview <- function(
                           "p_8_7_1")
       )
       
-    return(df7)
+    return(df8)
     
   }
   

@@ -47,29 +47,32 @@ QRQ_ranking.fn <- function(data,
     
     return(flagged_data.df)
     
-  } else if (analysis == "LONG") {
+  } else if (analysis == "NUTS") {
     
     # QRQ LONGITUDINAL scores ======================================================================================================
     
     rankings.df <- data %>% 
-      group_by(indicator, scenario) %>%
-      mutate(Rank_QRQ = rank(-QRQ_value),
-             Rank_LONG = rank(-long_QRQ_value))
+      group_by(indicator, scenario, TPS_variable) %>%
+      mutate(Rank_QRQ_NUTS = rank(-QRQ_value),
+             Rank_TPS_NUTS = rank(-TPS_NUTS_value))
     
     flagged_data.df <- rankings.df %>%
-      group_by(indicator, country_name_ltn, country_code_nuts, scenario) %>%
+      group_by(indicator, country, nuts, scenario) %>%
       mutate(
-        Trend             = Rank_QRQ - Rank_LONG,
+        Trend             = Rank_QRQ_NUTS - Rank_TPS_NUTS,
         Trend             = if_else(Trend < 0, "Negative", "Positive"),
-        Diff_Rank         = max(abs(Rank_QRQ - Rank_LONG)),
-        LONG_flag_tr = if_else(Diff_Rank >= 15, "Red", 
-                                         "Green", NA_character_)
+        Diff_Rank         = max(abs(Rank_QRQ_NUTS - Rank_TPS_NUTS))
+      ) %>%
+      rename(
+        country_name_ltn = country,
+        country_code_nuts = nuts,
+        QRQ_NUTS_value = QRQ_value
       )
     
     flagged_data.df <- diff_rank(flagged_data.df, "LONG") %>%
       select(country_name_ltn, country_code_nuts, indicator, 
-             QRQ_value, long_QRQ_value, Rank_QRQ, Rank_LONG, Diff_Rank, Trend,
-             LONG_flag_tr, LONG_flag_iqr = flagged_questions, scenario)
+             QRQ_NUTS_value, TPS_NUTS_value, Rank_QRQ_NUTS, Rank_TPS_NUTS, Diff_Rank, Trend,
+             TPS_NUTS_flag_iqr = flagged_questions, scenario)
       
     
     return(flagged_data.df)

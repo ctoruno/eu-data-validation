@@ -362,7 +362,10 @@ TPS_NUTS_QRQ <- TPS_nuts_qrq %>%
          nuts = NUTS) %>%
   left_join(eu_qrq_final, 
             by = c("nuts", "indicator"), 
-            relationship = "many-to-many")
+            relationship = "many-to-many") %>%
+  select(!country.x) %>%
+  rename(country = country.y,
+         TPS_NUTS_value = TPS_value)
   
 #### QRQ ROLI scores ======================================================================================================
 
@@ -428,6 +431,9 @@ ROLI_validation <-  QRQ_ranking.fn(data = QRQ_ROLI_final,
 
 GPP_validation <- QRQ_ranking.fn(data = master_data.df, 
                                  analysis = "GPP")
+
+TPS_nuts_validation <- QRQ_ranking.fn(data = TPS_NUTS_QRQ,
+                                      analysis = "NUTS")
 
 #### Outliers analyses =======================================================================================
 
