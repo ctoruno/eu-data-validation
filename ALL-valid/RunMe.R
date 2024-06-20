@@ -43,6 +43,7 @@ source("Code/html_flags.R")
 source("Code/diff_rank.R")
 source("Code/nuts_html_flags.R")
 source("Code/nuts_flags_overview.R")
+
 ### QRQ ======================================================================================================
 
 source("Code/qrq_ranking_analysis.R")
@@ -59,20 +60,23 @@ source("Code/FLE_524_cleaning.R")
 
 #### Read Data Merge ======================================================================================================
 master_data.df <- read_dta(paste0(path2eu, 
-                                  "/EU-S Data/eu-gpp/1. Data/3. Merge/EU_GPP_2024.dta"))
+                                  "/EU-S Data/eu-gpp/1. Data/3. Merge/",
+                                  "EU_GPP_2024.dta"))
 
 #### Read Inputs: supplemental data =======================================================================================
 
 # This is the file which contains all GPP variables
 data_map.df <- read_excel(paste0(path2eu, 
-                                 "/EU-S Data/eu-data-validation/CD-valid/Input/EU2 GPP 2023 Full Datamap.xlsx"), 
+                                 "/EU-S Data/eu-data-validation/CD-valid/Input/",
+                                 "EU2 GPP 2023 Full Datamap.xlsx"), 
                           sheet = "Data Map")
 
 # This is the codebook with all the information of the GPP vars, we join it with 
 #the GPP variables and filter the variables from the report
 
 codebook.df <- read_excel(paste0(path2eu, 
-                                 "/EU-S Data/eu-data-validation/CD-valid/Input/EU2 GPP 2023 Codebook.xlsx")
+                                 "/EU-S Data/eu-data-validation/CD-valid/Input/",
+                                 "EU2 GPP 2023 Codebook.xlsx")
                           ) %>%
   left_join(data_map.df %>% 
               select(Variable, Scale), 
@@ -84,21 +88,25 @@ reportvars.df <- codebook.df %>%
 reportvarslist <- reportvars.df$Variable # The final list of variables from the report
 
 # This file contains the weight distributions for each country
-weight.df<- read_excel(paste0(path2eu, "/EU-S Data/reports/eu-gpp-report/data-viz/inputs/region_labels.xlsx"))
+weight.df<- read_excel(paste0(path2eu, "/EU-S Data/reports/eu-gpp-report/data-viz/inputs/",
+                              "region_labels.xlsx"))
 
 # This file contains the TPS data base which comes from TPS folder
 
 TPS.df <- read_csv(paste0(path2eu,
-                          "/EU-S Data/eu-data-validation/CD-valid/Input/TPS_data.csv")) 
+                          "/EU-S Data/eu-data-validation/CD-valid/Input/",
+                          "TPS_data.csv")) 
 
 # This file contains the latest previous GPP data
 
-GPP_previous.df <- haven::read_dta(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/eu_merge.dta")) 
+GPP_previous.df <- haven::read_dta(paste0(path2eu, "/EU-S Data/eu-data-validation/CD-valid/Input/",
+                                          "eu_merge.dta")) 
 
 # This file contains the match among the GPP and the thematical framework
 
 metadata <- read_excel(paste0(path2eu, 
-                             "/EU-S Data/eu-data-validation/CD-valid/Input/Master Map File_EU GPP.xlsx"), 
+                             "/EU-S Data/eu-data-validation/CD-valid/Input/",
+                             "Master Map File_EU GPP.xlsx"), 
                        sheet = "Question Coding") %>%
   select(!`Horacio Question ID`, 
          EU_GPP = `EU GPP Full Question`,
@@ -131,12 +139,14 @@ metadata <- read_excel(paste0(path2eu,
 # This file contains the match between the TPS and our data
 
 metadataTPS <- read_excel(paste0(path2eu,
-                                 "/EU-S Data/eu-data-validation/CD-valid/Input/Metadatatps.xlsx"))
+                                 "/EU-S Data/eu-data-validation/CD-valid/Input/",
+                                 "Metadatatps.xlsx"))
 
 # This  file contains the variables to be tested over time
 
 variable_list.df <- read_excel(paste0(path2eu,
-                                      "/EU-S Data/eu-data-validation/CD-valid/Input/Metadatatt.xlsx"))
+                                      "/EU-S Data/eu-data-validation/CD-valid/Input/",
+                                      "Metadatatt.xlsx"))
 
 ### QRQ ======================================================================================================
 
@@ -237,7 +247,8 @@ EU_QRQ_country_s4 <- read_dta(paste0(path2eu,
 ##### QRQ best score ======================================================================================================
 
 eu_qrq_final_s5 <- readxl::read_xlsx(paste0(path2eu,
-                                            "/EU-S Data/eu-data-validation/ALL-valid/Outputs/best_scenario_nuts.xlsx")
+                                            "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                            "best_scenario_nuts.xlsx")
                                      ) %>%
   mutate(
     scenario = "best scenario"
@@ -246,7 +257,8 @@ eu_qrq_final_s5 <- readxl::read_xlsx(paste0(path2eu,
   select(!best_scenario)
 
 EU_QRQ_country_s5 <- readxl::read_xlsx(paste0(path2eu,
-                                              "/EU-S Data/eu-data-validation/ALL-valid/Outputs/best_scenario_country.xlsx")
+                                              "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                              "best_scenario_country.xlsx")
 ) %>%
   mutate(
     scenario = "best scenario"
@@ -266,13 +278,13 @@ EU_QRQ_country <- rbind(EU_QRQ_country_s1, EU_QRQ_country_s2, EU_QRQ_country_s3,
 # These are the TPS scores that we will compare with the QRQ scores
 
 QRQ_codebook<- import_list(paste0(path2eu,
-                                 "/EU-S Data/eu-data-validation/ALL-valid/",
-                                 "Inputs/EU QRQ Codebook.xlsx"))
+                                 "/EU-S Data/eu-data-validation/ALL-valid/Inputs/",
+                                 "EU QRQ Codebook.xlsx"))
 QRQ_codebook<- rbind(QRQ_codebook$CJ, QRQ_codebook$CCA, QRQ_codebook$CCB, QRQ_codebook$GOV)
 
 QRQ_TPS <- read_excel(paste0(path2eu,
-                             "/EU-S Data/eu-data-validation/ALL-valid/",
-                             "Inputs/QRQ_TPS.xlsx")) %>%
+                             "/EU-S Data/eu-data-validation/ALL-valid/Inputs/",
+                             "QRQ_TPS.xlsx")) %>%
   pivot_longer(cols = !c(country_name_ltn, country_code_nuts), 
                names_to = "Variable", 
                values_to = "value")
@@ -280,8 +292,8 @@ QRQ_TPS <- read_excel(paste0(path2eu,
 # These are the matches between the TPS and the QRQ scores
 
 QRQ_Matches_TPS <- read_excel(paste0(path2eu,
-                                     "/EU-S Data/eu-data-validation/ALL-valid/",
-                                     "Inputs/QRQ Matches TPS.xlsx")) %>%
+                                     "/EU-S Data/eu-data-validation/ALL-valid/Inputs/",
+                                     "QRQ Matches TPS.xlsx")) %>%
   drop_na(Variable)
 
 # We merge both databases to know which score belong to each QRQ score
@@ -293,8 +305,8 @@ QRQ_TPS_MATCH.df <- QRQ_TPS %>%
 # These data describe each indicator, to get a more complete data base we will merge this database with the QRQ_TPS
 
 QRQ_description <- read_excel(paste0(path2eu,
-                                     "/EU-S Data/eu-data-validation/ALL-valid/",
-                                     "Inputs/QRQ_description.xlsx"))
+                                     "/EU-S Data/eu-data-validation/ALL-valid/Inputs/",
+                                     "QRQ_description.xlsx"))
 
 QRQ_final_TPS <- QRQ_TPS_MATCH.df %>%
   left_join(QRQ_description, by = "indicator")
@@ -305,14 +317,45 @@ QRQ_TPS_final <- QRQ_final_TPS %>%
 
 
 # This is the data from Flash Eurobarometer 524
-eurobarometer524<- read_dta(file.path(path2SP, 
-                                      "8. Data/TPS/Eurobarometer/FLE_524_raw.dta",
+eurobarometer524 <- read_dta(file.path(path2SP, 
+                                      "8. Data/TPS/Eurobarometer/",
+                                      "FLE_524_raw.dta",
                                       fsep = "/")) 
 
 # This matches the NUTS region labels from FLE 524 with the relevant NUTS region IDs we want
-nutsencoding<- read_excel(paste0(path2eu,
-                                 "/EU-S Data/eu-data-validation/ALL-valid/Inputs/NUTS encodings.xlsx"))
+nutsencoding <- read_excel(paste0(path2eu,
+                                 "/EU-S Data/eu-data-validation/ALL-valid/Inputs/",
+                                 "NUTS encodings.xlsx"))
 
+#### NUTS level TPS ========================================================================================
+
+TPS_nuts_qrq <- FLE_524_cleaning(eurobarometer524) 
+
+write_xlsx(TPS_nuts_qrq, 
+           path = paste0(path2eu,
+                         "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                         "TPS_nuts_qrq.xlsx")
+)
+
+TPS_NUTS_QRQ <- TPS_nuts_qrq %>%
+  drop_na(NUTS) %>%
+  pivot_longer(cols = !c(Country, NUTS), 
+               names_to = "Variable", 
+               values_to = "value") %>%
+  mutate(
+    Variable = fct_relabel(Variable, ~ gsub("q", "Q", .))
+  ) %>% 
+  left_join(QRQ_Matches_TPS, 
+            by = "Variable", 
+            relationship = "many-to-many") %>%
+  rename(TPS_variable = Variable,
+         TPS_value = value,
+         country = Country,
+         nuts = NUTS) %>%
+  left_join(eu_qrq_final, 
+            by = c("nuts", "indicator"), 
+            relationship = "many-to-many")
+  
 #### QRQ ROLI scores ======================================================================================================
 
 eu_qrq_roli <- read_dta(paste0(path2eu,
@@ -383,21 +426,15 @@ GPP_validation <- QRQ_ranking.fn(data = master_data.df,
 Positions_validation <- qrq_outlier_analysis(data = eu_qrq_final, type = "position")
 
 write_xlsx(Positions_validation, path = paste0(path2eu,
-                                                 "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_positions_outliers.xlsx")
+                                                 "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                                 "QRQ_positions_outliers.xlsx")
 )
 
 Scores_validation <- qrq_outlier_analysis(data = eu_qrq_final, type = "score")
 
 write_xlsx(Scores_validation, path = paste0(path2eu,
-                                               "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_scores_outliers.xlsx")
-)
-
-#### NUTS level TPS ========================================================================================
-
-TPS_nuts_qrq <- FLE_524_cleaning(eurobarometer524)
-
-write_xlsx(TPS_nuts_qrq, path = paste0(path2eu,
-                                        "/EU-S Data/eu-data-validation/ALL-valid/Outputs/TPS_nuts_qrq.xlsx")
+                                               "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                               "QRQ_scores_outliers.xlsx")
 )
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -420,8 +457,10 @@ GPP_flagging_system.df <- flags_overview(type = "GPP")
 QRQ_flagging_system.df <- flags_overview(type = "QRQ")
 
 write_xlsx(QRQ_flagging_system.df, path = paste0(path2eu,
-                                                 "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_flagging_system.xlsx")
+                                                 "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                                 "QRQ_flagging_system.xlsx")
            )
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 4.  Outcome Functions                                                                        ----
@@ -431,13 +470,16 @@ write_xlsx(QRQ_flagging_system.df, path = paste0(path2eu,
 ### GPP ======================================================================================================
 
 openxlsx::write.xlsx(TPS_ranking_analysis.df, paste0(path2eu,
-                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_external_ranking.xlsx"))
+                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                                    "GPP_external_ranking.xlsx"))
 
 openxlsx::write.xlsx(INTERNAL_ranking_analysis.df, paste0(path2eu,
-                                                     "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_internal_ranking.xlsx"))
+                                                     "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                                     "GPP_internal_ranking.xlsx"))
 
 openxlsx::write.xlsx(GPP_flagging_system.df, paste0(path2eu,
-                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_flagging_system.xlsx"))
+                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                                    "GPP_flagging_system.xlsx"))
 
 ### Threshold outputs ========================================================================================
 
@@ -454,30 +496,37 @@ rankthresh<- left_join(tpsthresh, INTERNAL_ranking_analysis.df%>%
   arrange(country_name_ltn)
 
 openxlsx::write.xlsx(rankthresh, paste0(path2eu,
-                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/ranking_thresholds.xlsx"))
+                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                    "ranking_thresholds.xlsx"))
 
 ### NUTS GPP =================================================================================================
 
 
 openxlsx::write.xlsx(NUTS_outliers.df, paste0(path2eu,
-                                                     "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_NUTS_outliers.xlsx"))
+                                                     "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                                     "GPP_NUTS_outliers.xlsx"))
 
 openxlsx::write.xlsx(Question_outliers.df, paste0(path2eu,
-                                                          "/EU-S Data/eu-data-validation/ALL-valid/Outputs/GPP_Question_outliers.xlsx"))
+                                                          "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                                          "GPP_Question_outliers.xlsx"))
 
 ### QRQ ======================================================================================================
 
 openxlsx::write.xlsx(TPS_validation, paste0(path2eu,
-                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_external_ranking.xlsx"))
+                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                                    "QRQ_external_ranking.xlsx"))
 
 openxlsx::write.xlsx(ROLI_validation, paste0(path2eu,
-                                            "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_internal_ranking.xlsx"))
+                                            "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                            "QRQ_internal_ranking.xlsx"))
 
 openxlsx::write.xlsx(LONG_validation, paste0(path2eu,
-                                             "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_longitudinal.xlsx"))
+                                             "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                             "QRQ_longitudinal.xlsx"))
 
 openxlsx::write.xlsx(QRQ_flagging_system.df, paste0(path2eu,
-                                             "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_flags.xlsx"))
+                                             "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                             "QRQ_flags.xlsx"))
 
 
 
