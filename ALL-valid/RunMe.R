@@ -49,6 +49,7 @@ source("Code/nuts_flags_overview.R")
 source("Code/qrq_ranking_analysis.R")
 source("Code/qrq_outlier_analysis.R")
 source("Code/FLE_524_cleaning.R")
+source("Code/FLE_520_cleaning.R")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -315,6 +316,11 @@ QRQ_TPS_final <- QRQ_final_TPS %>%
   left_join(EU_QRQ_country, by = c("indicator","country_name_ltn")) %>%
   select(country_name_ltn, country_code_nuts, indicator, QRQ_value, TPS_variable, TPS_value, scenario)
 
+# This is the data from Flash Eurobarometer 520
+eurobarometer520 <- read_dta(file.path(path2SP, 
+                                       "8. Data/TPS/Eurobarometer/",
+                                       "FLE_520_raw.dta",
+                                       fsep = "/")) 
 
 # This is the data from Flash Eurobarometer 524
 eurobarometer524 <- read_dta(file.path(path2SP, 
@@ -329,12 +335,14 @@ nutsencoding <- read_excel(paste0(path2eu,
 
 #### NUTS level TPS ========================================================================================
 
-TPS_nuts_qrq <- FLE_524_cleaning(eurobarometer524) 
+FLE_520<- FLE_520_cleaning(eurobarometer520)
 
-write_xlsx(TPS_nuts_qrq, 
-           path = paste0(path2eu,
-                         "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
-                         "TPS_nuts_qrq.xlsx")
+FLE_524<- FLE_524_cleaning(eurobarometer524)
+
+TPS_nuts_qrq <- full_join(FLE_520, FLE_524)
+
+write_xlsx(TPS_nuts_qrq, path = paste0(path2eu,
+                                       "/EU-S Data/eu-data-validation/ALL-valid/Outputs/TPS_nuts_qrq.xlsx")
 )
 
 TPS_NUTS_QRQ <- TPS_nuts_qrq %>%
