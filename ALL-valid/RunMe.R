@@ -475,6 +475,7 @@ Capitals_analysis <- capitals.fn()
 
 GPP_flagging_system.df <- flags_overview(type = "GPP")
 
+GPP_NUTS_flagging_system.df <- nuts_flags_overview(type = "GPP")
 
 ### QRQ ======================================================================================================
 
@@ -536,6 +537,9 @@ openxlsx::write.xlsx(NUTS_outliers.df, paste0(path2eu,
 openxlsx::write.xlsx(Question_outliers.df, paste0(path2eu,
                                                           "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
                                                           "GPP_Question_outliers.xlsx"))
+openxlsx::write.xlsx(GPP_NUTS_flagging_system.df, paste0(path2eu,
+                                                    "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                                    "GPP_NUTS_flagging_system.xlsx"))
 
 ### QRQ ======================================================================================================
 
