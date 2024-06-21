@@ -24,14 +24,15 @@ nuts_flags_overview <- function(
     colnames(df) <- c("NUTS", "Country", "GPP_Variable_Name")
     
     # Populate 'df' with combinations of unique countries from 'html_flags.df' and 'reportvarslist' which contain the variables from the report
+    fullvars<- unique(c(NUTS_outliers.df$Question, Question_outliers.df$Question, nuts_html_flags.df$GPP_Variable_Name))
     
     for (i in unique(master_data.df$nuts_id)) {
       cy<- master_data.df%>%
         filter(nuts_id==i)
       
-      df <- rbind(df, tibble("NUTS" = rep(i, length(reportvarslist)),
+      df <- rbind(df, tibble("NUTS" = rep(i, length(fullvars)),
                              "Country" = cy$country_name_ltn[[1]],
-                             "GPP_Variable_Name" = reportvarslist))
+                             "GPP_Variable_Name" = fullvars))
     }
     
     # Join 'df' with 'html_flags' and remove duplicate rows
@@ -104,13 +105,11 @@ nuts_flags_overview <- function(
     # Prepare 'subp' dataframe by selecting and joining relevant columns from 'metadata' and 'QRQ_description'
     # This step is necessary to join the theoretical framework with the scores and the analyses
     
+    # Prepare 'subp' dataframe by selecting and joining relevant columns from 'metadata' and 'QRQ_description'
+    # This step is necessary to join the theoretical framework with the scores and the analyses
+    
     subp <- metadata %>%
-      select(GPP_Variable_Name = DAU_GPP, Question, subpillar = sub_pillar) %>%
-      arrange(subpillar) %>%
-      left_join(QRQ_description %>% 
-                  select(pillar, pillar_name, pillar_id, subpillar, subpillar_name),
-                by = "subpillar") %>%
-      distinct()
+      select(GPP_Variable_Name = DAU_GPP, Question, subpillar = sub_pillar)
     
     ## 1.5 Join everything ==================================================================================
     
@@ -130,7 +129,7 @@ nuts_flags_overview <- function(
     # In this step we create the flagging system according to the conditions we established
     # Please remember that the case_when is hierarchical that's means the initial condition is greater than the rest. The order matters.
     
-    df7 <- left_join(df6, subp, relationship = "many-to-many", by = "GPP_Variable_Name") %>%
+    df7 <-df6%>%
       mutate(
         Final_flag = 
           case_when(
@@ -154,9 +153,10 @@ nuts_flags_overview <- function(
             TRUE ~ "Green"
           )
       )%>%
-      select(Country, NUTS, GPP_Variable_Name , Score, HTML_flag , NUTS_outliers_flag , Question_outliers_flag , TPS_flag , Final_flag , everything())
+      select(Country, NUTS, GPP_Variable_Name , Score, HTML_flag , NUTS_outliers_flag , Question_outliers_flag , TPS_flag , Final_flag , everything())%>%
+      left_join(subp, by = "GPP_Variable_Name", relationship = "many-to-many")
     
-    # Return the final dataframe 'df6'
+    # Return the final dataframe 'df7'
     
     return(df7)
     

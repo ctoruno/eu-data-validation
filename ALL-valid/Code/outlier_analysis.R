@@ -21,7 +21,7 @@ outlier_analysis<- function(gpp_data.df = master_data.df, type){
   ## 1.1 Identifying indicators    =============================================================================
   nuts<- unique(gpp_data.df$nuts_id)
   repvars<- reportvarslist[!grepl("^DIS_", reportvarslist)]
-  repvars<- setdiff(repvars, c("BRB_permit_A", "BRB_benefits_A", "BRB_id_A", "BRB_school_A", "BRB_health_A"))
+  repvars<- reportvarslist[!grepl("^BRB_", reportvarslist)]
   
   ## 1.2 Sub-setting data  =====================================================================================
   gpp2 <- gpp_data.df %>% 
