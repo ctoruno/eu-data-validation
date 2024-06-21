@@ -25,8 +25,8 @@ QRQ_ranking.fn <- function(data,
     
     rankings.df <- data %>%
       group_by(indicator, TPS_variable, scenario) %>%
-      mutate(Rank_QRQ = rank(-QRQ_value),
-             Rank_TPS = rank(-TPS_value))
+      mutate(Rank_QRQ = rank(-QRQ_value, na.last = "keep"),
+             Rank_TPS = rank(-TPS_value, na.last = "keep"))
     
     
     flagged_data.df <- rankings.df %>%
@@ -49,12 +49,25 @@ QRQ_ranking.fn <- function(data,
     
   } else if (analysis == "NUTS") {
     
-    # QRQ LONGITUDINAL scores ======================================================================================================
+    # QRQ TPS NUTS scores ======================================================================================================
+    
+    FLE_524_Q5 <- data %>%
+      filter(indicator == "p_2_2") %>%
+      group_by(nuts, country, scenario, indicator, QRQ_value) %>%
+      mutate(FLE_524_Q5 = mean(TPS_NUTS_value, na.rm = T)) %>%
+      select(nuts, scenario, FLE_524_Q5, indicator, QRQ_value, country) %>%
+      pivot_longer(cols = !c(nuts, scenario, indicator, QRQ_value, country), 
+                   names_to = "TPS_variable", values_to = "TPS_NUTS_value") %>%
+      distinct()
     
     rankings.df <- data %>% 
+      filter(TPS_variable != "FLE_524_Q5_2") %>%
+      filter(TPS_variable != "FLE_524_Q5_1") %>%
+      select(nuts, country, scenario, indicator, TPS_variable, TPS_NUTS_value, QRQ_value) %>%
+      rbind(FLE_524_Q5) %>%
       group_by(indicator, scenario, TPS_variable) %>%
-      mutate(Rank_QRQ_NUTS = rank(-QRQ_value),
-             Rank_TPS_NUTS = rank(-TPS_NUTS_value))
+      mutate(Rank_QRQ_NUTS = rank(-QRQ_value, na.last = "keep"),
+             Rank_TPS_NUTS = rank(-TPS_NUTS_value, na.last = "keep")) 
     
     flagged_data.df <- rankings.df %>%
       group_by(indicator, country, nuts, scenario) %>%
@@ -71,9 +84,9 @@ QRQ_ranking.fn <- function(data,
     
     flagged_data.df <- diff_rank(flagged_data.df, "LONG") %>%
       select(country_name_ltn, country_code_nuts, indicator, 
-             QRQ_NUTS_value, TPS_NUTS_value, Rank_QRQ_NUTS, Rank_TPS_NUTS, Diff_Rank, Trend,
-             TPS_NUTS_flag_iqr = flagged_questions, scenario)
-      
+             QRQ_NUTS_value, TPS_variable, TPS_NUTS_value, Rank_QRQ_NUTS, Rank_TPS_NUTS, Diff_Rank, Trend,
+             TPS_NUTS_flag_iqr = flagged_questions, scenario) %>%
+      distinct() 
     
     return(flagged_data.df)
     
@@ -155,8 +168,8 @@ QRQ_ranking.fn <- function(data,
     
     rankings.df <- GPP_QRQ %>% 
       group_by(indicator, scenario) %>%
-      mutate(Rank_QRQ = rank(-QRQ_value),
-             Rank_GPP = rank(-GPP_score)) %>%
+      mutate(Rank_QRQ = rank(-QRQ_value, na.last = "keep"),
+             Rank_GPP = rank(-GPP_score, na.last = "keep")) %>%
       rename(
         country_name_ltn = country,
         country_code_nuts = nuts
@@ -187,8 +200,8 @@ QRQ_ranking.fn <- function(data,
     
     rankings.df <- data %>% 
       group_by(indicator, scenario) %>%
-      mutate(Rank_QRQ = rank(-QRQ_value),
-             Rank_ROLI = rank(-ROLI_QRQ_value))
+      mutate(Rank_QRQ = rank(-QRQ_value, na.last = "keep"),
+             Rank_ROLI = rank(-ROLI_QRQ_value, na.last = "keep"))
     
     flagged_data.df <- rankings.df %>%
       group_by(indicator, country_name_ltn, scenario) %>%

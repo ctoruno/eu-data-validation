@@ -1,22 +1,7 @@
-QRQ_flags <- QRQ_flagging_system.df %>%
-  group_by(country_name_ltn, country_code_nuts, scenario) %>%
-  summarise(
-    total_flags_tr = sum(total_flags_tr, 
-                         na.rm = T),
-    total_flags_iqr = sum(total_flags_iqr, 
-                          na.rm = T)
-  ) %>%
-  ungroup()
-
-write_xlsx(QRQ_flags,
-           path = paste0(path2eu,
-                         "/EU-S Data/eu-data-validation/ALL-valid/Outputs/QRQ_flags.xlsx")
-)
-
-best_scenario <- QRQ_flags %>%
+best_scenario <- QRQ_flagging_system.df  %>%
   group_by(country_code_nuts, scenario) %>%
   mutate(
-    final_score = mean(c(total_flags_tr,total_flags_iqr),na.rm = T)
+    final_score = mean(total_flags_iqr,na.rm = T)
     ) %>%
   group_by(country_code_nuts) %>%
   mutate(
@@ -28,7 +13,7 @@ best_scenario <- QRQ_flags %>%
   ungroup() %>%
   group_by(country_code_nuts) %>%
   mutate(
-    best_iqr   = min(total_flags_iqr)
+    best_iqr   = min(total_flags_iqr, na.rm = T)
   ) %>%
   filter(
     total_flags_iqr == best_iqr
@@ -54,8 +39,12 @@ best_scenario <- QRQ_flags %>%
   filter(filtro == 1) %>%
   select(country = country_name_ltn, nuts = country_code_nuts, best_scenario = scenario, best_score)
 
+nuts_best <- best_scenario %>%
+  select(nuts, best_scenario, best_score) %>%
+  distinct()
+  
 final_scores_nuts <- eu_qrq_final %>%
-  left_join(best_scenario, by = c("country", "nuts")) %>%
+  left_join(nuts_best, by = c("nuts")) %>%
   filter(scenario == best_scenario)
 
 write_xlsx(final_scores_nuts,
@@ -83,9 +72,11 @@ final_scores_country <- final_scores_nuts %>%
   ) %>%
   ungroup() %>%
   group_by(country, indicator) %>%
-  summarise(QRQ_value = sum(QRQ_country_value))
+  summarise(QRQ_value = sum(QRQ_country_value)) %>%
+  distinct()
 
 write_xlsx(final_scores_country,
            path = paste0(path2eu,
                          "/EU-S Data/eu-data-validation/ALL-valid/Outputs/best_scenario_country.xlsx")
 )
+

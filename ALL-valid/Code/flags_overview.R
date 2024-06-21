@@ -235,45 +235,84 @@ flags_overview <- function(
     # Define the '%!in%' operator to check for elements not in a vector
     "%!in%" <- compose("!", "%in%")
     
-    # Join EU_QRQ_country with TPS_validation, filter out certain indicators, and calculate TPS flags
-    df2 <- EU_QRQ_country %>%
-      left_join(TPS_validation %>%
-                  select(country_name_ltn, indicator, TPS_flag_iqr, scenario),
+    direction_TPS <- EU_QRQ_country %>%
+      full_join(TPS_validation %>%
+                  select(country_name_ltn, indicator, TPS_flag_iqr,  scenario, Rank_QRQ, Rank_TPS),
                 by = c("country_name_ltn", "indicator", "scenario")
       ) %>%
-      filter(indicator %!in% c("p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "p_7", "p_8")) %>%
       mutate(
         TPS_flag_iqr = str_replace_all(TPS_flag_iqr, " Flag", ""),
-        c_flags_TPS_iqr = if_else(TPS_flag_iqr == "Red", 1, 0),
+        c_flags_TPS_iqr = 
+          case_when(
+            TPS_flag_iqr == "Red" ~ 1,
+            TPS_flag_iqr == "Green" ~ 0,
+            T ~ NA_real_
+          )
+        ) %>% 
+      group_by(country_name_ltn, indicator, scenario) %>%
+      mutate(
+        c_flags_TPS_iqr = sum(c_flags_TPS_iqr, na.rm = TRUE),
+        tps_mean = mean(Rank_TPS),
+        diff = Rank_QRQ - Rank_TPS,
+        direction = if_else(diff < 0, "Negative", "Positive")
       ) %>%
+      select(country_name_ltn, indicator, scenario,direction) %>%
+      distinct() %>%
+      mutate(
+        direction   = first(direction)
+      ) %>%
+      distinct()
+    
+    # Join EU_QRQ_country with TPS_validation, filter out certain indicators, and calculate TPS flags
+    df2 <- EU_QRQ_country %>%
+      full_join(TPS_validation %>%
+                  select(country_name_ltn, indicator, TPS_flag_iqr,  scenario),
+                by = c("country_name_ltn", "indicator", "scenario")
+      ) %>%
+      mutate(
+        TPS_flag_iqr = str_replace_all(TPS_flag_iqr, " Flag", ""),
+        c_flags_TPS_iqr = 
+          case_when(
+            TPS_flag_iqr == "Red" ~ 1,
+            TPS_flag_iqr == "Green" ~ 0,
+            T ~ NA_real_
+          )
+      ) %>% 
       group_by(country_name_ltn, indicator, scenario, QRQ_value) %>%
-      summarise(c_flags_TPS_iqr = sum(c_flags_TPS_iqr, na.rm = TRUE))
+      summarise(c_flags_TPS_iqr = sum(c_flags_TPS_iqr, na.rm = TRUE)) %>%
+      left_join(direction_TPS, by = c("country_name_ltn", "indicator", "scenario")) %>%
+      mutate(
+        c_flags_TPS_iqr = if_else(is.na(direction), NA_real_, c_flags_TPS_iqr)
+      ) %>%
+      rename(trend_TPS = direction)
     
     ## ROLI flags ==================================================================================
     
     # Join df2 with ROLI_validation, calculate ROLI flags, and summarize total flags per country and indicator
     df3 <- df2 %>%
-      left_join(ROLI_validation %>%
-                  select(country_name_ltn, indicator, QRQ_value, ROLI_flag_tr, ROLI_flag_iqr, scenario),
+      full_join(ROLI_validation %>%
+                  select(country_name_ltn, indicator, QRQ_value, ROLI_flag_tr, ROLI_flag_iqr, scenario, Trend),
                 by = c("country_name_ltn", "indicator", "scenario", "QRQ_value")
       ) %>%
       mutate(
         ROLI_flag_iqr = str_replace_all(ROLI_flag_iqr, " Flag", ""),
         c_flags_ROLI_iqr = if_else(ROLI_flag_tr == "Red", 1, 0)
       ) %>%
-      select(country_name_ltn, indicator, QRQ_value, c_flags_TPS_iqr, c_flags_ROLI_iqr, scenario)
+      select(country_name_ltn, indicator, QRQ_value, c_flags_TPS_iqr, trend_TPS, c_flags_ROLI_iqr, trend_ROLI = Trend, scenario)
     
-    ## LONGITUDINAL flags ==================================================================================
+    ## NUTS flags ==================================================================================
     
     # Prepare df4 by renaming columns and filtering indicators
     df4 <- eu_qrq_final %>%
       rename(QRQ_NUTS_value = QRQ_value,
              country_name_ltn = country) %>%
-      left_join(df3, by = c("country_name_ltn", "indicator", "scenario")) %>%
+      full_join(df3, by = c("country_name_ltn", "indicator", "scenario")) %>%
       rename(country_code_nuts = nuts,
              QRQ_country_value = QRQ_value) %>%
-      left_join(GPP_validation %>%
-                  select(country_name_ltn, country_code_nuts, indicator, QRQ_NUTS_value = QRQ_value, GPP_flag_iqr, scenario), 
+      full_join(GPP_validation %>%
+                  select(country_name_ltn, country_code_nuts, indicator, 
+                         QRQ_NUTS_value = QRQ_value, trend_GPP = Trend, 
+                         GPP_flag_iqr, scenario), 
                 by = c("country_name_ltn", "country_code_nuts", "indicator", "scenario", "QRQ_NUTS_value")) %>%
       mutate(
         GPP_flag_iqr = str_replace_all(GPP_flag_iqr, " Flag", ""),
@@ -281,22 +320,35 @@ flags_overview <- function(
       ) %>%
       select(country_name_ltn, country_code_nuts, indicator, 
              QRQ_country_value, QRQ_NUTS_value, 
-             c_flags_TPS_iqr, c_flags_ROLI_iqr, 
-             c_flags_GPP_iqr, scenario)
+             trend_TPS, c_flags_TPS_iqr, 
+             trend_ROLI, c_flags_ROLI_iqr, 
+             trend_GPP, c_flags_GPP_iqr, 
+             scenario)
     
     df5 <- df4 %>%
-      left_join(TPS_nuts_validation %>%
-                  select(country_name_ltn, country_code_nuts, indicator, TPS_NUTS_flag_iqr, QRQ_NUTS_value, scenario), 
-                by = c("country_name_ltn", "country_code_nuts", "indicator", "QRQ_NUTS_value", "scenario")) %>%
+      full_join(TPS_nuts_validation %>%
+                  select(country_code_nuts, indicator, TPS_NUTS_flag_iqr, QRQ_NUTS_value, trend_TPS_NUTS = Trend, scenario), 
+                by = c("country_code_nuts", "indicator", "QRQ_NUTS_value", "scenario")) %>%
+      distinct() %>%
       mutate(
         TPS_NUTS_flag_iqr = str_replace_all(TPS_NUTS_flag_iqr, " Flag", ""),
         c_flags_TPS_NUTS_iqr = if_else(TPS_NUTS_flag_iqr == "Red", 1, 0)
       ) %>%
       select(country_name_ltn, country_code_nuts, indicator, 
              QRQ_country_value, QRQ_NUTS_value, 
-             c_flags_TPS_iqr, c_flags_ROLI_iqr, 
-             c_flags_GPP_iqr, c_flags_TPS_NUTS_iqr,
-             scenario)
+             trend_TPS, c_flags_TPS_iqr, 
+             trend_ROLI, c_flags_ROLI_iqr, 
+             trend_GPP, c_flags_GPP_iqr, 
+             trend_TPS_NUTS, c_flags_TPS_NUTS_iqr,
+             scenario) %>%
+      distinct() %>%
+      mutate(
+        counter = 1
+      ) %>%
+      group_by(country_code_nuts, indicator, QRQ_NUTS_value, scenario) %>%
+      mutate(
+        repeated = sum(counter)
+      )
       
     
     ## Flagging system ==================================================================================
@@ -304,30 +356,43 @@ flags_overview <- function(
     df6 <- df5 %>%
       group_by(country_name_ltn,country_code_nuts,indicator, scenario) %>%
       mutate(total_flags_iqr = sum(c(c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_GPP_iqr, c_flags_TPS_NUTS_iqr), na.rm = T)) %>%
+      mutate(total_flags_iqr = if_else(
+       is.na(c_flags_TPS_iqr) & is.na(c_flags_ROLI_iqr) & is.na(c_flags_GPP_iqr) & is.na(c_flags_TPS_NUTS_iqr), NA_real_, total_flags_iqr
+      )) %>%
       select(country_name_ltn, country_code_nuts, indicator, QRQ_country_value, QRQ_NUTS_value,
-             c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_GPP_iqr, c_flags_TPS_NUTS_iqr,
+             trend_TPS, c_flags_TPS_iqr, 
+             trend_ROLI, c_flags_ROLI_iqr, 
+             trend_GPP, c_flags_GPP_iqr, 
+             trend_TPS_NUTS, c_flags_TPS_NUTS_iqr,
              total_flags_iqr, scenario) %>%
       arrange(country_code_nuts, indicator, scenario)
 
     
     ## Outliers Analyses ==================================================================================
     
-    
     df7 <- df6 %>%
       left_join(Positions_validation%>% 
-                  select(Country, `NUTS Region`, Indicator, Scenario, Flag)%>%
+                  select(Country, `NUTS Region`, Indicator, Scenario, Flag) %>%
                   rename(country_name_ltn = Country,
                          country_code_nuts = `NUTS Region`,
                          indicator = Indicator,
                          scenario = Scenario,
                          c_flags_POS_iqr = Flag))%>%
       left_join(Scores_validation%>%
-                  select(Country, `NUTS Region`, Indicator, Scenario, Flag)%>%
+                  select(Country, `NUTS Region`, Indicator, Scenario, Flag) %>%
                   rename(country_name_ltn = Country,
                          country_code_nuts = `NUTS Region`,
                          indicator = Indicator,
                          scenario = Scenario,
-                         c_flags_SCORE_iqr = Flag))
+                         c_flags_SCORE_iqr = Flag)) %>%
+      left_join(Capitals_analysis %>%
+                  select(Country, `NUTS Region`, Indicator, Scenario, capital, Flag) %>%
+                  rename(country_name_ltn = Country,
+                         country_code_nuts = `NUTS Region`,
+                         indicator = Indicator,
+                         scenario = Scenario,
+                         c_flags_CAPITALS_iqr = Flag)
+                )
 
     df8 <- df7 %>%
       filter(

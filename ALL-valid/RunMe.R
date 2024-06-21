@@ -158,8 +158,8 @@ variable_list.df <- read_excel(paste0(path2eu,
 eu_qrq_final_s1 <- read_dta(paste0(path2eu,
                                    "/EU-S Data/eu-qrq/1. Data/",
                                    "eu_qrq_nuts.dta")) %>%
-  select(country, nuts, starts_with("p_")) %>%
-  pivot_longer(cols = !c(nuts, country), 
+  select(country, nuts, starts_with("p_"), capital) %>%
+  pivot_longer(cols = !c(nuts, country, capital), 
                names_to = "indicator", values_to = "QRQ_value") %>%
   mutate(
     scenario = "scenario 1"
@@ -181,9 +181,9 @@ EU_QRQ_country_s1 <- read_dta(paste0(path2eu,
 eu_qrq_final_s2 <- read_dta(paste0(path2eu,
                                    "/EU-S Data/eu-qrq/1. Data/",
                                    "eu_qrq_no_out1.dta")) %>%
-  select(country, nuts, starts_with("p_")) %>%
-  pivot_longer(cols = !c(nuts, country), 
-               names_to = "indicator", values_to = "QRQ_value")  %>%
+  select(country, nuts, starts_with("p_"), capital) %>%
+  pivot_longer(cols = !c(nuts, country, capital), 
+               names_to = "indicator", values_to = "QRQ_value") %>%
   mutate(
     scenario = "scenario 2"
   )
@@ -204,9 +204,9 @@ EU_QRQ_country_s2 <- read_dta(paste0(path2eu,
 eu_qrq_final_s3 <- read_dta(paste0(path2eu,
                                    "/EU-S Data/eu-qrq/1. Data/",
                                    "eu_qrq_no_out2.dta")) %>%
-  select(country, nuts, starts_with("p_")) %>%
-  pivot_longer(cols = !c(nuts, country), 
-               names_to = "indicator", values_to = "QRQ_value")  %>%
+  select(country, nuts, starts_with("p_"), capital) %>%
+  pivot_longer(cols = !c(nuts, country, capital), 
+               names_to = "indicator", values_to = "QRQ_value") %>%
   mutate(
     scenario = "scenario 3"
   )
@@ -227,9 +227,9 @@ EU_QRQ_country_s3 <- read_dta(paste0(path2eu,
 eu_qrq_final_s4 <- read_dta(paste0(path2eu,
                                    "/EU-S Data/eu-qrq/1. Data/",
                                    "eu_qrq_no_out3.dta")) %>%
-  select(country, nuts, starts_with("p_")) %>%
-  pivot_longer(cols = !c(nuts, country), 
-               names_to = "indicator", values_to = "QRQ_value")  %>%
+  select(country, nuts, starts_with("p_"), capital) %>%
+  pivot_longer(cols = !c(nuts, country, capital), 
+               names_to = "indicator", values_to = "QRQ_value") %>%
   mutate(
     scenario = "scenario 4"
   )
@@ -270,7 +270,8 @@ EU_QRQ_country_s5 <- readxl::read_xlsx(paste0(path2eu,
 
 ##### QRQ final ======================================================================================================
 
-eu_qrq_final <- rbind(eu_qrq_final_s1, eu_qrq_final_s2, eu_qrq_final_s3, eu_qrq_final_s4, eu_qrq_final_s5 ) 
+
+eu_qrq_final <- rbind(eu_qrq_final_s1, eu_qrq_final_s2, eu_qrq_final_s3, eu_qrq_final_s4, eu_qrq_final_s5) 
 
 EU_QRQ_country <- rbind(EU_QRQ_country_s1, EU_QRQ_country_s2, EU_QRQ_country_s3, EU_QRQ_country_s4, EU_QRQ_country_s5) 
   
@@ -335,9 +336,9 @@ nutsencoding <- read_excel(paste0(path2eu,
 
 #### NUTS level TPS ========================================================================================
 
-FLE_520<- FLE_520_cleaning(eurobarometer520)
+FLE_520 <- FLE_520_cleaning(eurobarometer520)
 
-FLE_524<- FLE_524_cleaning(eurobarometer524)
+FLE_524 <- FLE_524_cleaning(eurobarometer524)
 
 TPS_nuts_qrq <- full_join(FLE_520, FLE_524)
 
@@ -347,11 +348,18 @@ write_xlsx(TPS_nuts_qrq, path = paste0(path2eu,
 
 TPS_NUTS_QRQ <- TPS_nuts_qrq %>%
   drop_na(NUTS) %>%
+  mutate(
+    across(
+      starts_with("FLE_"),
+      ~if_else(.x == "NaN", NA_real_, .x)
+    )
+  ) %>%
   pivot_longer(cols = !c(Country, NUTS), 
                names_to = "Variable", 
                values_to = "value") %>%
   mutate(
-    Variable = fct_relabel(Variable, ~ gsub("q", "Q", .))
+    Variable = if_else(str_detect(Variable, "FLE_524"), 
+                       fct_relabel(Variable, ~ gsub("q", "Q", .)), Variable)
   ) %>% 
   left_join(QRQ_Matches_TPS, 
             by = "Variable", 
@@ -365,7 +373,7 @@ TPS_NUTS_QRQ <- TPS_nuts_qrq %>%
             relationship = "many-to-many") %>%
   select(!country.x) %>%
   rename(country = country.y,
-         TPS_NUTS_value = TPS_value)
+         TPS_NUTS_value = TPS_value) 
   
 #### QRQ ROLI scores ======================================================================================================
 
@@ -374,7 +382,8 @@ eu_qrq_roli <- read_dta(paste0(path2eu,
                                "Benchmarks/eu_qrq_ROLI_new.dta")) %>%
   pivot_longer(cols = !country, 
                names_to = "indicator", values_to = "ROLI_QRQ_value") %>%
-  rename(country_name_ltn = country)
+  rename(country_name_ltn = country) %>%
+  mutate(country_name_ltn = if_else(country_name_ltn %in% "Slovak Republic", "Slovakia", country_name_ltn))
 
 QRQ_ROLI_final <- eu_qrq_roli %>%
   left_join(EU_QRQ_country, by = c("indicator","country_name_ltn")) 
@@ -451,6 +460,8 @@ write_xlsx(Scores_validation, path = paste0(path2eu,
                                                "QRQ_scores_outliers.xlsx")
 )
 
+Capitals_analysis <- capitals.fn()
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 3.  Implementing flagging system                                                                          ----
@@ -470,9 +481,10 @@ GPP_flagging_system.df <- flags_overview(type = "GPP")
 
 QRQ_flagging_system.df <- flags_overview(type = "QRQ")
 
-write_xlsx(QRQ_flagging_system.df, path = paste0(path2eu,
-                                                 "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
-                                                 "QRQ_flagging_system.xlsx")
+write_xlsx(QRQ_flagging_system.df, 
+           path = paste0(path2eu,
+                         "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                         "QRQ_flagging_system.xlsx")
            )
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -534,13 +546,6 @@ openxlsx::write.xlsx(ROLI_validation, paste0(path2eu,
                                             "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
                                             "QRQ_internal_ranking.xlsx"))
 
-openxlsx::write.xlsx(LONG_validation, paste0(path2eu,
-                                             "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
-                                             "QRQ_longitudinal.xlsx"))
-
 openxlsx::write.xlsx(QRQ_flagging_system.df, paste0(path2eu,
                                              "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
                                              "QRQ_flags.xlsx"))
-
-
-
