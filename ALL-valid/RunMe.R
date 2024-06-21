@@ -50,6 +50,7 @@ source("Code/qrq_ranking_analysis.R")
 source("Code/qrq_outlier_analysis.R")
 source("Code/FLE_524_cleaning.R")
 source("Code/FLE_520_cleaning.R")
+source("Code/capitals_analysis.R")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##

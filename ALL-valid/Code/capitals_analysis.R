@@ -1,5 +1,7 @@
 capitals.fn <- function() {
   
+  "%!in%" <- compose("!", "%in%")
+  
   capital_mean <- eu_qrq_final %>%
     filter(capital == 1) %>%
     group_by(nuts, country, indicator, scenario) %>%
