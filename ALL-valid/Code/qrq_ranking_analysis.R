@@ -33,7 +33,7 @@ QRQ_ranking.fn <- function(data,
       group_by(indicator, TPS_variable, country_name_ltn, scenario) %>%
       mutate(
         Trend             = Rank_QRQ - Rank_TPS,
-        Trend             = if_else(Trend < 0, "Negative", "Positive"),
+        Trend             = if_else(Trend < 0, "Positive", "Negative"),
         Diff_Rank         = max(abs(Rank_QRQ - Rank_TPS)),
         TPS_flag_tr       = if_else(Diff_Rank >= 10, "Red", 
                                     "Green", NA_character_)
@@ -73,7 +73,7 @@ QRQ_ranking.fn <- function(data,
       group_by(indicator, country, nuts, scenario) %>%
       mutate(
         Trend             = Rank_QRQ_NUTS - Rank_TPS_NUTS,
-        Trend             = if_else(Trend < 0, "Negative", "Positive"),
+        Trend             = if_else(Trend < 0, "Positive", "Negative"),
         Diff_Rank         = max(abs(Rank_QRQ_NUTS - Rank_TPS_NUTS))
       ) %>%
       rename(
@@ -179,7 +179,7 @@ QRQ_ranking.fn <- function(data,
       group_by(indicator, country_name_ltn, country_code_nuts, scenario) %>%
       mutate(
         Trend             = Rank_QRQ - Rank_GPP,
-        Trend             = if_else(Trend < 0, "Negative", "Positive"),
+        Trend             = if_else(Trend < 0, "Positive", "Negative"),
         Diff_Rank         = max(abs(Rank_QRQ - Rank_GPP)),
         GPP_flag_tr       = if_else(Diff_Rank >= 15, "Red",
                                     "Green", NA_character_)
@@ -207,7 +207,7 @@ QRQ_ranking.fn <- function(data,
       group_by(indicator, country_name_ltn, scenario) %>%
       mutate(
         Trend             = Rank_QRQ - Rank_ROLI,
-        Trend             = if_else(Trend < 0, "Negative", "Positive"),
+        Trend             = if_else(Trend < 0, "Positive", "Negative"),
         Diff_Rank         = max(abs(Rank_QRQ - Rank_ROLI)),
         ROLI_flag_tr      = if_else(Diff_Rank >= 7, "Red", 
                                          "Green", NA_character_)
