@@ -179,3 +179,139 @@ gpp_vars<-c("JSE_indjudges", "ROL_courtrulings_imp", "ORC_govtefforts", "ORC_imp
            "CPB_freexp_cso", "CPA_partdem_congress", "CPB_freexp_pp", "CPA_partdem_localgvt", "LEP_rightsresp", "LEP_accountability"
            )
 countrylist<- c("Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden")
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 5. Iterarion function                                                              ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+# Best scenario function
+best_scenario.fn <- function(data.df = QRQ_flagging_system.df) {
+  
+  best_scenario <- data.df %>%
+    group_by(country_code_nuts, scenario) %>%
+    mutate(final_score = sum(total_flags_iqr, na.rm = T)) %>%
+    group_by(country_code_nuts) %>%
+    mutate(best_score = min(final_score, na.rm = T)) %>%
+    filter(final_score == best_score) %>%
+    group_by(country_code_nuts) %>%
+    mutate(
+      number = as.numeric(str_extract_all(best_scenario_final, "\\d+")),
+      number = if_else(is.na(number), 0, number),
+      number = if_else(str_detect(scenario, "best scenario"), number + 10, number),
+      max_number = max(number),
+      num_scenario = max_number %% 10,
+      best_scenario_final = paste("scenario", num_scenario)
+    ) %>%
+    ungroup() %>%
+    filter(number == max_number) %>%
+    select(country = country_name_ltn, nuts = country_code_nuts, scenario, best_scenario_final, best_score)
+  
+  nuts_best <- best_scenario %>%
+    select(nuts, best_scenario_final, best_score) %>%
+    distinct()
+  
+  final_scores_nuts <- eu_qrq_final %>%
+    select(!best_scenario_final) %>%
+    left_join(nuts_best, by = c("nuts")) %>%
+    filter(scenario == best_scenario_final) %>%
+    mutate(scenario = "best scenario") %>%
+    select(country, nuts, indicator, scenario, best_scenario_final, best_score, QRQ_value, capital)
+  
+  final_scores_country <- final_scores_nuts %>%
+    left_join(weight.df %>% select(country, nuts = nuts_id, regionpop, regionpoppct),
+              by = c("country", "nuts")) %>%
+    drop_na() %>%
+    group_by(country, indicator) %>%
+    mutate(
+      region_adjusted = regionpop / sum(regionpop),
+      repeated = if_else(regionpoppct == region_adjusted, 1, 0),
+      QRQ_country_value = region_adjusted * QRQ_value
+    ) %>%
+    ungroup() %>%
+    group_by(country, indicator, scenario) %>%
+    summarise(
+      QRQ_value = sum(QRQ_country_value)) %>%
+    distinct()
+  
+  list(final_scores_nuts, final_scores_country, nuts_best)
+}
+
+# Main iterative process
+run_iterations <- function(iterations = 7) {
+  
+  eu_qrq_final_it <- eu_qrq_final
+  EU_QRQ_country_it <- EU_QRQ_country
+  
+  results_list <- list()
+  
+  for (i in 1:iterations) {
+    
+    print(paste("Iteration", i))
+    
+    final_scores.ls <- best_scenario.fn(QRQ_flagging_system.df)
+    names(final_scores.ls) <- c("final_scores_nuts", "final_scores_country", "nuts_best")
+    
+    # NUTS LEVEL
+    final_scores_nuts_final <- final_scores.ls[["final_scores_nuts"]] %>%
+      select(country, nuts, capital, indicator, QRQ_value, scenario, best_scenario_final) %>%
+      mutate(scenario = paste("best scenario", i))
+    
+    eu_qrq_final_it <- eu_qrq_final_it %>%
+      rbind(final_scores_nuts_final)
+    
+    # COUNTRY LEVEL
+    final_scores_country_final <- final_scores.ls[["final_scores_country"]] %>%
+      select(country_name_ltn = country, indicator, QRQ_value, scenario) %>%
+      mutate(
+        scenario = paste("best scenario", i),
+        best_scenario_final = paste("best scenario", i)
+      )
+    
+    EU_QRQ_country_it <- EU_QRQ_country_it %>%
+      rbind(final_scores_country_final)
+    
+    # QRQ validation
+    
+    TPS_validation_it <- QRQ_ranking.fn(data = EU_QRQ_country_it, analysis = "TPS")
+    ROLI_validation_it <- QRQ_ranking.fn(data = EU_QRQ_country_it, analysis = "ROLI")
+    GPP_validation_it <- QRQ_ranking.fn(data = eu_qrq_final_it, analysis = "GPP")
+    TPS_nuts_validation_it <- QRQ_ranking.fn(data = eu_qrq_final_it, analysis = "NUTS")
+    Positions_validation_it <- qrq_outlier_analysis(data = eu_qrq_final_it, type = "position")
+    Scores_validation_it <- qrq_outlier_analysis(data = eu_qrq_final_it, type = "score")
+    Capitals_analysis_it <- capitals.fn(data = eu_qrq_final_it)
+    
+    # QRQ flagging system
+    QRQ_flagging_system.df <- flags_overview(type = "QRQ",
+                                             QRQ_country_data     = EU_QRQ_country_it,
+                                             QRQ_nuts_data        = eu_qrq_final_it,
+                                             TPS_validation       = TPS_validation_it,
+                                             ROLI_validation      = ROLI_validation_it,
+                                             GPP_validation       = GPP_validation_it,
+                                             TPS_nuts_validation  = TPS_nuts_validation_it,
+                                             Positions_validation = Positions_validation_it,
+                                             Scores_validation    = Scores_validation_it,
+                                             Capitals_analysis    = Capitals_analysis_it
+                                             )
+    
+    # Final table
+    final_table <- QRQ_flagging_system.df %>%
+      group_by(scenario) %>%
+      summarise(
+        flags_POS_iqr = sum(c_flags_POS_iqr, na.rm = T),
+        flags_SCORE_iqr = sum(c_flags_SCORE_iqr, na.rm = T),
+        flags_CAPITALS_iqr = sum(c_flags_CAPITALS_iqr, na.rm = T),
+        total_flags_iqr = sum(total_flags_iqr, na.rm = T)
+      )
+    
+    # Store the results of this iteration
+    
+    results_list[[i]] <- list(final_table = final_table, 
+                              final_scores = final_scores.ls,
+                              QRQ_flagging_system = QRQ_flagging_system.df)
+  }
+  
+  return(results_list)
+}

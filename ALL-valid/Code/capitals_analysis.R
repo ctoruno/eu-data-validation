@@ -1,8 +1,12 @@
-capitals.fn <- function() {
+capitals.fn <- function(
+    
+  data = eu_qrq_final
+  
+  ) {
   
   "%!in%" <- compose("!", "%in%")
   
-  capital_mean <- eu_qrq_final %>%
+  capital_mean <- data %>%
     filter(capital == 1) %>%
     group_by(nuts, country, indicator, scenario) %>%
     summarise(
@@ -11,7 +15,7 @@ capitals.fn <- function() {
     distinct() %>%
     select(!nuts)
   
-  region_diff <- eu_qrq_final %>%
+  region_diff <- data %>%
     left_join(capital_mean, 
               by = c("country", "indicator", "scenario")) %>%
     mutate(

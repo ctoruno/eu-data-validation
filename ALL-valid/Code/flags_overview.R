@@ -1,5 +1,14 @@
 flags_overview <- function(
-  type = "GPP"  
+  type = "GPP",
+  QRQ_country_data = EU_QRQ_country,
+  QRQ_nuts_data = eu_qrq_final,
+  TPS_validation,
+  ROLI_validation,
+  TPS_nuts_validation,
+  GPP_validation,
+  Positions_validation,
+  Scores_validation,
+  Capitals_analysis
   ) {
 
   # GPP ==================================================================================
@@ -230,12 +239,16 @@ flags_overview <- function(
     ## TPS flags ==================================================================================
     
     # Assign the dataframe EU_QRQ_country to df1
-    df1 <- EU_QRQ_country
+    df1 <- QRQ_country_data
+    QRQ_nuts_data <- QRQ_nuts_data
+    TPS_validation <- TPS_validation
+    ROLI_validation <- ROLI_validation
+    TPS_nuts_validation <- TPS_nuts_validation
     
     # Define the '%!in%' operator to check for elements not in a vector
     "%!in%" <- compose("!", "%in%")
     
-    direction_TPS <- EU_QRQ_country %>%
+    direction_TPS <- df1 %>%
       full_join(TPS_validation %>%
                   select(country_name_ltn, indicator, TPS_flag_iqr,  scenario, Rank_QRQ, Rank_TPS),
                 by = c("country_name_ltn", "indicator", "scenario")
@@ -263,8 +276,10 @@ flags_overview <- function(
       ) %>%
       distinct()
     
+    print(table(direction_TPS$scenario, direction_TPS$direction))
+    
     # Join EU_QRQ_country with TPS_validation, filter out certain indicators, and calculate TPS flags
-    df2 <- EU_QRQ_country %>%
+    df2 <- df1  %>%
       full_join(TPS_validation %>%
                   select(country_name_ltn, indicator, TPS_flag_iqr,  scenario),
                 by = c("country_name_ltn", "indicator", "scenario")
@@ -280,11 +295,14 @@ flags_overview <- function(
       ) %>% 
       group_by(country_name_ltn, indicator, scenario, QRQ_value) %>%
       summarise(c_flags_TPS_iqr = sum(c_flags_TPS_iqr, na.rm = TRUE)) %>%
-      left_join(direction_TPS, by = c("country_name_ltn", "indicator", "scenario")) %>%
+      left_join(direction_TPS, by = c("country_name_ltn", "indicator", "scenario"), relationship = "many-to-many") %>%
       mutate(
         c_flags_TPS_iqr = if_else(is.na(direction), NA_real_, c_flags_TPS_iqr)
       ) %>%
-      rename(trend_TPS = direction)
+      rename(trend_TPS = direction) %>%
+      distinct()
+    
+    print(table(df2$scenario, df2$c_flags_TPS_iqr))
     
     ## ROLI flags ==================================================================================
     
@@ -292,28 +310,31 @@ flags_overview <- function(
     df3 <- df2 %>%
       full_join(ROLI_validation %>%
                   select(country_name_ltn, indicator, QRQ_value, ROLI_flag_tr, ROLI_flag_iqr, scenario, Trend),
-                by = c("country_name_ltn", "indicator", "scenario", "QRQ_value")
+                by = c("country_name_ltn", "indicator", "scenario", "QRQ_value"), relationship = "many-to-many"
       ) %>%
       mutate(
         ROLI_flag_iqr = str_replace_all(ROLI_flag_iqr, " Flag", ""),
         c_flags_ROLI_iqr = if_else(ROLI_flag_tr == "Red", 1, 0)
       ) %>%
-      select(country_name_ltn, indicator, QRQ_value, c_flags_TPS_iqr, trend_TPS, c_flags_ROLI_iqr, trend_ROLI = Trend, scenario)
+      select(country_name_ltn, indicator, QRQ_value, c_flags_TPS_iqr, trend_TPS, c_flags_ROLI_iqr, trend_ROLI = Trend, scenario) %>%
+      distinct()
+    
+    print(table(df3$scenario, df3$c_flags_TPS_iqr))
     
     ## NUTS flags ==================================================================================
     
     # Prepare df4 by renaming columns and filtering indicators
-    df4 <- eu_qrq_final %>%
+    df4 <- QRQ_nuts_data %>%
       rename(QRQ_NUTS_value = QRQ_value,
              country_name_ltn = country) %>%
-      full_join(df3, by = c("country_name_ltn", "indicator", "scenario")) %>%
+      left_join(df3, by = c("country_name_ltn", "indicator", "scenario"), relationship = "many-to-many") %>%
       rename(country_code_nuts = nuts,
              QRQ_country_value = QRQ_value) %>%
-      full_join(GPP_validation %>%
+      left_join(GPP_validation %>%
                   select(country_name_ltn, country_code_nuts, indicator, 
                          QRQ_NUTS_value = QRQ_value, trend_GPP = Trend, 
                          GPP_flag_iqr, scenario), 
-                by = c("country_name_ltn", "country_code_nuts", "indicator", "scenario", "QRQ_NUTS_value")) %>%
+                by = c("country_name_ltn", "country_code_nuts", "indicator", "scenario", "QRQ_NUTS_value"), relationship = "many-to-many") %>%
       mutate(
         GPP_flag_iqr = str_replace_all(GPP_flag_iqr, " Flag", ""),
         c_flags_GPP_iqr = if_else(GPP_flag_iqr == "Red", 1, 0)
@@ -323,12 +344,13 @@ flags_overview <- function(
              trend_TPS, c_flags_TPS_iqr, 
              trend_ROLI, c_flags_ROLI_iqr, 
              trend_GPP, c_flags_GPP_iqr, 
-             scenario)
+             scenario, best_scenario_final) %>%
+      distinct()
     
     df5 <- df4 %>%
       full_join(TPS_nuts_validation %>%
                   select(country_code_nuts, indicator, TPS_NUTS_flag_iqr, QRQ_NUTS_value, trend_TPS_NUTS = Trend, scenario), 
-                by = c("country_code_nuts", "indicator", "QRQ_NUTS_value", "scenario")) %>%
+                by = c("country_code_nuts", "indicator", "QRQ_NUTS_value", "scenario"), relationship = "many-to-many") %>%
       distinct() %>%
       mutate(
         TPS_NUTS_flag_iqr = str_replace_all(TPS_NUTS_flag_iqr, " Flag", ""),
@@ -340,7 +362,7 @@ flags_overview <- function(
              trend_ROLI, c_flags_ROLI_iqr, 
              trend_GPP, c_flags_GPP_iqr, 
              trend_TPS_NUTS, c_flags_TPS_NUTS_iqr,
-             scenario) %>%
+             scenario, best_scenario_final) %>%
       distinct() %>%
       mutate(
         counter = 1
@@ -350,6 +372,8 @@ flags_overview <- function(
         repeated = sum(counter)
       )
       
+    print(table(df5$scenario, df5$c_flags_GPP_iqr))
+    
     
     ## Flagging system ==================================================================================
     
@@ -364,35 +388,37 @@ flags_overview <- function(
              trend_ROLI, c_flags_ROLI_iqr, 
              trend_GPP, c_flags_GPP_iqr, 
              trend_TPS_NUTS, c_flags_TPS_NUTS_iqr,
-             total_flags_iqr, scenario) %>%
+             total_flags_iqr, scenario, best_scenario_final) %>%
       arrange(country_code_nuts, indicator, scenario)
 
+    print(table(df6$scenario, df6$total_flags_iqr))
     
     ## Outliers Analyses ==================================================================================
     
     df7 <- df6 %>%
-      left_join(Positions_validation%>% 
+      left_join(Positions_validation %>% 
                   select(Country, `NUTS Region`, Indicator, Scenario, Flag) %>%
                   rename(country_name_ltn = Country,
                          country_code_nuts = `NUTS Region`,
                          indicator = Indicator,
                          scenario = Scenario,
-                         c_flags_POS_iqr = Flag))%>%
-      left_join(Scores_validation%>%
+                         c_flags_POS_iqr = Flag), relationship = "many-to-many")%>%
+      left_join(Scores_validation %>%
                   select(Country, `NUTS Region`, Indicator, Scenario, Flag) %>%
                   rename(country_name_ltn = Country,
                          country_code_nuts = `NUTS Region`,
                          indicator = Indicator,
                          scenario = Scenario,
-                         c_flags_SCORE_iqr = Flag)) %>%
+                         c_flags_SCORE_iqr = Flag), relationship = "many-to-many") %>%
       left_join(Capitals_analysis %>%
                   select(Country, `NUTS Region`, Indicator, Scenario, capital, Flag) %>%
                   rename(country_name_ltn = Country,
                          country_code_nuts = `NUTS Region`,
                          indicator = Indicator,
                          scenario = Scenario,
-                         c_flags_CAPITALS_iqr = Flag)
-                )
+                         c_flags_CAPITALS_iqr = Flag), relationship = "many-to-many"
+                ) %>%
+      distinct()
 
     df8 <- df7 %>%
       filter(
@@ -415,11 +441,16 @@ flags_overview <- function(
                           "p_8_1_1",  "p_8_1_2", "p_8_2_1",  "p_8_2_2", "p_8_3_1",  "p_8_3_2",
                           "p_8_3_3",  "p_8_3_4",  "p_8_3_5", "p_8_4_1", "p_8_4_2",  "p_8_4_3",
                           "p_8_5_1", "p_8_6_1",  "p_8_6_2",  "p_8_6_3",  "p_8_6_4",  "p_8_6_5",
-                          "p_8_7_1")
-      )
+                          "p_8_7_1") 
+      )%>%
+      distinct()
       
+    print(table(df8$scenario, df8$total_flags_iqr))
+    print(table(df8$scenario, df8$c_flags_POS_iqr))
+    print(table(df8$scenario, df8$c_flags_SCORE_iqr))
+    print(table(df8$scenario, df8$c_flags_CAPITALS_iqr))
+    
     return(df8)
     
   }
-  
 }
