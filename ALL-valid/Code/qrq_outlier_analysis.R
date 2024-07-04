@@ -21,7 +21,7 @@ qrq_outlier_analysis<- function(data = eu_qrq_final, type){
   if (type == "position"){
     rankings<- data%>%
       group_by(indicator, scenario) %>%
-      mutate(Rank = rank(-QRQ_value))
+      mutate(Rank = rank(-QRQ_value, na.last = "keep"))
     
     results<- data.frame(matrix(nrow = 0, ncol = 13))
     colnames(results)<- c("Country", "NUTS Region", "Indicator", "QRQ_value", "Rank", "Lower Bound", "Q1", "Median", "Q3", "Upper Bound", "IQR", "Flag", "Scenario")

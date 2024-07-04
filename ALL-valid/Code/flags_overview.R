@@ -379,16 +379,24 @@ flags_overview <- function(
     
     df6 <- df5 %>%
       group_by(country_name_ltn,country_code_nuts,indicator, scenario) %>%
-      mutate(total_flags_iqr = sum(c(c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_GPP_iqr, c_flags_TPS_NUTS_iqr), na.rm = T)) %>%
-      mutate(total_flags_iqr = if_else(
-       is.na(c_flags_TPS_iqr) & is.na(c_flags_ROLI_iqr) & is.na(c_flags_GPP_iqr) & is.na(c_flags_TPS_NUTS_iqr), NA_real_, total_flags_iqr
-      )) %>%
+      mutate(total_flags_iqr = sum(c(c_flags_TPS_iqr, c_flags_ROLI_iqr, c_flags_GPP_iqr, c_flags_TPS_NUTS_iqr), na.rm = T),
+             total_flags_nuts_iqr = sum(c(c_flags_GPP_iqr, c_flags_TPS_NUTS_iqr))
+             ) %>%
+      mutate(
+        total_flags_iqr = if_else(
+          is.na(c_flags_TPS_iqr) & is.na(c_flags_ROLI_iqr) & is.na(c_flags_GPP_iqr) & is.na(c_flags_TPS_NUTS_iqr), NA_real_, total_flags_iqr
+          ),
+        total_flags_nuts_iqr = if_else(
+          is.na(c_flags_GPP_iqr) & is.na(c_flags_TPS_NUTS_iqr), NA_real_, total_flags_iqr
+        )
+        ) %>%
       select(country_name_ltn, country_code_nuts, indicator, QRQ_country_value, QRQ_NUTS_value,
              trend_TPS, c_flags_TPS_iqr, 
              trend_ROLI, c_flags_ROLI_iqr, 
              trend_GPP, c_flags_GPP_iqr, 
              trend_TPS_NUTS, c_flags_TPS_NUTS_iqr,
-             total_flags_iqr, scenario, best_scenario_final) %>%
+             total_flags_iqr, total_flags_nuts_iqr,
+             scenario, best_scenario_final) %>%
       arrange(country_code_nuts, indicator, scenario)
 
     print(table(df6$scenario, df6$total_flags_iqr))
@@ -443,7 +451,15 @@ flags_overview <- function(
                           "p_8_5_1", "p_8_6_1",  "p_8_6_2",  "p_8_6_3",  "p_8_6_4",  "p_8_6_5",
                           "p_8_7_1") 
       )%>%
-      distinct()
+      distinct() %>%
+      mutate(
+        need_to_review = 
+          case_when(
+            c_flags_POS_iqr == 1 ~ 1,
+            c_flags_SCORE_iqr == 1 & c_flags_CAPITALS_iqr == 1 ~ 1,
+            T ~ 0
+          )
+      )
       
     print(table(df8$scenario, df8$total_flags_iqr))
     print(table(df8$scenario, df8$c_flags_POS_iqr))

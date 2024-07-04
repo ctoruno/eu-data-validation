@@ -4,7 +4,7 @@
 ## Script:            Altogether data validation
 ##
 ## Author(s):         Santiago Pardo G.        (spardo@worldjusticeproject.org)
-##                    Dalia Habiby                (Dhabiby@worldjusticeproject.org)
+##                    Dalia Habiby              (Dhabiby@worldjusticeproject.org)
 ##
 ## Dependencies:      World Justice Project
 ##
@@ -158,7 +158,7 @@ variable_list.df <- read_excel(paste0(path2eu,
 
 eu_qrq_final_s1 <- read_dta(paste0(path2eu,
                                    "/EU-S Data/eu-qrq/1. Data/",
-                                   "eu_qrq_nuts.dta")) %>%
+                                   "eu_qrq_nuts_s1.dta")) %>%
   select(country, nuts, starts_with("p_"), capital) %>%
   pivot_longer(cols = !c(nuts, country, capital), 
                names_to = "indicator", values_to = "QRQ_value") %>%
@@ -168,7 +168,7 @@ eu_qrq_final_s1 <- read_dta(paste0(path2eu,
 
 EU_QRQ_country_s1 <- read_dta(paste0(path2eu,
                                      "/EU-S Data/eu-qrq/1. Data/",
-                                     "eu_qrq_country.dta")) %>%
+                                     "eu_qrq_country_s1.dta")) %>%
   select(country, starts_with("p_")) %>%
   pivot_longer(cols = !c(country), 
                names_to = "indicator", values_to = "QRQ_value") %>%
@@ -181,7 +181,7 @@ EU_QRQ_country_s1 <- read_dta(paste0(path2eu,
 
 eu_qrq_final_s2 <- read_dta(paste0(path2eu,
                                    "/EU-S Data/eu-qrq/1. Data/",
-                                   "eu_qrq_no_out1.dta")) %>%
+                                   "eu_qrq_nuts_s2.dta")) %>%
   select(country, nuts, starts_with("p_"), capital) %>%
   pivot_longer(cols = !c(nuts, country, capital), 
                names_to = "indicator", values_to = "QRQ_value") %>%
@@ -191,7 +191,7 @@ eu_qrq_final_s2 <- read_dta(paste0(path2eu,
 
 EU_QRQ_country_s2 <- read_dta(paste0(path2eu,
                                      "/EU-S Data/eu-qrq/1. Data/",
-                                     "eu_qrq_country_no_out1.dta")) %>%
+                                     "eu_qrq_country_s2.dta")) %>%
   select(country, starts_with("p_")) %>%
   pivot_longer(cols = !c(country), 
                names_to = "indicator", values_to = "QRQ_value") %>%
@@ -204,7 +204,7 @@ EU_QRQ_country_s2 <- read_dta(paste0(path2eu,
 
 eu_qrq_final_s3 <- read_dta(paste0(path2eu,
                                    "/EU-S Data/eu-qrq/1. Data/",
-                                   "eu_qrq_no_out2.dta")) %>%
+                                   "eu_qrq_nuts_s3.dta")) %>%
   select(country, nuts, starts_with("p_"), capital) %>%
   pivot_longer(cols = !c(nuts, country, capital), 
                names_to = "indicator", values_to = "QRQ_value") %>%
@@ -214,7 +214,7 @@ eu_qrq_final_s3 <- read_dta(paste0(path2eu,
 
 EU_QRQ_country_s3 <- read_dta(paste0(path2eu,
                                      "/EU-S Data/eu-qrq/1. Data/",
-                                     "eu_qrq_country_no_out2.dta")) %>%
+                                     "eu_qrq_country_s3.dta")) %>%
   select(country, starts_with("p_")) %>%
   pivot_longer(cols = !c(country), 
                names_to = "indicator", values_to = "QRQ_value") %>%
@@ -227,7 +227,7 @@ EU_QRQ_country_s3 <- read_dta(paste0(path2eu,
 
 eu_qrq_final_s4 <- read_dta(paste0(path2eu,
                                    "/EU-S Data/eu-qrq/1. Data/",
-                                   "eu_qrq_no_out3.dta")) %>%
+                                   "eu_qrq_nuts_s4.dta")) %>%
   select(country, nuts, starts_with("p_"), capital) %>%
   pivot_longer(cols = !c(nuts, country, capital), 
                names_to = "indicator", values_to = "QRQ_value") %>%
@@ -237,7 +237,7 @@ eu_qrq_final_s4 <- read_dta(paste0(path2eu,
 
 EU_QRQ_country_s4 <- read_dta(paste0(path2eu,
                                      "/EU-S Data/eu-qrq/1. Data/",
-                                     "eu_qrq_country_no_out3.dta")) %>%
+                                     "eu_qrq_country_s4.dta")) %>%
   select(country, starts_with("p_")) %>%
   pivot_longer(cols = !c(country), 
                names_to = "indicator", values_to = "QRQ_value") %>%
@@ -451,7 +451,7 @@ QRQ_flagging_system.df <- flags_overview(type = "QRQ",
                                          Positions_validation = Positions_validation,
                                          Scores_validation = Scores_validation,
                                          Capitals_analysis = Capitals_analysis
-                                         )
+                                         ) 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -460,13 +460,13 @@ QRQ_flagging_system.df <- flags_overview(type = "QRQ",
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # Running the iterations
-results <- run_iterations(100)
+results <- run_iterations(10)
 # The best iteration is the number 3 according the results of the final table
-final_table <- results[[100]][["final_table"]]
+final_table <- results[[10]][["final_table"]]
 
 best_nuts1 <- results[[1]][["final_scores"]][["nuts_best"]] %>%
   mutate(it = "best1")
-best_nuts3 <- results[[6]][["final_scores"]][["nuts_best"]] %>%
+best_nuts3 <- results[[7]][["final_scores"]][["nuts_best"]] %>%
   mutate(it = "best3")
 
 
@@ -483,7 +483,7 @@ nuts_changes <- bind_rows(best_nuts1, best_nuts3) %>%
 
 ### Final nuts list ======================================================================================================
 
-nuts_list             <- results[[6]][["final_scores"]][["nuts_best"]]
+nuts_list             <- results[[7]][["final_scores"]][["nuts_best"]]
 write_xlsx(nuts_list, 
            path = paste0(path2eu,
                          "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
@@ -492,14 +492,14 @@ write_xlsx(nuts_list,
 
 ### Final scores list ======================================================================================================
 
-final_scores_nuts     <- results[[6]][["final_scores"]][["final_scores_nuts"]]
+final_scores_nuts     <- results[[7]][["final_scores"]][["final_scores_nuts"]]
 write_xlsx(final_scores_nuts, 
            path = paste0(path2eu,
                          "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
                          "final_scores_nuts.xlsx")
 )
 
-final_scores_country  <- results[[6]][["final_scores"]][["final_scores_country"]]
+final_scores_country  <- results[[7]][["final_scores"]][["final_scores_country"]]
 write_xlsx(final_scores_country, 
            path = paste0(path2eu,
                          "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
@@ -508,7 +508,20 @@ write_xlsx(final_scores_country,
 
 ### Final flagging system ======================================================================================================
 
-final_flagging_system <- results[[6]][["QRQ_flagging_system"]]
+final_flagging_system <- results[[7]][["QRQ_flagging_system"]]
+
+nuts_flags.df <- final_flagging_system %>%
+  filter(need_to_review == 1) %>%
+  filter(scenario == "best scenario 7") %>%
+  select(country_name_ltn, QRQ_country_value, country_code_nuts, QRQ_NUTS_value, 
+         indicator, scenario, c_flags_POS_iqr, c_flags_SCORE_iqr, c_flags_CAPITALS_iqr, 
+         need_to_review)
+
+write_xlsx(nuts_flags.df, 
+           path = paste0(path2eu,
+                         "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                         "needs_to_review_best_scenario.xlsx")
+)
 
 QRQ_flagging_system_final.df <- final_flagging_system %>%
   mutate(
@@ -522,16 +535,21 @@ QRQ_flagging_system_final.df <- final_flagging_system %>%
   select(!filtro) %>%
   mutate(
     scenario = if_else(scenario == "best scenario 6", "best scenario", scenario)
-  )
-write_xlsx(final_flagging_system, 
+  ) %>%
+  filter(
+    scenario == "best scenario"
+  ) 
+
+write_xlsx(QRQ_flagging_system_final.df, 
            path = paste0(path2eu,
                          "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
-                         "QRQ_flagging_system.xlsx")
+                         "QRQ_flagging_system_best_scenario.xlsx")
            )
+
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 4.  Outcome Functions                                                                        ----
+## 5.  Outcome Functions                                                                        ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

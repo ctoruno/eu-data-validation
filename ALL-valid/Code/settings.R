@@ -300,10 +300,12 @@ run_iterations <- function(iterations = 7) {
     final_table <- QRQ_flagging_system.df %>%
       group_by(scenario) %>%
       summarise(
-        flags_POS_iqr = sum(c_flags_POS_iqr, na.rm = T),
-        flags_SCORE_iqr = sum(c_flags_SCORE_iqr, na.rm = T),
-        flags_CAPITALS_iqr = sum(c_flags_CAPITALS_iqr, na.rm = T),
-        total_flags_iqr = sum(total_flags_iqr, na.rm = T)
+        flags_POS_iqr        = sum(c_flags_POS_iqr, na.rm = T),
+        flags_SCORE_iqr      = sum(c_flags_SCORE_iqr, na.rm = T),
+        flags_CAPITALS_iqr   = sum(c_flags_CAPITALS_iqr, na.rm = T),
+        total_flags_iqr      = sum(total_flags_iqr, na.rm = T),
+        total_flags_nuts_iqr = sum(total_flags_nuts_iqr, na.rm = T),
+        NeedToReview         = sum(need_to_review, na.rm = T)
       )
     
     # Store the results of this iteration
