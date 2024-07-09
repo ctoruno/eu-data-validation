@@ -460,7 +460,7 @@ QRQ_flagging_system.df <- flags_overview(type = "QRQ",
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # Running the iterations
-results <- run_iterations(10)
+results <- run_iterations(100)
 # The best iteration is the number 3 according the results of the final table
 final_table <- results[[10]][["final_table"]]
 
