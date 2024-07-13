@@ -460,14 +460,18 @@ QRQ_flagging_system.df <- flags_overview(type = "QRQ",
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # Running the iterations
-results <- run_iterations(100)
+results <- run_iterations(50)
+saveRDS(results,
+        file =  paste0(path2eu,
+                       "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                       "Iterations_50.RDS"))
 # The best iteration is the number 3 according the results of the final table
-final_table <- results[[10]][["final_table"]]
+final_table <- results[[50]][["final_table"]]
 
 best_nuts1 <- results[[1]][["final_scores"]][["nuts_best"]] %>%
   mutate(it = "best1")
-best_nuts3 <- results[[7]][["final_scores"]][["nuts_best"]] %>%
-  mutate(it = "best3")
+best_nuts7 <- results[[7]][["final_scores"]][["nuts_best"]] %>%
+  mutate(it = "best7")
 
 
 nuts_changes <- bind_rows(best_nuts1, best_nuts3) %>%
@@ -525,16 +529,7 @@ write_xlsx(nuts_flags.df,
 
 QRQ_flagging_system_final.df <- final_flagging_system %>%
   mutate(
-    filtro =
-      case_when(
-        is.na(total_flags_iqr) ~ 0,
-        T ~ 1
-      )
-  ) %>%
-  filter(filtro == 1) %>%
-  select(!filtro) %>%
-  mutate(
-    scenario = if_else(scenario == "best scenario 6", "best scenario", scenario)
+    scenario = if_else(scenario == "best scenario 7", "best scenario", scenario)
   ) %>%
   filter(
     scenario == "best scenario"
