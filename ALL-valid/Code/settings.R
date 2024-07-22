@@ -96,9 +96,10 @@ if (Sys.info()["user"] == "ctoruno") {
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-normalizingvars<- function(gppctry, gppvars){
+normalizingvars<- function(gppctry, 
+                           gppvars){
   
-  oriented<- gppctry
+  oriented <- gppctry
   
   for(i in gppvars){
     
@@ -106,13 +107,28 @@ normalizingvars<- function(gppctry, gppvars){
     
   }
   
-  ro<- c("JSE_indjudges", "ORC_govtefforts", "ORC_impartial_measures", "CPA_freevote", "CPA_cleanelec_local", 
-         "CPA_media_freeop", "CPB_freexp_cso", "CPA_freepolassoc", "CPB_freexp", "LEP_bribesreq", "IRE_campaign",
-         "IPR_easy2read", "IPR_rights", "TRT_govt_local", "TRT_govt_national",  "TRT_prosecutors",   
-         "TRT_pda", "TRT_judges", "TRT_media", "IPR_easy2find", "IPR_easy2find_online", "TRT_parliament", "TRT_police", 
-         "TRT_pparties", "TRT_people",   "CTZ_laborcond", "JSE_equality", "CJP_proofburden", "JSE_rightsaware", "JSE_access2assis", "JSE_affordcosts", "JSE_quickresol", "COR_judges", "JSE_enforce", "LEP_indpolinv", "COR_police", "COR_prosecutors",    "COR_pda", "LEP_indprosecutors", "CJP_resprights", "CJP_fairtrial", "CJP_saferights", "CPB_community", "CPB_freeassoc", "COR_govt_local", "COR_parliament", "ROL_equality_sig", "JSE_polinfluence", "COR_govt_national", "IRE_govtbudget", "IRE_govtcontracts", "IRE_disclosure", "SEC_walking", "CPA_law_langaval", "CPB_unions", "CPB_freemedia", "CPA_freemedia", "CPA_cons_cso", "CPA_partdem_congress", "CPB_freexp_pp","CPA_partdem_localgvt", "CJP_efficient" , "CJP_access" , "CJP_fairpunishment", "CJP_egalitarian", "CJP_victimsupport")
+  ro <- codebook.df %>%
+    filter(Direction %in% c("Inverse", "Proportional (after Transformation)")) %>%
+    filter(!str_detect(Variable, "DIS")) %>%
+    filter(!str_detect(Variable, "BRB")) %>%
+    filter(Scale %in% c("Scale 4", "Scale 5")) %>%
+    pull(Variable)
   
-  ro2<- c("CPA_protest", "CPA_cso")
+  ro <- c(ro, 
+          "CTZ_laborcond",
+          "CTZ_gendereq",
+          "CTZ_consrights",
+          "CTZ_envprotect",
+          "CTZ_euvalues",
+          "CTZ_headgovteval",
+          "CTZ_localgovteval")
+  
+  ro2 <- codebook.df %>%
+    filter(Direction %in% c("Inverse", "Proportional (after Transformation)")) %>%
+    filter(!str_detect(Variable, "DIS")) %>%
+    filter(!str_detect(Variable, "BRB")) %>%
+    filter(Scale %in% c("Scale 2")) %>%
+    pull(Variable)
   
   gppro<- intersect(gppvars, ro)
   gppro2<- intersect(gppvars, ro2)
@@ -306,7 +322,11 @@ run_iterations <- function(iterations = 7) {
         total_flags_iqr      = sum(total_flags_iqr, na.rm = T),
         total_flags_nuts_iqr = sum(total_flags_nuts_iqr, na.rm = T),
         NeedToReview         = sum(need_to_review, na.rm = T)
-      )
+      ) %>%
+      drop_na()
+    
+    print(table(final_table$scenario, final_table$total_flags_iqr))
+    print(table(final_table$scenario, final_table$NeedToReview))
     
     # Store the results of this iteration
     

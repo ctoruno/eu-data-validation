@@ -302,8 +302,6 @@ flags_overview <- function(
       rename(trend_TPS = direction) %>%
       distinct()
     
-    print(table(df2$scenario, df2$c_flags_TPS_iqr))
-    
     ## ROLI flags ==================================================================================
     
     # Join df2 with ROLI_validation, calculate ROLI flags, and summarize total flags per country and indicator
@@ -318,8 +316,6 @@ flags_overview <- function(
       ) %>%
       select(country_name_ltn, indicator, QRQ_value, c_flags_TPS_iqr, trend_TPS, c_flags_ROLI_iqr, trend_ROLI = Trend, scenario) %>%
       distinct()
-    
-    print(table(df3$scenario, df3$c_flags_TPS_iqr))
     
     ## NUTS flags ==================================================================================
     
@@ -372,8 +368,6 @@ flags_overview <- function(
         repeated = sum(counter)
       )
       
-    print(table(df5$scenario, df5$c_flags_GPP_iqr))
-    
     
     ## Flagging system ==================================================================================
     
@@ -398,8 +392,6 @@ flags_overview <- function(
              total_flags_iqr, total_flags_nuts_iqr,
              scenario, best_scenario_final) %>%
       arrange(country_code_nuts, indicator, scenario)
-
-    print(table(df6$scenario, df6$total_flags_iqr))
     
     ## Outliers Analyses ==================================================================================
     
@@ -460,11 +452,9 @@ flags_overview <- function(
             T ~ 0
           )
       )
-      
+    
     print(table(df8$scenario, df8$total_flags_iqr))
-    print(table(df8$scenario, df8$c_flags_POS_iqr))
-    print(table(df8$scenario, df8$c_flags_SCORE_iqr))
-    print(table(df8$scenario, df8$c_flags_CAPITALS_iqr))
+    print(table(df8$scenario, df8$need_to_review))
     
     return(df8)
     

@@ -460,18 +460,25 @@ QRQ_flagging_system.df <- flags_overview(type = "QRQ",
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # Running the iterations
-results <- run_iterations(50)
-saveRDS(results,
-        file =  paste0(path2eu,
-                       "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
-                       "Iterations_50.RDS"))
+#results <- run_iterations(50)
+
+# saveRDS(results,
+#         file =  paste0(path2eu,
+#                        "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+#                        "Iterations_50_R2.RDS"))
+
+results <- readRDS(file = paste0(path2eu,
+                                 "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                                 "Iterations_50_R2.RDS"))
+
 # The best iteration is the number 3 according the results of the final table
-final_table <- results[[50]][["final_table"]]
+final_table <- results[[50]][["final_table"]] %>%
+  drop_na()
 
 best_nuts1 <- results[[1]][["final_scores"]][["nuts_best"]] %>%
   mutate(it = "best1")
-best_nuts7 <- results[[7]][["final_scores"]][["nuts_best"]] %>%
-  mutate(it = "best7")
+best_nuts3 <- results[[6]][["final_scores"]][["nuts_best"]] %>%
+  mutate(it = "best3")
 
 
 nuts_changes <- bind_rows(best_nuts1, best_nuts3) %>%
@@ -487,7 +494,7 @@ nuts_changes <- bind_rows(best_nuts1, best_nuts3) %>%
 
 ### Final nuts list ======================================================================================================
 
-nuts_list             <- results[[7]][["final_scores"]][["nuts_best"]]
+nuts_list             <- results[[1]][["final_scores"]][["nuts_best"]]
 write_xlsx(nuts_list, 
            path = paste0(path2eu,
                          "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
@@ -496,14 +503,14 @@ write_xlsx(nuts_list,
 
 ### Final scores list ======================================================================================================
 
-final_scores_nuts     <- results[[7]][["final_scores"]][["final_scores_nuts"]]
+final_scores_nuts     <- results[[1]][["final_scores"]][["final_scores_nuts"]]
 write_xlsx(final_scores_nuts, 
            path = paste0(path2eu,
                          "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
                          "final_scores_nuts.xlsx")
 )
 
-final_scores_country  <- results[[7]][["final_scores"]][["final_scores_country"]]
+final_scores_country  <- results[[1]][["final_scores"]][["final_scores_country"]]
 write_xlsx(final_scores_country, 
            path = paste0(path2eu,
                          "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
@@ -512,11 +519,11 @@ write_xlsx(final_scores_country,
 
 ### Final flagging system ======================================================================================================
 
-final_flagging_system <- results[[7]][["QRQ_flagging_system"]]
+final_flagging_system <- results[[1]][["QRQ_flagging_system"]]
 
 nuts_flags.df <- final_flagging_system %>%
   filter(need_to_review == 1) %>%
-  filter(scenario == "best scenario 7") %>%
+  filter(scenario == "best scenario 1") %>%
   select(country_name_ltn, QRQ_country_value, country_code_nuts, QRQ_NUTS_value, 
          indicator, scenario, c_flags_POS_iqr, c_flags_SCORE_iqr, c_flags_CAPITALS_iqr, 
          need_to_review)
@@ -529,7 +536,7 @@ write_xlsx(nuts_flags.df,
 
 QRQ_flagging_system_final.df <- final_flagging_system %>%
   mutate(
-    scenario = if_else(scenario == "best scenario 7", "best scenario", scenario)
+    scenario = if_else(scenario == "best scenario 1", "best scenario", scenario)
   ) %>%
   filter(
     scenario == "best scenario"
@@ -564,7 +571,7 @@ openxlsx::write.xlsx(GPP_flagging_system.df, paste0(path2eu,
 
 ### Threshold outputs ========================================================================================
 
-tpsthresh<- TPS_ranking_analysis.df%>%
+tpsthresh<- TPS_ranking_analysis.df %>%
   select(country_name_ltn, Type_Survey, upper_bound)%>%
   distinct()%>%
   pivot_wider(names_from = Type_Survey, values_from = upper_bound)

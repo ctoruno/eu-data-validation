@@ -30,8 +30,8 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
     
     tpsvars <- mat$TPS_Variable_Name
     gppvars <- mat$GPP_Variable_Name
-    gppvars <- gppvars[!grepl("^DIS_", gppvars)]
-    gppvars <- gppvars[!grepl("^BRB_", gppvars)]
+    gppvars <- reportvarslist[!grepl("^DIS_", reportvarslist)]
+    gppvars <- reportvarslist[!grepl("^BRB_", reportvarslist)]
     
     ## 1.2 Sub-setting data  =====================================================================================
     gpp2 <- gpp_data.df %>% 
@@ -39,7 +39,7 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
     
     ## 1.3 Re-orient indicators ==================================================================================
     
-    normalized <- normalizingvars(gpp2, gppvars)
+    normalized <- normalizingvars(gppctry = gpp2, gppvars)
     
     ## 1.5 Aggregate indicators at the country level =============================================================
     
@@ -90,6 +90,7 @@ ranking_analysis.fn <- function(gpp_data.df = master_data.df,
                                     "Green Flag", NA_character_)
       ) %>%
       distinct()
+    
   } else {
     
     
