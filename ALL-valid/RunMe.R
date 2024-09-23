@@ -90,7 +90,7 @@ reportvars.df <- codebook.df %>%
 reportvarslist <- reportvars.df$Variable # The final list of variables from the report
 
 # This file contains the weight distributions for each country
-weight.df<- read_excel(paste0(path2eu, "/EU-S Data/reports/eu-gpp-report/data-viz/inputs/",
+weight.df<- read_excel(paste0(path2eu, "/EU-S Data/reports/eu-thematic-reports/data-viz/inputs/",
                               "region_labels.xlsx"))
 
 # This file contains the TPS data base which comes from TPS folder
@@ -152,7 +152,73 @@ variable_list.df <- read_excel(paste0(path2eu,
 
 ### QRQ ======================================================================================================
 
+"%!in%" <- compose("!", "%in%")
 #### QRQ scores data ======================================================================================================
+eu_qrq_final_scores_topics <- read_dta(paste0(path2eu,
+                                       "/EU-S Data/eu-qrq/1. Data/",
+                                       "eu_qrq_nuts_final_with_topics.dta")) %>%
+  select(country, nuts, starts_with("p_"), capital) %>%
+  pivot_longer(cols = !c(nuts, country, capital), 
+               names_to = "indicator", values_to = "QRQ_value") %>%
+  mutate(
+    scenario = "scenario final"
+  )
+
+eu_qrq_final_scores <- read_dta(paste0(path2eu,
+                                "/EU-S Data/eu-qrq/1. Data/",
+                                "eu_qrq_nuts_final.dta")) %>%
+  select(country, nuts, starts_with("p_"), capital) %>%
+  pivot_longer(cols = !c(nuts, country, capital), 
+               names_to = "indicator", values_to = "QRQ_value") %>%
+  mutate(
+    scenario = "scenario final"
+  )
+
+extreme_scores_positive <- eu_qrq_final_scores %>%
+  filter(QRQ_value > 0.99) %>%
+  arrange(indicator, -QRQ_value)  %>%
+  filter(indicator %!in% c("p_1","p_2","p_3","p_4", "p_5","p_6", "p_7", "p_8"))
+
+write_xlsx(extreme_scores_positive, 
+           path = paste0(path2eu,
+                         "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                         "extreme_scores_positive.xlsx")
+)
+
+extreme_scores_negative <- eu_qrq_final_scores %>%
+  filter(QRQ_value < 0.30) %>%
+  arrange(indicator, -QRQ_value)  %>%
+  filter(indicator %!in% c("p_1","p_2","p_3","p_4", "p_5","p_6", "p_7", "p_8"))
+
+write_xlsx(extreme_scores_negative, 
+           path = paste0(path2eu,
+                         "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                         "extreme_scores_negative.xlsx")
+)
+
+EU_QRQ_country_final_scores <- read_dta(paste0(path2eu,
+                                     "/EU-S Data/eu-qrq/1. Data/",
+                                     "eu_qrq_country_final.dta")) %>%
+  select(country, starts_with("p_")) %>%
+  pivot_longer(cols = !c(country), 
+               names_to = "indicator", values_to = "QRQ_value") %>%
+  rename(country_name_ltn = country) %>%
+  mutate(
+    scenario = "scenario final"
+  )
+
+
+EU_QRQ_country_final_scores_topics <- read_dta(paste0(path2eu,
+                                               "/EU-S Data/eu-qrq/1. Data/",
+                                               "eu_qrq_country_final_with_topics.dta")) %>%
+  select(country, starts_with("p_")) %>%
+  pivot_longer(cols = !c(country), 
+               names_to = "indicator", values_to = "QRQ_value") %>%
+  rename(country_name_ltn = country) %>%
+  mutate(
+    scenario = "scenario final"
+  )
+
 
 ##### QRQ s1 ======================================================================================================
 
@@ -249,10 +315,10 @@ EU_QRQ_country_s4 <- read_dta(paste0(path2eu,
 ##### QRQ final ======================================================================================================
 
 
-eu_qrq_final <- rbind(eu_qrq_final_s1, eu_qrq_final_s2, eu_qrq_final_s3, eu_qrq_final_s4) %>%
+eu_qrq_final <- rbind(eu_qrq_final_s1, eu_qrq_final_s2, eu_qrq_final_s3, eu_qrq_final_s4, eu_qrq_final_scores) %>%
   mutate(best_scenario_final = scenario)
 
-EU_QRQ_country <- rbind(EU_QRQ_country_s1, EU_QRQ_country_s2, EU_QRQ_country_s3, EU_QRQ_country_s4) %>%
+EU_QRQ_country <- rbind(EU_QRQ_country_s1, EU_QRQ_country_s2, EU_QRQ_country_s3, EU_QRQ_country_s4, EU_QRQ_country_final_scores) %>%
   mutate(best_scenario_final = scenario)
   
 #### QRQ TPS scores ======================================================================================================
@@ -453,6 +519,10 @@ QRQ_flagging_system.df <- flags_overview(type = "QRQ",
                                          Capitals_analysis = Capitals_analysis
                                          ) 
 
+QRQ_flagging_system.df_scenario_final <- QRQ_flagging_system.df %>%
+  filter(scenario == "scenario final") %>%
+  drop_na(QRQ_NUTS_value)
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 4.  QRQ: Iteration process                                                                 ----
@@ -549,11 +619,42 @@ write_xlsx(QRQ_flagging_system_final.df,
            )
 
 
+"%!in%" <- compose("!", "%in%")
+
+final_review <- QRQ_flagging_system.df_scenario_final %>%
+  select(country_name_ltn, country_code_nuts, indicator, need_to_review) %>%
+  left_join(QRQ_flagging_system_final.df %>%
+              select(country_name_ltn, country_code_nuts, indicator, need_to_review),
+            by = c("country_name_ltn", "country_code_nuts", "indicator")) %>%
+  left_join(extreme_scores_negative %>%
+              mutate(negative = 1) %>%
+              select(country_name_ltn = country, country_code_nuts = nuts, indicator, negative), 
+            by = c("country_name_ltn", "country_code_nuts", "indicator")) %>%
+  left_join(extreme_scores_positive %>%
+              mutate(positive = 1) %>%
+              select(country_name_ltn = country, country_code_nuts = nuts, indicator, positive), 
+            by = c("country_name_ltn", "country_code_nuts", "indicator")) %>%
+  mutate(
+    match = if_else(need_to_review.x == need_to_review.y, 1, 0),
+    match_flags = if_else(match == 0 & need_to_review.x == 0, 1, 0)
+  ) %>%
+  filter(match_flags == 1) %>%
+  select(country_name_ltn, country_code_nuts, indicator, negative, positive) %>%
+  distinct() %>%
+  filter(indicator %!in% c("p_1","p_2","p_3","p_4", "p_5","p_6", "p_7", "p_8"))
+
+write_xlsx(final_review, 
+           path = paste0(path2eu,
+                         "/EU-S Data/eu-data-validation/ALL-valid/Outputs/",
+                         "new_indicators_to_review.xlsx")
+)
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 5.  Outcome Functions                                                                        ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 ### GPP ======================================================================================================
 
